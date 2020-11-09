@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package pb.mission;
+
+
+// ===
+// === Mission message
+// ============================================================================ //
+message Mission {
+    message Element {
+        message Point {
+            string name = 1;
+        }
+        message Rail {
+            string name = 1;
+            Point p0 = 2;
+            Point p1 = 3;
+        }
+        message Segment {
+            string name = 1;
+            Point p0 = 2;
+            Point p1 = 3;
+        }
+        oneof element {
+            Point point = 1;
+            Rail rail = 2;
+            Segment segment = 3;
+        }
+    }
+
+    message Collection {
+        string name = 1;
+        repeated Element elements = 2;
+    }
+
+   message Component {
+    oneof component{
+        Element element = 1;
+        Collection collection = 2;
+    }
+   }
+
+    string name = 1;
+    repeated Component components = 2;
+}

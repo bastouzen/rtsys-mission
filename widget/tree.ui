@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MissionTreeWidget</class>
+ <widget class="QWidget" name="MissionTreeWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTreeView" name="treeView"/>
+   </item>
+  </layout>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionAddPoint">
+   <property name="text">
+    <string>Add Point</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Point</string>
+   </property>
+  </action>
+  <action name="actionAddRail">
+   <property name="text">
+    <string>Add Rail</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Rail</string>
+   </property>
+  </action>
+  <action name="actionAddSegment">
+   <property name="text">
+    <string>Add Segment</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Segment</string>
+   </property>
+  </action>
+  <action name="actionAddCollection">
+   <property name="text">
+    <string>Add Collection</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Collection</string>
+   </property>
+  </action>
+  <action name="actionNewMission">
+   <property name="text">
+    <string>New Mission</string>
+   </property>
+   <property name="toolTip">
+    <string>New Mission</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/collection.svg</file>
+        <file>resource/mission.svg</file>
+        <file>resource/rail.svg</file>
+        <file>resource/route.svg</file>
+        <file>resource/segment.svg</file>
+        <file>resource/family.svg</file>
+        <file>resource/erase.svg</file>
+        <file>resource/point.png</file>
+        <file>resource/rail.png</file>
+        <file>resource/target.svg</file>
+    </qresource>
+</RCC>
