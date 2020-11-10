@@ -6,6 +6,7 @@
 #include "private/model.h"
 #include "protobuf/mission.pb.h"
 
+#include <QDebug>
 #include <QIcon>
 
 // ===
@@ -93,4 +94,52 @@ MissionBackend::Collection MissionBackend::collectionType() const
 MissionBackend::Component MissionBackend::parentComponentType() const
 {
     return _item->parent()->backend()->componentType();
+}
+
+unsigned int MissionBackend::action() const
+{
+    const auto &component_type = componentType();
+    if (component_type == MissionBackend::kMission) {
+        return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment) | (1 << kAddCollection);
+    } else if (component_type == MissionBackend::kCollection) {
+        return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment);
+    } else if (component_type == MissionBackend::kRail || component_type == MissionBackend::kSegment) {
+        return (1 << kDelete);
+    } else if (component_type == MissionBackend::kPoint) {
+        const auto &parent_component_type = parentComponentType();
+        if (parent_component_type != MissionBackend::kRail && parent_component_type != MissionBackend::kSegment) {
+            return (1 << kDelete);
+        }
+    }
+    return 0;
+}
+
+void MissionBackend::remove(const int row)
+{
+    const auto &component_type = componentType();
+    if (component_type == MissionBackend::kMission) {
+        auto *mission = static_cast<pb::mission::Mission *>(_item->parent()->backend()->protobuf());
+        for (int i = row; i < mission->components_size() - 1; i++) {
+            mission->mutable_components()->SwapElements(i, i + 1);
+        }
+        mission->mutable_components()->RemoveLast();
+
+    } else if (component_type == MissionBackend::kCollection) {
+        auto *collection = static_cast<pb::mission::Mission::Collection *>(_item->parent()->backend()->protobuf());
+        for (int i = row; i < collection->elements_size() - 1; i++) {
+            collection->mutable_elements()->SwapElements(i, i + 1);
+        }
+        collection->mutable_elements()->RemoveLast();
+    }
+}
+
+google::protobuf::Message *MissionBackend::addPoint()
+{
+    const auto &component_type = componentType();
+    if (component_type == MissionBackend::kMission) {
+        return static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_point();
+    } else if (component_type == MissionBackend::kCollection) {
+        return static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_point();
+    }
+    return nullptr;
 }

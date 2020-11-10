@@ -28,17 +28,25 @@ class MissionBackend
 {
   public:
     enum Component { kMission, kCollection, kPoint, kRail, kSegment };
-    enum Collection { kScenario, kRoute, kFamily };    
+    enum Collection { kScenario, kRoute, kFamily };
+    enum Action { kDelete, kAddPoint, kAddRail, kAddSegment, kAddCollection };
 
   public:
     explicit MissionBackend(google::protobuf::Message *protobuf = nullptr, MissionItem *item = nullptr);
     ~MissionBackend();
 
     QVariant icon() const;
-    Component componentType() const;
-    Collection collectionType() const;
+    unsigned int action() const;
+
+    google::protobuf::Message *protobuf() { return _protobuf; }
+
+    void remove(const int row);
+    void remove();
+    google::protobuf::Message *addPoint();
 
   private:
+    Component componentType() const;
+    Collection collectionType() const;
     Component parentComponentType() const;
 
     google::protobuf::Message *_protobuf;

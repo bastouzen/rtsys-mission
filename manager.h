@@ -6,10 +6,7 @@
 // ============================================================================ //
 
 #include "private/model.h"
-
-// ===
-// === Define
-// ============================================================================ //
+#include "protobuf/mission.pb.h"
 
 // ===
 // === Class
@@ -25,9 +22,13 @@ class MissionManager : public QObject
 
     MissionModel *model() { return &_model; }
     void loadMission(pb::mission::Mission *mission);
-    void addMission(const QModelIndex &parent);
-    void deleteS(const QModelIndex &index);
 
+    void newMission();
+    void clearMission();
+    void addPoint(const QModelIndex &parent);
+    void remove(const QModelIndex &index);
+
+    pb::mission::Mission _mission;
   private:
     MissionModel _model;
 };

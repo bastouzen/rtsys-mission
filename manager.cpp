@@ -4,8 +4,6 @@
 
 #include "manager.h"
 
-#include "protobuf/mission.pb.h"
-
 #include <QDebug>
 
 // ===
@@ -16,23 +14,43 @@ MissionManager::MissionManager(QObject *parent)
     : QObject(parent)
 {
     setObjectName("MissionManager");
+
+    // Initialization of the mission data structure.
+    newMission();
 }
 
 MissionManager::~MissionManager() {}
 
-void MissionManager::addMission(const QModelIndex &index)
+// This creates a new mission.
+void MissionManager::newMission()
 {
-    qInfo() << objectName() << ":: addMission" << index;
-    if (!index.isValid()) {
-        _model.insertRow(0, index);
-    } else {
-        qWarning() << "===> can not add a mission into not root element"; // This should never happend
-    }
+    clearMission();
+
+    _mission.set_name("My New Mission");
+    _model.insertRow<decltype(_mission)>(0, QModelIndex(), &_mission);
 }
 
-void MissionManager::deleteS(const QModelIndex &index)
+// This clears the existing mission
+void MissionManager::clearMission()
 {
-    qInfo() << objectName() << ":: deleteS" << index;
+    _mission.Clear();
+    _model.removeRow(0, QModelIndex());
+}
+
+// This adds a point into the parent index model.
+void MissionManager::addPoint(const QModelIndex &parent)
+{
+    auto *parent_item = parent.isValid() ? _model.item(parent) : _model.root();
+    auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(parent_item->backend()->addPoint());
+    const auto &row = _model.rowCount(parent);
+    protobuf->set_name(QString("My Point %1").arg(row).toStdString());
+    _model.insertRow<pb::mission::Mission::Element::Point>(row, parent, protobuf);
+}
+
+// This removes the object specify by the index model.
+void MissionManager::remove(const QModelIndex &index)
+{
+    qInfo() << objectName() << ":: remove" << index;
     if (index.isValid()) {
         _model.removeRow(index.row(), index.parent());
     }

@@ -22,11 +22,15 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MissionTreeWidget::createCustomContexMenu);
 
     // connect(ui->actionSelectAll, &QAction::triggered, ui->treeView, &QTreeView::selectAll);
-    connect(ui->treeView, &QTreeView::doubleClicked, this, [](const QModelIndex &index) { qDebug() << index; });
+    connect(ui->treeView, &QTreeView::doubleClicked, this, [this](const QModelIndex &index) {
+        qDebug() << index;
+        qDebug() << _manager._mission.DebugString().data();
+    });
 
     // connect(ui->actionNewMission, &QAction::triggered, &manager, &MissionManager::addMission);
-    connect(ui->actionNewMission, &QAction::triggered, this, [&]() { _manager.addMission(_index); });
-    connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager.deleteS(_index); });
+    // connect(ui->actionNewMission, &QAction::triggered, this, [&]() { _manager.addMission(_index); });
+    connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager.remove(_index); });
+    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager.addPoint(_index); });
 }
 
 MissionTreeWidget::~MissionTreeWidget()
@@ -44,50 +48,20 @@ void MissionTreeWidget::loadMission(pb::mission::Mission *mission)
 void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
 {
     _index = ui->treeView->indexAt(position);
-    qDebug() << "createCustomContexMenu" << _index << _index.isValid() << _index.parent() << _index.parent().isValid();
-
     auto *item = _manager.model()->item(_index);
     if (item) {
-        const auto &component_type = item->backend()->componentType();
-
-        if (component_type == MissionBackend::kMission) {
+        const auto &mask_action = item->backend()->action();
+        if (mask_action) {
             QMenu menu(this);
-            menu.addAction(ui->actionDelete);
-            QMenu *add = menu.addMenu(tr("Add"));
-            add->addAction(ui->actionAddPoint);
-            add->addAction(ui->actionAddRail);
-            add->addAction(ui->actionAddSegment);
-            add->addAction(ui->actionAddCollection);
-            menu.exec(ui->treeView->viewport()->mapToGlobal(position));
-
-        } else if (component_type == MissionBackend::kCollection) {
-            QMenu menu(this);
-            menu.addAction(ui->actionDelete);
-            QMenu *add = menu.addMenu(tr("Add"));
-            add->addAction(ui->actionAddPoint);
-            add->addAction(ui->actionAddRail);
-            add->addAction(ui->actionAddSegment);
-            menu.exec(ui->treeView->viewport()->mapToGlobal(position));
-
-        } else if (component_type == MissionBackend::kPoint) {
-            const auto &parent_component_type = item->parent()->backend()->componentType();
-            if (parent_component_type != MissionBackend::kRail && parent_component_type != MissionBackend::kSegment) {
-                QMenu menu(this);
-                menu.addAction(ui->actionDelete);
-                menu.exec(ui->treeView->viewport()->mapToGlobal(position));
+            if ((mask_action >> MissionBackend::Action::kDelete) & 1) menu.addAction(ui->actionDelete);
+            if (mask_action > 1) {
+                QMenu *add = menu.addMenu(tr("Add"));
+                if ((mask_action >> MissionBackend::Action::kAddPoint) & 1) add->addAction(ui->actionAddPoint);
+                if ((mask_action >> MissionBackend::Action::kAddRail) & 1) add->addAction(ui->actionAddRail);
+                if ((mask_action >> MissionBackend::Action::kAddSegment) & 1) add->addAction(ui->actionAddSegment);
+                if ((mask_action >> MissionBackend::Action::kAddCollection) & 1)
+                    add->addAction(ui->actionAddCollection);
             }
-
-        } else if (component_type == MissionBackend::kRail || component_type == MissionBackend::kSegment) {
-            QMenu menu(this);
-            menu.addAction(ui->actionDelete);
-            menu.exec(ui->treeView->viewport()->mapToGlobal(position));
-        }
-
-    } else {
-        // If the modem item is invalid and the modem root item has no child
-        if (_manager.model()->root()->childCount() == 0) {
-            QMenu menu(this);
-            menu.addAction(ui->actionNewMission);
             menu.exec(ui->treeView->viewport()->mapToGlobal(position));
         }
     }

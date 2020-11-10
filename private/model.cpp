@@ -26,6 +26,12 @@ MissionItem::~MissionItem()
     qDeleteAll(_childs);
 }
 
+void MissionItem::removeChild(int row)
+{
+    _childs.remove(row);
+    _backend.remove(row);
+}
+
 MissionItem *MissionItem::child(int row)
 {
     if (row < 0 || row >= _childs.size()) {
@@ -148,24 +154,15 @@ int MissionModel::rowCount(const QModelIndex &parent) const
     return (parent.isValid() ? CastToItem(parent) : _root)->childCount();
 }
 
-// This inserts an item into the model specified by the row and the parent.
-void MissionModel::insertRow(int row, const QModelIndex &parent, google::protobuf::Message *protobuf)
-{
-    auto name = protobuf ? QString::fromStdString(protobuf->GetDescriptor()->name()) : QString("None");
-    auto *parent_ = parent.isValid() ? CastToItem(parent) : _root;
-
-    beginInsertRows(parent, row, row + 1);
-    parent_->insertChild(row, new MissionItem({name, name}, protobuf, parent_));
-    endInsertRows();
-}
-
 // This removes an item from the model specified by the row and the parent.
 void MissionModel::removeRow(int row, const QModelIndex &parent)
 {
     auto *parent_ = parent.isValid() ? CastToItem(parent) : _root;
 
-    beginRemoveRows(parent, parent.row(), parent.row() + 1);
-    parent_->removeChild(row);
-    parent_ = nullptr;
-    endRemoveRows();
+    if (rowCount(parent) && rowCount(parent) >= row) {
+        beginRemoveRows(parent, parent.row(), parent.row() + 1);
+        parent_->removeChild(row);
+        parent_ = nullptr;
+        endRemoveRows();
+    }
 }

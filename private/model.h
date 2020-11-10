@@ -12,16 +12,6 @@
 #include <QVariant>
 
 // ===
-// === Define
-// ============================================================================ //
-
-namespace pb {
-namespace mission {
-class Mission;
-} // namespace mission
-} // namespace pb
-
-// ===
 // === Class
 // ============================================================================ //
 
@@ -40,7 +30,7 @@ class MissionItem
 
     void appendChild(MissionItem *child) { _childs.append(child); }
     void insertChild(int row, MissionItem *child) { _childs.insert(row, child); }
-    void removeChild(int row) { _childs.remove(row); }
+    void removeChild(int row);
     MissionItem *child(int row);
     const QVector<MissionItem *> &childs() const { return _childs; }
     int childCount() const { return _childs.count(); }
@@ -82,11 +72,25 @@ class MissionModel : public QAbstractItemModel
 
     QModelIndex index(MissionItem *item, int column) const;
     MissionItem *item(const QModelIndex &index) const;
-    void insertRow(int row, const QModelIndex &parent, google::protobuf::Message *protobuf = nullptr);
+    template <class T>
+    void insertRow(int row, const QModelIndex &parent, T *protobuf = nullptr);
     void removeRow(int row, const QModelIndex &parent);
 
   private:
     MissionItem *_root;
 };
+
+// This inserts an item into the model specified by the row and the parent.
+template <class T>
+void MissionModel::insertRow(int row, const QModelIndex &parent, T *protobuf)
+{
+    auto *parent_ = parent.isValid() ? static_cast<MissionItem *>(parent.internalPointer()) : _root;
+
+    beginInsertRows(parent, row, row + 1);
+    parent_->insertChild(row, new MissionItem({QString::fromStdString(protobuf->GetDescriptor()->name()),
+                                               QString::fromStdString(protobuf->name())},
+                                              protobuf, parent_));
+    endInsertRows();
+}
 
 #endif // RTSYS_MISSION_MODEL_H
