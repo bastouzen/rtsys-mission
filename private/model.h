@@ -15,12 +15,12 @@
 // === Class
 // ============================================================================ //
 
-// This defines the mission item. It represents one element of the mission tree.
+// This defines the mission item. It represents one item of the mission tree.
 // Each one holds a reference to their parent and to their children. The parent
 // reference is weak so that it isn't responsible for deleting it. The children
-// reference is strong so that it is responsible for deleting them.
-// It holds data '_data', these data are are displayed in the tree view. The
-// backend is a responsible of managing the protobuf underlying data.
+// reference is strong so that it is responsible for deleting them. It holds
+// data '_data', these data are displayed in the tree view.
+// The backend is responsible of managing the protobuf underlying data.
 class MissionItem
 {
   public:
@@ -37,8 +37,9 @@ class MissionItem
     int columnCount() const { return _data.count(); }
     QVariant data(int column) const;
     int row() const;
+
     MissionItem *parent() { return _parent; }
-    MissionBackend *backend() { return &_backend; }
+    MissionBackend &backend() { return _backend; }
 
   private:
     QVector<QVariant> _data;
@@ -46,6 +47,7 @@ class MissionItem
     MissionBackend _backend;
     QVector<MissionItem *> _childs;
 };
+
 
 // This defines the mission model. The mission model is represented as a tree, each
 // element of the tree (item) is linked to the root item in either parent or child
@@ -70,26 +72,28 @@ class MissionModel : public QAbstractItemModel
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QModelIndex index(MissionItem *item, int column) const;
-    MissionItem *item(const QModelIndex &index) const;
     template <class T>
     void insertRow(int row, const QModelIndex &parent, T *protobuf = nullptr);
     void removeRow(int row, const QModelIndex &parent);
+    MissionItem *item(const QModelIndex &index) const;
 
   private:
+    QModelIndex index(MissionItem *item, int column) const;
     MissionItem *_root;
 };
 
-// This inserts an item into the model specified by the row and the parent.
+// Create then inserts an item specified by the given row and parent index
+// When the parent index isn't valid it means that we try inserting top-level
+// item so we set the parent item to the root item.
 template <class T>
 void MissionModel::insertRow(int row, const QModelIndex &parent, T *protobuf)
 {
-    auto *parent_ = parent.isValid() ? static_cast<MissionItem *>(parent.internalPointer()) : _root;
+    auto *parent_item = parent.isValid() ? static_cast<MissionItem *>(parent.internalPointer()) : _root;
 
     beginInsertRows(parent, row, row + 1);
-    parent_->insertChild(row, new MissionItem({QString::fromStdString(protobuf->GetDescriptor()->name()),
-                                               QString::fromStdString(protobuf->name())},
-                                              protobuf, parent_));
+    parent_item->insertChild(row, new MissionItem({QString::fromStdString(protobuf->GetDescriptor()->name()),
+                                                   QString::fromStdString(protobuf->name())},
+                                                  protobuf, parent_item));
     endInsertRows();
 }
 

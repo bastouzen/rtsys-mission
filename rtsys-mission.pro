@@ -8,7 +8,7 @@ SOURCES += protobuf/mission.pb.cc
 LIBS += -lprotobuf
 
 # Model
-HEADERS += private/model.h private/backend.h
+HEADERS += private/model.h private/backend.h private/model_misc.h
 SOURCES += private/model.cpp private/backend.cpp
 
 

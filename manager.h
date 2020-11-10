@@ -23,13 +23,14 @@ class MissionManager : public QObject
     MissionModel *model() { return &_model; }
     void loadMission(pb::mission::Mission *mission);
 
+    void remove(const QModelIndex &index);
+    void addPoint(const QModelIndex &parent);
+    void addRail(const QModelIndex &parent);
+
+  private:
+    pb::mission::Mission _mission;
     void newMission();
     void clearMission();
-    void addPoint(const QModelIndex &parent);
-    void remove(const QModelIndex &index);
-
-    pb::mission::Mission _mission;
-  private:
     MissionModel _model;
 };
 
