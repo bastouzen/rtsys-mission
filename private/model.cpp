@@ -79,10 +79,10 @@ MissionModel::~MissionModel()
     delete _root;
 }
 
-// Returns the number of columns for the children of the given parent index.
-int MissionModel::columnCount(const QModelIndex &parent) const
+// Returns the item flags for the given index.
+Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
 {
-    return parent.isValid() ? CastToItem(parent)->columnCount() : _root->columnCount();
+    return index.isValid() ? QAbstractItemModel::flags(index) : Qt::NoItemFlags;
 }
 
 // Returns the data stored under the given role for the specified index.
@@ -105,12 +105,6 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-// Returns the item flags for the given index.
-Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
-{
-    return index.isValid() ? QAbstractItemModel::flags(index) : Qt::NoItemFlags;
-}
-
 // Returns the data for the given role and section in the header with the specified orientation.
 QVariant MissionModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -118,6 +112,20 @@ QVariant MissionModel::headerData(int section, Qt::Orientation orientation, int 
         return _root->data(section);
     }
     return QVariant();
+}
+
+// Returns the number of rows under the given parent index. When the parent
+// index is valid it means that rowCount is returning the number of children
+// of parent index.
+int MissionModel::rowCount(const QModelIndex &parent) const
+{
+    return (parent.isValid() ? CastToItem(parent) : _root)->childCount();
+}
+
+// Returns the number of columns for the children of the given parent index.
+int MissionModel::columnCount(const QModelIndex &parent) const
+{
+    return parent.isValid() ? CastToItem(parent)->columnCount() : _root->columnCount();
 }
 
 // Creates then returns the index specified by the given row, column and parent index.
@@ -155,14 +163,6 @@ QModelIndex MissionModel::parent(const QModelIndex &child) const
         return index(CastToItem(child)->parent(), 0);
     }
     return QModelIndex();
-}
-
-// Returns the number of rows under the given parent index. When the parent
-// index is valid it means that rowCount is returning the number of children
-// of parent index.
-int MissionModel::rowCount(const QModelIndex &parent) const
-{
-    return (parent.isValid() ? CastToItem(parent) : _root)->childCount();
 }
 
 // Remove the index specified by the given row and parent index. When the
