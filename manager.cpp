@@ -58,39 +58,26 @@ void MissionManager::remove(const QModelIndex &index)
 // valid and if the "addPoint" action is enabled for the specified parent index.
 void MissionManager::addPoint(const QModelIndex &parent)
 {
-    if (!parent.isValid()) return;
-
-    const auto &parent_backend = _model.item(parent)->backend();
-    if (parent_backend.hasEnableAction(MissionBackend::Action::kAddPoint)) {      
-        const auto &row = _model.rowCount(parent);
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(_model.item(parent)->backend().addPoint());
-        // protobuf->set_name(QString("My Point %1").arg(row).toStdString());
-        //_model.insertRow<pb::mission::Mission::Element::Point>(row, parent, protobuf);
-        qWarning() << "MissionManager" << __func__ << "adding point succeed";
-
-
-    } else {
-        qWarning() << "MissionManager" << __func__ << "adding point fail because action is not enabled";
-    }
+    _model.addPoint(parent);
 }
 
 // Adds a rail under the specified parent index. This check if the parent is
 // valid and if the "addRail" action is enabled for the specified parent index.
 void MissionManager::addRail(const QModelIndex &parent)
 {
-    if (!parent.isValid()) return;
+    //    if (!parent.isValid()) return;
 
-    const auto &parent_backend = _model.item(parent)->backend();
-    if (parent_backend.hasEnableAction(MissionBackend::Action::kAddRail)) {
-        const auto &row = _model.rowCount(parent);
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Rail *>(_model.item(parent)->backend().addRail());
-        protobuf->set_name(QString("My Rail %1").arg(row).toStdString());
-        protobuf->mutable_p0()->set_name("P1");
-        protobuf->mutable_p1()->set_name("P2");
-        misc::appendRail(protobuf, _model.item(parent));
-    } else {
-        qWarning() << "MissionManager" << __func__ << "adding rail fail because action is not enabled";
-    }
+    //    const auto &parent_backend = _model.item(parent)->backend();
+    //    if (parent_backend.hasEnableAction(MissionBackend::Action::kAddRail)) {
+    //        const auto &row = _model.rowCount(parent);
+    //        auto *protobuf = static_cast<pb::mission::Mission::Element::Rail
+    //        *>(_model.item(parent)->backend().addRail()); protobuf->set_name(QString("My Rail
+    //        %1").arg(row).toStdString()); protobuf->mutable_p0()->set_name("P1");
+    //        protobuf->mutable_p1()->set_name("P2");
+    //        misc::appendRail(protobuf, _model.item(parent));
+    //    } else {
+    //        qWarning() << "MissionManager" << __func__ << "adding rail fail because action is not enabled";
+    //    }
 }
 
 void MissionManager::loadMission(pb::mission::Mission *mission)
@@ -98,7 +85,7 @@ void MissionManager::loadMission(pb::mission::Mission *mission)
     auto appendItem = [&](auto *msg, MissionItem *parent) {
         auto *item = new MissionItem(
             {QString::fromStdString(msg->GetDescriptor()->name()), QString::fromStdString(msg->name())}, msg, parent);
-        parent->appendChild(item);
+        // parent->appendChild(item);
         return item;
     };
 

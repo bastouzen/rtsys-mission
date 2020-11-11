@@ -28,7 +28,8 @@ class MissionItem
                          MissionItem *parent = nullptr);
     ~MissionItem();
 
-    void appendChild(MissionItem *child) { _childs.append(child); }
+    // void appendChild(MissionItem *child);
+    void addPoint();
     void insertChild(int row, MissionItem *child) { _childs.insert(row, child); }
     void removeChild(int row);
     MissionItem *child(int row);
@@ -47,7 +48,6 @@ class MissionItem
     MissionBackend _backend;
     QVector<MissionItem *> _childs;
 };
-
 
 // This defines the mission model. The mission model is represented as a tree, each
 // element of the tree (item) is linked to the root item in either parent or child
@@ -72,19 +72,29 @@ class MissionModel : public QAbstractItemModel
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 
-    //setData()
+    // setData()
 
     template <class T>
     void insertRow(int row, const QModelIndex &parent, T *protobuf = nullptr);
     void removeRow(int row, const QModelIndex &parent);
     MissionItem *item(const QModelIndex &index) const;
 
+    // Provide shortcut for standard operation
+    void addPoint(const QModelIndex &parent)
+    {
+        auto *parent_item = parent.isValid() ? static_cast<MissionItem *>(parent.internalPointer()) : _root;
+
+        beginInsertRows(parent, parent.row(), parent.row() + 1);
+        parent_item->addPoint();
+        endInsertRows();
+    };
+
   private:
     QModelIndex index(MissionItem *item, int column) const;
     MissionItem *_root;
 };
 
-// Create then inserts an item specified by the given row and parent index
+// Creates then inserts an item specified by the given row and parent index.
 // When the parent index isn't valid it means that we try inserting top-level
 // item so we set the parent item to the root item.
 template <class T>

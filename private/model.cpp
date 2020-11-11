@@ -26,6 +26,22 @@ MissionItem::~MissionItem()
     qDeleteAll(_childs);
 }
 
+// Adds a point under the specified parent index. This check if the parent is
+// valid and if the "addPoint" action is enabled for the specified parent index.
+void MissionItem::addPoint()
+{
+    if (_backend.hasEnableAction(MissionBackend::Action::kAddPoint)) {
+        auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(_backend.addPoint());
+        _childs.append(new MissionItem(
+            {QString::fromStdString(protobuf->GetDescriptor()->name()), QString::fromStdString(protobuf->name())},
+            protobuf, this));
+        qWarning() << "MissionItem" << __func__ << "adding point succeed";
+
+    } else {
+        qWarning() << "MissionItem" << __func__ << "adding point fail because action is not enabled";
+    }
+}
+
 // Removes the child specified by the given row. This also removes the
 // underlying protobuf data through the backend.
 void MissionItem::removeChild(int row)
@@ -141,6 +157,15 @@ QModelIndex MissionModel::index(int row, int column, const QModelIndex &parent) 
     return QModelIndex();
 }
 
+// Creates then returns the parent index of the child index.
+QModelIndex MissionModel::parent(const QModelIndex &child) const
+{
+    if (child.isValid()) {
+        return index(CastToItem(child)->parent(), 0);
+    }
+    return QModelIndex();
+}
+
 // Creates then returns the index specified by the given item and column.
 QModelIndex MissionModel::index(MissionItem *item, int column) const
 {
@@ -154,15 +179,6 @@ QModelIndex MissionModel::index(MissionItem *item, int column) const
 MissionItem *MissionModel::item(const QModelIndex &index) const
 {
     return index.isValid() ? CastToItem(index) : nullptr;
-}
-
-// Creates then returns the parent index of the child index.
-QModelIndex MissionModel::parent(const QModelIndex &child) const
-{
-    if (child.isValid()) {
-        return index(CastToItem(child)->parent(), 0);
-    }
-    return QModelIndex();
 }
 
 // Remove the index specified by the given row and parent index. When the
