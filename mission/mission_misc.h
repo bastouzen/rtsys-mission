@@ -5,7 +5,7 @@
 // === Include
 // ============================================================================ //
 
-#include "private/model.h"
+#include "mission_model.h"
 #include "protobuf/mission.pb.h"
 
 // ===

@@ -1,7 +1,7 @@
 #include "ui_tree.h"
 
-//#include "private/backend.h"
-#include "private/model.h"
+#include "mission/mission_manager.h"
+#include "mission/mission_model_item.h"
 #include "widget/tree.h"
 
 #include <QDebug>
@@ -24,7 +24,7 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MissionTreeWidget::createCustomContexMenu);
 
     // connect(ui->actionSelectAll, &QAction::triggered, ui->treeView, &QTreeView::selectAll);
-    connect(ui->treeView, &QTreeView::doubleClicked, this, [this](const QModelIndex &index) {
+    connect(ui->treeView, &QTreeView::doubleClicked, this, [](const QModelIndex &index) {
         qDebug() << index;
         // qDebug() << _manager._mission.DebugString().data();
     });

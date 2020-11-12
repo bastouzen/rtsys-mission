@@ -2,9 +2,8 @@
 // === Include
 // ============================================================================ //
 
-#include "private/backend.h"
-#include "private/model.h"
-#include "private/model_misc.h"
+#include "mission/mission_model_backend.h"
+#include "mission/mission_model_item.h"
 #include "protobuf/mission.pb.h"
 
 #include <QDebug>

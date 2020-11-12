@@ -1,9 +1,10 @@
 #ifndef MISSION_TREE_WIDGET_H
 #define MISSION_TREE_WIDGET_H
 
-#include "manager.h"
-
+#include <QModelIndex>
 #include <QWidget>
+
+class MissionManager;
 
 namespace Ui {
 class MissionTreeWidget;

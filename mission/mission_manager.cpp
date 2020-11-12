@@ -2,8 +2,8 @@
 // === Include
 // ============================================================================ //
 
-#include "manager.h"
-#include "private/model_misc.h"
+#include "mission/mission_manager.h"
+#include "mission/mission_misc.h"
 #include <QDebug>
 
 // ===
