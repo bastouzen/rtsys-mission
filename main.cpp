@@ -2,7 +2,7 @@
 // === Include
 // ============================================================================ //
 
-#include "mission/mission_manager.h"
+#include "mission/manager.h"
 #include "widget/tree.h"
 
 #include "protobuf/mission.pb.h"

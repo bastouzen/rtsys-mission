@@ -1,5 +1,5 @@
-#ifndef RTSYS_MISSION_MODEL_BACKEND_H
-#define RTSYS_MISSION_MODEL_BACKEND_H
+#ifndef RTSYS_MISSION_BACKEND_H
+#define RTSYS_MISSION_BACKEND_H
 
 // ===
 // === Include
@@ -60,4 +60,4 @@ class MissionBackend
     MissionItem *_item;
 };
 
-#endif // RTSYS_MISSION_MODEL_BACKEND_H
+#endif // RTSYS_MISSION_BACKEND_H

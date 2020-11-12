@@ -2,8 +2,8 @@
 // === Include
 // ============================================================================ //
 
-#include "mission/mission_model.h"
-#include "mission/mission_model_item.h"
+#include "mission/model.h"
+#include "mission/item.h"
 #include "protobuf/mission.pb.h"
 
 #include <QDebug>

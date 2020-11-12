@@ -1,11 +1,11 @@
-#ifndef RTSYS_MISSION_MODEL_ITEM_H
-#define RTSYS_MISSION_MODEL_ITEM_H
+#ifndef RTSYS_MISSION_ITEM_H
+#define RTSYS_MISSION_ITEM_H
 
 // ===
 // === Include
 // ============================================================================ //
 
-#include "mission/mission_model_backend.h"
+#include "mission/backend.h"
 
 #include <QAbstractItemModel>
 #include <QModelIndex>
@@ -50,12 +50,4 @@ class MissionItem
     QVector<MissionItem *> _childs;
 };
 
-template <class T>
-MissionItem *create(T *protobuf, MissionItem *parent)
-{
-    return new MissionItem(
-        {QString::fromStdString(protobuf->GetDescriptor()->name()), QString::fromStdString(protobuf->name())}, protobuf,
-        parent);
-}
-
-#endif // RTSYS_MISSION_MODEL_ITEM_H
+#endif // RTSYS_MISSION_ITEM_H

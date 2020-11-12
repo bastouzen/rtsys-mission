@@ -1,7 +1,7 @@
 #include "ui_tree.h"
 
-#include "mission/mission_manager.h"
-#include "mission/mission_model_item.h"
+#include "mission/manager.h"
+#include "mission/item.h"
 #include "widget/tree.h"
 
 #include <QDebug>
