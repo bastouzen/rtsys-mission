@@ -17,12 +17,12 @@ class MissionTreeWidget : public QWidget
     explicit MissionTreeWidget(QWidget *parent = nullptr);
     ~MissionTreeWidget();
 
-    void loadMission(pb::mission::Mission *mission);
+    void setManager(MissionManager *manager);
 
   private:
     void createCustomContexMenu(const QPoint &position);
     Ui::MissionTreeWidget *ui;
-    MissionManager _manager;
+    MissionManager *_manager;
     QModelIndex _index;
 };
 

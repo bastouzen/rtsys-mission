@@ -90,10 +90,14 @@ int main(int argc, char *argv[])
     element->mutable_rail()->mutable_p0()->set_name("J5A");
     element->mutable_rail()->mutable_p1()->set_name("J5B");
 
+    MissionManager manager;
+
     MissionTreeWidget widget;
     widget.setWindowTitle(QObject::tr("RTSys Mission Tree Widget"));
+    widget.setManager(&manager);
     widget.show();
-    //widget.loadMission(&mission);
+
+    manager.loadMission(mission);
 
     return app.exec();
 }

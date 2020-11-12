@@ -10,9 +10,11 @@
 MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MissionTreeWidget)
+    , _manager(nullptr)
 {
     ui->setupUi(this);
-    ui->treeView->setModel(_manager.model());
+    // ui->treeView->setModel(_manager.model());
+
     // ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->treeView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     // ui->treeView->setSelectionModel()
@@ -29,9 +31,6 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
 
     // connect(ui->actionNewMission, &QAction::triggered, &manager, &MissionManager::addMission);
     // connect(ui->actionNewMission, &QAction::triggered, this, [&]() { _manager.addMission(_index); });
-    connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager.remove(_index); });
-    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager.addPoint(_index); });
-    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager.addRail(_index); });
 }
 
 MissionTreeWidget::~MissionTreeWidget()
@@ -39,17 +38,26 @@ MissionTreeWidget::~MissionTreeWidget()
     delete ui;
 }
 
-void MissionTreeWidget::loadMission(pb::mission::Mission *mission)
+void MissionTreeWidget::setManager(MissionManager *manager)
 {
-    _manager.loadMission(mission);
-    ui->treeView->expandAll();
-    ui->treeView->resizeColumnToContents(0);
+    _manager = manager;
+    ui->treeView->setModel(_manager->model());
+    //    connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager->remove(_index); });
+    //    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addPoint(_index); });
+    //    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addRail(_index); });
 }
+
+// void MissionTreeWidget::loadMission(const pb::mission::Mission &mission)
+//{
+//    _manager.loadMission(mission);
+//    ui->treeView->expandAll();
+//    ui->treeView->resizeColumnToContents(0);
+//}
 
 void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
 {
     _index = ui->treeView->indexAt(position);
-    auto *item = _manager.model()->item(_index);
+    auto *item = _manager->model()->item(_index);
     if (item) {
         auto &backend = item->backend();
         const auto &mask_action = backend.maskEnableAction();
