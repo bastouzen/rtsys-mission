@@ -7,7 +7,6 @@
 #include "protobuf/mission.pb.h"
 
 #include <QDebug>
-#include <QIcon>
 
 #define CastToItem(index) static_cast<MissionItem *>(index.internalPointer())
 
@@ -72,7 +71,7 @@ int MissionModel::rowCount(const QModelIndex &parent) const
 // Returns the number of columns for the children of the given parent index.
 int MissionModel::columnCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? CastToItem(parent)->columnCount() : _root->columnCount();
+    return (parent.isValid() ? CastToItem(parent) : _root)->columnCount();
 }
 
 // Creates then returns the index specified by the given row, column and parent index.
@@ -112,28 +111,24 @@ MissionItem *MissionModel::item(const QModelIndex &index) const
     return index.isValid() ? CastToItem(index) : nullptr;
 }
 
-// Creates then inserts an item specified by the given row and parent index.
-// When the parent index isn't valid it means that we try inserting top-level
-// item so we set the parent item to the root item.
+// Appends an item to the specified parent index children. When the parent index
+// isn't valid it means that we try inserting top-level item so we set the
+// the parent item to the root item.
 void MissionModel::appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf)
 {
-    auto *parent_item = parent.isValid() ? static_cast<MissionItem *>(parent.internalPointer()) : _root;
-
     beginInsertRows(parent, parent.row(), parent.row() + 1);
-    parent_item->appendRow(protobuf);
+    (parent.isValid() ? CastToItem(parent) : _root)->appendRow(protobuf);
     endInsertRows();
 }
 
-//// Remove the index specified by the given row and parent index. When the
-//// parent index isn't valid it means that we try removing top-level item so
-//// we set the parent item to the root item.
-// void MissionModel::removeRow(int row, const QModelIndex &parent)
-//{
-//    auto *parent_item = parent.isValid() ? CastToItem(parent) : _root;
-
-//    if (rowCount(parent) && rowCount(parent) >= row) {
-//        beginRemoveRows(parent, parent.row(), parent.row() + 1);
-//        // parent_item->removeChild(row);
-//        endRemoveRows();
-//    }
-//}
+// Removes the item specified by the given row and parent index. When the
+// parent index isn't valid it means that we try removing top-level item so
+// we set the parent item to the root item.
+void MissionModel::removeRow(int row, const QModelIndex &parent)
+{
+    if (rowCount(parent) && rowCount(parent) >= row) {
+        beginRemoveRows(parent, row, row + 1);
+        (parent.isValid() ? CastToItem(parent) : _root)->removeRow(row);
+        endRemoveRows();
+    }
+}

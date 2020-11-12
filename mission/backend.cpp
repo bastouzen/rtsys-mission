@@ -28,19 +28,6 @@ const auto ComponentTypePoint = pb::mission::Mission::Element::Point::descriptor
 const auto ComponentTypeRail = pb::mission::Mission::Element::Rail::descriptor() -> name();
 const auto ComponentTypeSegment = pb::mission::Mission::Element::Segment::descriptor() -> name();
 
-#define AddElement(name)                                                                                               \
-    if (component_type == kMission)                                                                                    \
-        element =                                                                                                      \
-            static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_##name();     \
-    if (component_type == kCollection)                                                                                 \
-        element = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_##name();        \
-                                                                                                                       \
-    if (!element) {                                                                                                    \
-        qWarning() << "MissionBackend" << __func__ << "adding" << #name << "not implemented for component type"        \
-                   << component_type;                                                                                  \
-        return element;                                                                                                \
-    }
-
 // ===
 // === Function
 // ============================================================================ //
@@ -83,6 +70,18 @@ QVector<QVariant> MissionBackend::data(google::protobuf::Message *protobuf)
         return {QString::fromStdString(name),
                 QString::fromStdString(static_cast<pb::mission::Mission::Element::Segment *>(protobuf)->name())};
     return {QVariant(), QVariant()};
+}
+
+// Remove an index of a google protobuf repeated field. As the current repeated
+// field doesn't provide any removeAt function we use the SwapElements and the
+// RemoveLast function.
+template <class T>
+void RepeatedFieldRemoveAt(const int row, google::protobuf::RepeatedPtrField<T> *repeated)
+{
+    for (int i = row; i < repeated->size() - 1; i++) {
+        repeated->SwapElements(i, i + 1);
+    }
+    repeated->RemoveLast();
 }
 
 // ===
@@ -139,9 +138,8 @@ MissionBackend::Component MissionBackend::parentComponentType() const
     return _item->parent()->backend().componentType();
 }
 
-// Returns the collection type of the underlying protobuf message.
-// The collection type is figured out by looking at the item children
-// component type.
+// Returns the collection type of the underlying protobuf message. The collection
+// type is figured out by looking at the item children component type.
 //  - A Route is a collection of Point.
 //  - A Family is a collection of Rail.
 MissionBackend::Collection MissionBackend::collectionType() const
@@ -162,62 +160,76 @@ MissionBackend::Collection MissionBackend::collectionType() const
 
 // Returns the mask of the enabled action depending on the component type of
 // the underlying protobuf message.
-unsigned int MissionBackend::maskEnableAction() const
+unsigned int MissionBackend::maskAction() const
 {
     const auto &component_type = componentType();
+
     if (component_type == MissionBackend::kMission) {
-        // return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment) | (1 << kAddCollection);
-        return (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment) | (1 << kAddCollection);
+        return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment) | (1 << kAddCollection);
+
     } else if (component_type == MissionBackend::kCollection) {
         return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment);
+
     } else if (component_type == MissionBackend::kRail || component_type == MissionBackend::kSegment) {
         return (1 << kDelete);
+
     } else if (component_type == MissionBackend::kPoint) {
         const auto &parent_component_type = parentComponentType();
         if (parent_component_type != MissionBackend::kRail && parent_component_type != MissionBackend::kSegment) {
             return (1 << kDelete);
         }
     }
+
     return 0;
 }
 
-//// Remove the component type of the underlying protobuf message.
-//// Depending on the component type, we remove the row-element of the component
-//// type list. This is done by first swapping the elements and then removing
-//// the last element of the component type list.
-// void MissionBackend::remove(const int row)
-//{
-//    const auto &component_type = componentType();
+// Remove the children underlying protobuf message specified by the row.
+void MissionBackend::remove(const int row)
+{
+    const auto &component_type = componentType();
 
-//    if (component_type == MissionBackend::kMission) {
-//        // Remove the row-element of the components repeated field
-//        auto *mission = static_cast<pb::mission::Mission *>(_protobuf);
-//        for (int i = row; i < mission->components_size() - 1; i++) {
-//            mission->mutable_components()->SwapElements(i, i + 1);
-//        }
-//        mission->mutable_components()->RemoveLast();
+    if (component_type == MissionBackend::kMission) {
+        RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
 
-//    } else if (component_type == MissionBackend::kCollection) {
-//        // Remove the row-element of the collection repeated field
-//        auto *collection = static_cast<pb::mission::Mission::Collection *>(_protobuf);
-//        for (int i = row; i < collection->elements_size() - 1; i++) {
-//            collection->mutable_elements()->SwapElements(i, i + 1);
-//        }
-//        collection->mutable_elements()->RemoveLast();
+    } else if (component_type == MissionBackend::kCollection) {
+        RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
 
-//    } else if (component_type == MissionBackend::kNoComponent) {
-//        // In this case we want to remove a top-level item, it means that the
-//        // current backend is the one for the root item. In order to remove
-//        // the row-element we first retrieve the child item specified by the row
-//        // and the we clear the underlying protobuf message.
-//        if (_item->childCount() >= row) {
-//            //_item->child(row)->backend().clear();
-//        }
+    } else if (component_type == MissionBackend::kNoComponent) {
+        // In this case we want to remove a top-level item, it means that the
+        // current backend is the one for the root item. In order to remove the
+        // row-element we first retrieve the child item specified by the row
+        // and the we clear the underlying protobuf message.
+        if (_item->childCount() >= row) {
+            _item->child(row)->backend().clear();
+        }
 
-//    } else {
-//        qWarning() << "MissionBackend " << __func__ << "removing operation not implemented";
-//    }
-//}
+    } else {
+        qWarning() << "MissionBackend " << __func__ << "removing operation not implemented";
+    }
+}
+
+// Clears the underlying protobuf message.
+void MissionBackend::clear()
+{
+    if (_protobuf) _protobuf->Clear();
+}
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 //// Adds a point protobuf message under the underlying protobuf message.
 //// Depending on the component type, the point is added either into the
@@ -282,3 +294,16 @@ unsigned int MissionBackend::maskEnableAction() const
 //    collection->set_name(QString("Collection %1").arg(_item->childCount()).toStdString());
 //    return collection;
 //}
+
+//#define AddElement(name)                                                                                               \
+//    if (component_type == kMission)                                                                                    \
+//        element =                                                                                                      \
+//            static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_##name();     \
+//    if (component_type == kCollection)                                                                                 \
+//        element = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_##name();        \
+//                                                                                                                       \
+//    if (!element) {                                                                                                    \
+//        qWarning() << "MissionBackend" << __func__ << "adding" << #name << "not implemented for component type"        \
+//                   << component_type;                                                                                  \
+//        return element;                                                                                                \
+//    }

@@ -25,19 +25,16 @@ class MissionManager : public QObject
     // Standard interface
     void loadMission(const pb::mission::Mission &mission);
     void newMission();
-    void removeMission() {}
+    void removeMission();
 
     // Interface Tree view
-    void remove(const QModelIndex &index) {}
-    void addPoint(const QModelIndex &parent) {}
-    void addRail(const QModelIndex &parent) {}
+    void removeIndex(const QModelIndex &index);
+    void addPointIndex(const QModelIndex &parent);
+    // void addRail(const QModelIndex &parent) {}
 
   private:
     pb::mission::Mission _mission;
     MissionModel _model;
-
-    //    void newMission();
-    //    void clearMission();
 };
 
 #endif // RTSYS_MISSION_MANAGER_H

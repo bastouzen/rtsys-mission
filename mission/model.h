@@ -37,8 +37,6 @@ class MissionModel : public QAbstractItemModel
     explicit MissionModel(QObject *parent = nullptr);
     ~MissionModel();
 
-    MissionItem *root() { return _root; }
-
     // These methods override the abstraction item model.
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -47,14 +45,15 @@ class MissionModel : public QAbstractItemModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
-
     // setData()
-    void appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf = nullptr);
-    // void removeRow(int row, const QModelIndex &parent);
+
+    MissionItem *root() { return _root; }
     MissionItem *item(const QModelIndex &index) const;
+    QModelIndex index(MissionItem *item, int column = 0) const;
+    void appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf = nullptr);
+    void removeRow(int row, const QModelIndex &parent);
 
   private:
-    QModelIndex index(MissionItem *item, int column) const;
     MissionItem *_root;
 };
 

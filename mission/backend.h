@@ -40,24 +40,23 @@ class MissionBackend
     ~MissionBackend();
 
     QVariant icon() const;
-    unsigned int maskEnableAction() const;
-    bool hasEnableAction(const Action action) const { return hasEnableAction(action, maskEnableAction()); }
-    bool hasEnableAction(const Action action, const unsigned int mask) const { return (mask >> action) & 1; }
-
-    //    google::protobuf::Message *addPoint();
-    //    google::protobuf::Message *addRail();
-    //    google::protobuf::Message *addSegment();
-    //    google::protobuf::Message *addCollection();
-
-    //    void remove(const int row);
+    unsigned int maskAction() const;
+    bool hasAction(const Action action) const { return hasAction(action, maskAction()); }
+    bool hasAction(const Action action, const unsigned int mask) const { return (mask >> action) & 1; }
+    void remove(const int row);
+    void clear();
 
   private:
-    Collection collectionType() const;
     Component parentComponentType() const;
     Component componentType() const;
-
+    Collection collectionType() const;
     google::protobuf::Message *_protobuf;
     MissionItem *_item;
 };
+
+//    google::protobuf::Message *addPoint();
+//    google::protobuf::Message *addRail();
+//    google::protobuf::Message *addSegment();
+//    google::protobuf::Message *addCollection();
 
 #endif // RTSYS_MISSION_BACKEND_H

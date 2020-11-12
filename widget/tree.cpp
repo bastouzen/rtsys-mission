@@ -1,7 +1,7 @@
 #include "ui_tree.h"
 
-#include "mission/manager.h"
 #include "mission/item.h"
+#include "mission/manager.h"
 #include "widget/tree.h"
 
 #include <QDebug>
@@ -29,7 +29,6 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
         // qDebug() << _manager._mission.DebugString().data();
     });
 
-    // connect(ui->actionNewMission, &QAction::triggered, &manager, &MissionManager::addMission);
     // connect(ui->actionNewMission, &QAction::triggered, this, [&]() { _manager.addMission(_index); });
 }
 
@@ -42,8 +41,9 @@ void MissionTreeWidget::setManager(MissionManager *manager)
 {
     _manager = manager;
     ui->treeView->setModel(_manager->model());
-    //    connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager->remove(_index); });
-    //    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addPoint(_index); });
+    connect(ui->actionNewMission, &QAction::triggered, _manager, &MissionManager::newMission);
+    connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager->removeIndex(_index); });
+    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addPointIndex(_index); });
     //    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addRail(_index); });
 }
 
@@ -57,24 +57,35 @@ void MissionTreeWidget::setManager(MissionManager *manager)
 void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
 {
     _index = ui->treeView->indexAt(position);
+
+    qDebug() << "BUG" << _index;
+
     auto *item = _manager->model()->item(_index);
+    qDebug() << "BUG" << item;
     if (item) {
         auto &backend = item->backend();
-        const auto &mask_action = backend.maskEnableAction();
+        const auto &mask_action = backend.maskAction();
         if (mask_action) {
             QMenu menu(this);
-            if (backend.hasEnableAction(MissionBackend::Action::kDelete, mask_action)) menu.addAction(ui->actionDelete);
+            if (backend.hasAction(MissionBackend::Action::kDelete, mask_action)) menu.addAction(ui->actionDelete);
             if (mask_action > 1) {
                 QMenu *add = menu.addMenu(tr("Add"));
-                if (backend.hasEnableAction(MissionBackend::Action::kAddPoint, mask_action))
+                if (backend.hasAction(MissionBackend::Action::kAddPoint, mask_action))
                     add->addAction(ui->actionAddPoint);
-                if (backend.hasEnableAction(MissionBackend::Action::kAddRail, mask_action))
-                    add->addAction(ui->actionAddRail);
-                if (backend.hasEnableAction(MissionBackend::Action::kAddSegment, mask_action))
+                if (backend.hasAction(MissionBackend::Action::kAddRail, mask_action)) add->addAction(ui->actionAddRail);
+                if (backend.hasAction(MissionBackend::Action::kAddSegment, mask_action))
                     add->addAction(ui->actionAddSegment);
-                if (backend.hasEnableAction(MissionBackend::Action::kAddCollection, mask_action))
+                if (backend.hasAction(MissionBackend::Action::kAddCollection, mask_action))
                     add->addAction(ui->actionAddCollection);
             }
+            menu.exec(ui->treeView->viewport()->mapToGlobal(position));
+        }
+    } else {
+        // Add new mission if the root item has no child.
+        if (!_manager->model()->root()->childCount()) {
+            QMenu menu(this);
+            QMenu *add = menu.addMenu(tr("Add"));
+            add->addAction(ui->actionNewMission);
             menu.exec(ui->treeView->viewport()->mapToGlobal(position));
         }
     }

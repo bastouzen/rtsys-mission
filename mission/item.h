@@ -29,7 +29,7 @@ class MissionItem
     ~MissionItem();
 
     void appendRow(google::protobuf::Message *protobuf);
-    // void removeChild(int row);
+    void removeRow(int row);
 
     // Getters and Setters
     void appendChild(MissionItem *child) { _childs.append(child); }
