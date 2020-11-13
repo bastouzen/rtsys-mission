@@ -1,3 +1,10 @@
+/*
+ * This defines the mission model. The mission model is represented as a tree, each
+ * element of the tree (item) is linked to the root item in either parent or child
+ * relationship. The items of the tree are instance of 'ModelItem'. In other words
+ *the mission model holds all its data through the root item.
+ */
+
 #ifndef RTSYS_MISSION_MODEL_H
 #define RTSYS_MISSION_MODEL_H
 
@@ -19,16 +26,12 @@ class Message;
 } // namespace protobuf
 } // namespace google
 
-class MissionItem;
+class ModelItem;
 
 // ===
 // === Class
 // ============================================================================ //
 
-// This defines the mission model. The mission model is represented as a tree, each
-// element of the tree (item) is linked to the root item in either parent or child
-// relationship. The items of the tree are instance of 'MissionItem'. In other words
-// the mission model holds all its data through the root item.
 class MissionModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -47,15 +50,15 @@ class MissionModel : public QAbstractItemModel
     QModelIndex parent(const QModelIndex &child) const override;
     // setData()
 
-    MissionItem *root() { return _root; }
-    MissionItem *item(const QModelIndex &index) const;
-    QModelIndex index(MissionItem *item, int column = 0) const;
+    ModelItem *root() { return _root; }
+    ModelItem *item(const QModelIndex &index) const;
+    QModelIndex index(ModelItem *item, int column = 0) const;
     void appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf = nullptr);
     void appendRow(const QModelIndex &parent, const int action);
     void removeRow(int row, const QModelIndex &parent);
 
   private:
-    MissionItem *_root;
+    ModelItem *_root;
 };
 
 #endif // RTSYS_MISSION_MODEL_H

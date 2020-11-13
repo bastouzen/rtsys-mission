@@ -8,7 +8,11 @@
 
 #include <QDebug>
 
-#define CastToItem(index) static_cast<MissionItem *>(index.internalPointer())
+// ===
+// === Define
+// ============================================================================ //
+
+#define CastToItem(index) static_cast<ModelItem *>(index.internalPointer())
 
 // ===
 // === Class
@@ -16,7 +20,7 @@
 
 MissionModel::MissionModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , _root(new MissionItem({tr("Component"), tr("Name")}))
+    , _root(new ModelItem({tr("Component"), tr("Name")}))
 {
 }
 
@@ -97,7 +101,7 @@ QModelIndex MissionModel::parent(const QModelIndex &child) const
 }
 
 // Creates then returns the index specified by the given item and column.
-QModelIndex MissionModel::index(MissionItem *item, int column) const
+QModelIndex MissionModel::index(ModelItem *item, int column) const
 {
     if (!item || (item == _root)) {
         return QModelIndex(); // the root has no valid index model.
@@ -106,14 +110,13 @@ QModelIndex MissionModel::index(MissionItem *item, int column) const
 }
 
 // Returns the item specified by the given index.
-MissionItem *MissionModel::item(const QModelIndex &index) const
+ModelItem *MissionModel::item(const QModelIndex &index) const
 {
     return index.isValid() ? CastToItem(index) : nullptr;
 }
 
-// Appends an item to the specified parent index children. When the parent index
-// isn't valid it means that we try inserting top-level item so we set the
-// the parent item to the root item.
+// Appends an item to the specified parent children for the specified underlying
+// protobug message.
 void MissionModel::appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf)
 {
     beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
@@ -121,17 +124,15 @@ void MissionModel::appendRow(const QModelIndex &parent, google::protobuf::Messag
     endInsertRows();
 }
 
+// Appends an item to the specified parent children for the specified action.
 void MissionModel::appendRow(const QModelIndex &parent, const int action)
 {
-
     beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
-    (parent.isValid() ? CastToItem(parent) : _root)->appendRow(static_cast<MissionBackend::Action>(action));
+    (parent.isValid() ? CastToItem(parent) : _root)->appendRow(static_cast<ModelBacken::Action>(action));
     endInsertRows();
 }
 
-// Removes the item specified by the given row and parent index. When the
-// parent index isn't valid it means that we try removing top-level item so
-// we set the parent item to the root item.
+// Removes the item specified by the given row and parent index.
 void MissionModel::removeRow(int row, const QModelIndex &parent)
 {
     if (rowCount(parent) && rowCount(parent) >= row) {

@@ -1,3 +1,9 @@
+/*
+ * This defines the model backend object. The backend is responsible of managing
+ * the underlying protobuf message. It provides some intefaces to the model for
+ * getting and setting part of the underlying protobuf message (Add, Remove, ...)
+ */
+
 #ifndef RTSYS_MISSION_MODEL_BACKEND_H
 #define RTSYS_MISSION_MODEL_BACKEND_H
 
@@ -17,42 +23,38 @@ class Message;
 } // namespace protobuf
 } // namespace google
 
-class MissionItem;
+class ModelItem;
 
 // ===
 // === Class
 // ============================================================================ //
 
-// This defines the backend of the mission.
-class MissionBackend
+class ModelBacken
 {
-
   public:
-    enum Component { kMission, kCollection, kPoint, kRail, kSegment, kNoComponent };
+    enum Component { kMission, kCollection, kElement, kPoint, kRail, kSegment, kNoComponent };
     enum Collection { kScenario, kRoute, kFamily };
     enum Action { kDelete, kAddCollection, kAddPoint, kAddRail, kAddSegment };
 
-    static QVector<QVariant> data(google::protobuf::Message *protobuf);
-    static Component componentType(google::protobuf::Message *protobuf);
+    static Component component(const google::protobuf::Message *protobuf);
+    static QVector<QVariant> data(const google::protobuf::Message *protobuf);
 
-  public:
-    explicit MissionBackend(google::protobuf::Message *protobuf = nullptr, MissionItem *item = nullptr);
-    ~MissionBackend();
+    explicit ModelBacken(google::protobuf::Message *protobuf = nullptr, ModelItem *item = nullptr);
 
     QVariant icon() const;
-    unsigned int maskAction() const;
-    bool hasAction(const Action action) const { return hasAction(action, maskAction()); }
-    bool hasAction(const Action action, const unsigned int mask) const { return (mask >> action) & 1; }
-    void remove(const int row);
+    unsigned int authorizedAction() const;
+    bool isActionAuthorized(const Action action) const { return isActionAuthorized(action, authorizedAction()); }
+    bool isActionAuthorized(const Action action, const unsigned int mask) const { return (mask >> action) & 1; }
+    void removeRow(const int row);
     void clear();
-    google::protobuf::Message *append(const Action action);
+    google::protobuf::Message *appendRow(const Action action);
 
   private:
-    Component parentComponentType() const;
-    Component componentType() const;
-    Collection collectionType() const;
+    Component parentComponent() const;
+    Component component() const;
+    Collection collection() const;
     google::protobuf::Message *_protobuf;
-    MissionItem *_item;
+    ModelItem *_item;
 };
 
 #endif // RTSYS_MISSION_MODEL_BACKEND_H

@@ -43,39 +43,33 @@ void MissionTreeWidget::setManager(MissionManager *manager)
     ui->treeView->setModel(_manager->model());
     connect(ui->actionNewMission, &QAction::triggered, _manager, &MissionManager::newMission);
     connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager->removeIndex(_index); });
+    connect(ui->actionAddCollection, &QAction::triggered, this, [&]() { _manager->addCollectionIndex(_index); });
     connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addPointIndex(_index); });
-    //    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addRail(_index); });
+    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addRailIndex(_index); });
+    connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addSegmentIndex(_index); });
 }
-
-// void MissionTreeWidget::loadMission(const pb::mission::Mission &mission)
-//{
-//    _manager.loadMission(mission);
-//    ui->treeView->expandAll();
-//    ui->treeView->resizeColumnToContents(0);
-//}
 
 void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
 {
     _index = ui->treeView->indexAt(position);
 
-    qDebug() << "BUG" << _index;
-
     auto *item = _manager->model()->item(_index);
-    qDebug() << "BUG" << item;
+
     if (item) {
         auto &backend = item->backend();
-        const auto &mask_action = backend.maskAction();
+        const auto &mask_action = backend.authorizedAction();
         if (mask_action) {
             QMenu menu(this);
-            if (backend.hasAction(MissionBackend::Action::kDelete, mask_action)) menu.addAction(ui->actionDelete);
+            if (backend.isActionAuthorized(ModelBacken::Action::kDelete, mask_action)) menu.addAction(ui->actionDelete);
             if (mask_action > 1) {
                 QMenu *add = menu.addMenu(tr("Add"));
-                if (backend.hasAction(MissionBackend::Action::kAddPoint, mask_action))
+                if (backend.isActionAuthorized(ModelBacken::Action::kAddPoint, mask_action))
                     add->addAction(ui->actionAddPoint);
-                if (backend.hasAction(MissionBackend::Action::kAddRail, mask_action)) add->addAction(ui->actionAddRail);
-                if (backend.hasAction(MissionBackend::Action::kAddSegment, mask_action))
+                if (backend.isActionAuthorized(ModelBacken::Action::kAddRail, mask_action))
+                    add->addAction(ui->actionAddRail);
+                if (backend.isActionAuthorized(ModelBacken::Action::kAddSegment, mask_action))
                     add->addAction(ui->actionAddSegment);
-                if (backend.hasAction(MissionBackend::Action::kAddCollection, mask_action))
+                if (backend.isActionAuthorized(ModelBacken::Action::kAddCollection, mask_action))
                     add->addAction(ui->actionAddCollection);
             }
             menu.exec(ui->treeView->viewport()->mapToGlobal(position));

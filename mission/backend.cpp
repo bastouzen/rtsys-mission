@@ -13,6 +13,8 @@
 // === Define
 // ============================================================================ //
 
+#define CLASSNAME "ModelBackend ::"
+
 const auto ResourceIconMission = QStringLiteral(":/resource/mission.svg");
 const auto ResourceIconCollection = QStringLiteral(":/resource/collection.svg");
 const auto ResourceIconRoute = QStringLiteral(":/resource/route.svg");
@@ -24,6 +26,7 @@ const auto ResourceIconRailPoint = QStringLiteral(":/resource/rail.png");
 
 const auto ComponentTypeMission = pb::mission::Mission::descriptor() -> name();
 const auto ComponentTypeCollection = pb::mission::Mission::Collection::descriptor() -> name();
+const auto ComponentTypeElement = pb::mission::Mission::Element::descriptor() -> name();
 const auto ComponentTypePoint = pb::mission::Mission::Element::Point::descriptor() -> name();
 const auto ComponentTypeRail = pb::mission::Mission::Element::Rail::descriptor() -> name();
 const auto ComponentTypeSegment = pb::mission::Mission::Element::Segment::descriptor() -> name();
@@ -32,44 +35,60 @@ const auto ComponentTypeSegment = pb::mission::Mission::Element::Segment::descri
 // === Function
 // ============================================================================ //
 
-// Returns the component type of the underlying protobuf message. The component
-// type is figured out by looking at the protobuf message descriptor and then
-// check for name matching.
-MissionBackend::Component MissionBackend::componentType(google::protobuf::Message *protobuf)
+// Returns the component identifier specified by the underlying protobuf message.
+ModelBacken::Component ModelBacken::component(const google::protobuf::Message *protobuf)
 {
     if (!protobuf) return Component::kNoComponent;
 
     const auto &name = protobuf->GetDescriptor()->name();
-    if (name == ComponentTypeMission) return Component::kMission;
-    if (name == ComponentTypeCollection) return Component::kCollection;
-    if (name == ComponentTypePoint) return Component::kPoint;
-    if (name == ComponentTypeRail) return Component::kRail;
-    if (name == ComponentTypeSegment) return Component::kSegment;
-    return Component::kNoComponent;
+
+    if (name == ComponentTypeMission) {
+        return Component::kMission;
+    } else if (name == ComponentTypeCollection) {
+        return Component::kCollection;
+    } else if (name == ComponentTypeElement) {
+        return Component::kElement;
+    } else if (name == ComponentTypePoint) {
+        return Component::kPoint;
+    } else if (name == ComponentTypeRail) {
+        return Component::kRail;
+    } else if (name == ComponentTypeSegment) {
+        return Component::kSegment;
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail getting component identifier, missing definition" << name.data();
+        return Component::kNoComponent;
+    }
 }
 
-// Returns the data extrated from the specified protobuf message.
-QVector<QVariant> MissionBackend::data(google::protobuf::Message *protobuf)
+// Returns the displayed data specified by the underlying protobuf message.
+QVector<QVariant> ModelBacken::data(const google::protobuf::Message *protobuf)
 {
-    if (!protobuf) return {QVariant(), QVariant()};
+    if (!protobuf) {
+        qWarning() << CLASSNAME << "[Warning] fail getting displayed data, null protobuf pointer";
+        return {QVariant(), QVariant()};
+    }
 
     const auto &name = protobuf->GetDescriptor()->name();
-    if (name == ComponentTypeMission)
+
+    if (name == ComponentTypeMission) {
         return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<pb::mission::Mission *>(protobuf)->name())};
-    if (name == ComponentTypeCollection)
+                QString::fromStdString(static_cast<const pb::mission::Mission *>(protobuf)->name())};
+    } else if (name == ComponentTypeCollection) {
         return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<pb::mission::Mission::Collection *>(protobuf)->name())};
-    if (name == ComponentTypePoint)
+                QString::fromStdString(static_cast<const pb::mission::Mission::Collection *>(protobuf)->name())};
+    } else if (name == ComponentTypePoint) {
         return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<pb::mission::Mission::Element::Point *>(protobuf)->name())};
-    if (name == ComponentTypeRail)
+                QString::fromStdString(static_cast<const pb::mission::Mission::Element::Point *>(protobuf)->name())};
+    } else if (name == ComponentTypeRail) {
         return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<pb::mission::Mission::Element::Rail *>(protobuf)->name())};
-    if (name == ComponentTypeSegment)
+                QString::fromStdString(static_cast<const pb::mission::Mission::Element::Rail *>(protobuf)->name())};
+    } else if (name == ComponentTypeSegment) {
         return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<pb::mission::Mission::Element::Segment *>(protobuf)->name())};
-    return {QVariant(), QVariant()};
+                QString::fromStdString(static_cast<const pb::mission::Mission::Element::Segment *>(protobuf)->name())};
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail getting displayed data, missing definition" << name.data();
+        return {QVariant(), QVariant()};
+    }
 }
 
 // Remove an index of a google protobuf repeated field. As the current repeated
@@ -88,200 +107,238 @@ void RepeatedFieldRemoveAt(const int row, google::protobuf::RepeatedPtrField<T> 
 // === Class
 // ============================================================================ //
 
-MissionBackend::MissionBackend(google::protobuf::Message *protobuf, MissionItem *item)
+ModelBacken::ModelBacken(google::protobuf::Message *protobuf, ModelItem *item)
     : _protobuf(protobuf)
     , _item(item)
 {
 }
 
-MissionBackend::~MissionBackend() {}
-
-// Returns the representing icon of the underlying protobuf message. The icon
+// Returns the displayed icon of the underlying protobuf message. The icon
 // is figured out by looking at the componenet and collection type.
-QVariant MissionBackend::icon() const
+QVariant ModelBacken::icon() const
 {
-    const auto &component_type = componentType();
-    if (component_type == Component::kMission) {
+    const auto &component_id = component();
+    if (component_id == Component::kMission) {
         return QIcon(ResourceIconMission);
-    } else if (component_type == Component::kCollection) {
-        const auto &collection_type = collectionType();
-        if (collection_type == Collection::kRoute) return QIcon(ResourceIconRoute);
-        if (collection_type == Collection::kFamily) return QIcon(ResourceIconFamily);
-        return QIcon(ResourceIconCollection);
-    } else if (component_type == Component::kRail) {
+    } else if (component_id == Component::kCollection) {
+        const auto &collection_type = collection();
+        if (collection_type == Collection::kRoute) {
+            return QIcon(ResourceIconRoute);
+        } else if (collection_type == Collection::kFamily) {
+            return QIcon(ResourceIconFamily);
+        } else {
+            return QIcon(ResourceIconCollection);
+        }
+    } else if (component_id == Component::kRail) {
         return QIcon(ResourceIconRail);
-    } else if (component_type == Component::kSegment) {
+    } else if (component_id == Component::kSegment) {
         return QIcon(ResourceIconSegment);
-    } else if (component_type == Component::kPoint) {
-        const auto &parent_component_type = parentComponentType();
-        if (parent_component_type == Component::kRail) return QIcon(ResourceIconRailPoint);
-        if (parent_component_type == Component::kSegment) return QIcon(ResourceIconRailPoint);
-        return QIcon(ResourceIconPoint);
+    } else if (component_id == Component::kPoint) {
+        const auto &parent_component_id = parentComponent();
+        if (parent_component_id == Component::kRail) {
+            return QIcon(ResourceIconRailPoint);
+        } else if (parent_component_id == Component::kSegment) {
+            return QIcon(ResourceIconRailPoint);
+        } else {
+            return QIcon(ResourceIconPoint);
+        }
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail getting displayed icon, missing definition" << component_id;
+        return QVariant();
     }
-    return QVariant();
 }
 
-// Returns the component type of the underlying protobuf message. The component
-// type is figured out by looking at the protobuf message descriptor and then
-// check for name matching.
-MissionBackend::Component MissionBackend::componentType() const
+// Returns the component identifier of the underlying protobuf message.
+ModelBacken::Component ModelBacken::component() const
 {
-    return componentType(_protobuf);
+    return component(_protobuf);
 }
 
-// Returns the item parent component type of parent the underlying protobuf
-// message.
-MissionBackend::Component MissionBackend::parentComponentType() const
+// Returns the component identifier of the underlying protobuf message for the
+// parent item.
+ModelBacken::Component ModelBacken::parentComponent() const
 {
-    if (!_item || !_item->parent()) return Component::kNoComponent;
+    if (!_item || !_item->parent()) {
+        qWarning() << CLASSNAME << "[Warning] fail getting parent component identifier, null item pointer";
+        return Component::kNoComponent;
+    }
 
-    return _item->parent()->backend().componentType();
+    return _item->parent()->backend().component();
 }
 
-// Returns the collection type of the underlying protobuf message. The collection
-// type is figured out by looking at the item children component type.
+// Returns the collection identifier of the underlying protobuf message.
+// The collection identifier type is figured out by looking at the item
+// children component identifier.
 //  - A Route is a collection of Point.
 //  - A Family is a collection of Rail.
-MissionBackend::Collection MissionBackend::collectionType() const
+ModelBacken::Collection ModelBacken::collection() const
 {
-    if (!_item) return Collection::kScenario;
-
-    auto is_route = true;
-    auto is_family = true;
-    for (auto *child_item : _item->_childs) {
-        const auto &component_type = child_item->backend().componentType();
-        is_route &= component_type == Component::kPoint;
-        is_family &= component_type == Component::kRail;
+    if (!_item) {
+        qWarning() << CLASSNAME << "[Warning] fail getting collection identifier, null item pointer";
+        return Collection::kScenario;
     }
-    if (is_route && !is_family) return Collection::kRoute;
-    if (is_family && !is_route) return Collection::kFamily;
+
+    if (_item->childCount()) {
+        auto is_route = true;
+        auto is_family = true;
+        for (auto *child_item : _item->_childs) {
+            const auto &component_id = child_item->backend().component();
+            is_route &= component_id == Component::kPoint;
+            is_family &= component_id == Component::kRail;
+        }
+        if (is_route) {
+            return Collection::kRoute;
+        } else if (is_family) {
+            return Collection::kFamily;
+        }
+    }
     return Collection::kScenario;
 }
 
-// Returns the mask of the enabled action depending on the component type of
-// the underlying protobuf message.
-unsigned int MissionBackend::maskAction() const
+// Returns the authorized action of the underlying protobuf message. This
+// depends on the component and parent component identifer of the underlying
+// protobuf message.
+unsigned int ModelBacken::authorizedAction() const
 {
-    const auto &component_type = componentType();
+    const auto &component_id = component();
 
-    if (component_type == MissionBackend::kMission) {
+    if (component_id == ModelBacken::kMission) {
         return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment) | (1 << kAddCollection);
 
-    } else if (component_type == MissionBackend::kCollection) {
+    } else if (component_id == ModelBacken::kCollection) {
         return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment);
 
-    } else if (component_type == MissionBackend::kRail || component_type == MissionBackend::kSegment) {
+    } else if (component_id == ModelBacken::kRail || component_id == ModelBacken::kSegment) {
         return (1 << kDelete);
 
-    } else if (component_type == MissionBackend::kPoint) {
-        const auto &parent_component_type = parentComponentType();
-        if (parent_component_type != MissionBackend::kRail && parent_component_type != MissionBackend::kSegment) {
+    } else if (component_id == ModelBacken::kPoint) {
+        const auto &parent_component_id = parentComponent();
+        if (parent_component_id != ModelBacken::kRail && parent_component_id != ModelBacken::kSegment) {
             return (1 << kDelete);
         }
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail getting authorized action, missing definition" << component_id;
     }
 
     return 0;
 }
 
-// Remove the children underlying protobuf message specified by the row.
-void MissionBackend::remove(const int row)
+// Remove the row-protobuf message of the underlying protobuf message specified by the row.
+void ModelBacken::removeRow(const int row)
 {
-    const auto &component_type = componentType();
+    const auto &component_id = component();
 
-    if (component_type == MissionBackend::kMission) {
+    if (component_id == ModelBacken::kMission) {
         RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
 
-    } else if (component_type == MissionBackend::kCollection) {
+    } else if (component_id == ModelBacken::kCollection) {
         RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
 
-    } else if (component_type == MissionBackend::kNoComponent) {
-        // In this case we want to remove a top-level item, it means that the
-        // current backend is the one for the root item. In order to remove the
-        // row-element we first retrieve the child item specified by the row
-        // and the we clear the underlying protobuf message.
+    } else if (component_id == ModelBacken::kNoComponent) {
+        // In this case we want to remove a top-level row-protobuf message, it
+        // means this backend is the one linked to the root item. In order to
+        // remove the row-protobuf message, we first retrieve the child item
+        // specified by the row and then clear the underlying protobuf message.
         if (_item->childCount() >= row) {
             _item->child(row)->backend().clear();
+        } else {
+            qWarning() << CLASSNAME << "[Warning] fail removing row, missing item child" << row;
         }
 
     } else {
-        qWarning() << "MissionBackend " << __func__ << "removing operation not implemented";
+        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << component_id;
     }
 }
 
 // Clears the underlying protobuf message.
-void MissionBackend::clear()
+void ModelBacken::clear()
 {
-    if (_protobuf) _protobuf->Clear();
+    if (!_protobuf) {
+        qWarning() << CLASSNAME << "[Warning] fail clearing, null protobuf pointer";
+        return;
+    }
+
+    _protobuf->Clear();
 }
 
-google::protobuf::Message *MissionBackend::append(const Action action)
+// Create then appends a protobuf element into the underlying protobuf message.
+// The created protobuf message depends on the specified action.
+google::protobuf::Message *ModelBacken::appendRow(const Action action)
 {
-    if (!hasAction(action)) return nullptr;
+    if (!isActionAuthorized(action)) {
+        qWarning() << CLASSNAME << "[Warning] fail appending row, action not authorized";
+        return nullptr;
+    }
 
-    const auto &component_type = componentType();
+    const auto &component_id = component();
 
     if (action == kAddCollection) {
-        if (component_type == MissionBackend::kMission) {
+        if (component_id == ModelBacken::kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_collection();
             protobuf->set_name(QString("Collection %1").arg(_item->childCount()).toStdString());
             return protobuf;
         } else {
-            qWarning() << "MissionBackend :: Warning 1";
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a collection into component"
+                       << component_id;
             return nullptr;
         }
     }
 
     else if (action == kAddPoint) {
-        if (component_type == kMission) {
+        if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
             protobuf->mutable_point()->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
             return protobuf;
-        } else if (component_type == kCollection) {
+        } else if (component_id == kCollection) {
             auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
             protobuf->mutable_point()->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
             return protobuf;
         } else {
-            qWarning() << "MissionBackend :: Warning 2";
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a point into component" << component_id;
             return nullptr;
         }
     }
 
     else if (action == kAddRail) {
-        if (component_type == kMission) {
+        if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
             protobuf->mutable_rail()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
             protobuf->mutable_rail()->mutable_p0()->set_name("JA");
             protobuf->mutable_rail()->mutable_p1()->set_name("JB");
             return protobuf;
-        } else if (component_type == kCollection) {
+        } else if (component_id == kCollection) {
             auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
             protobuf->mutable_rail()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
             protobuf->mutable_rail()->mutable_p0()->set_name("JA");
             protobuf->mutable_rail()->mutable_p1()->set_name("JB");
             return protobuf;
         } else {
-            qWarning() << "MissionBackend :: Warning 2";
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a rail into component" << component_id;
             return nullptr;
         }
     }
 
     else if (action == kAddSegment) {
-        if (component_type == kMission) {
+        if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
             protobuf->mutable_segment()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
             protobuf->mutable_segment()->mutable_p0()->set_name("SA");
             protobuf->mutable_segment()->mutable_p1()->set_name("SB");
             return protobuf;
-        } else if (component_type == kCollection) {
+        } else if (component_id == kCollection) {
             auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
             protobuf->mutable_segment()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
             protobuf->mutable_segment()->mutable_p0()->set_name("SA");
             protobuf->mutable_segment()->mutable_p1()->set_name("SB");
             return protobuf;
         } else {
-            qWarning() << "MissionBackend :: Warning 3";
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a segment into component"
+                       << component_id;
             return nullptr;
         }
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail appending row, missing definition" << action;
     }
 
     return nullptr;

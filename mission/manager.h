@@ -29,8 +29,10 @@ class MissionManager : public QObject
 
     // Interface Tree view
     void removeIndex(const QModelIndex &index);
+    void addCollectionIndex(const QModelIndex &parent);
     void addPointIndex(const QModelIndex &parent);
-    // void addRail(const QModelIndex &parent) {}
+    void addRailIndex(const QModelIndex &parent);
+    void addSegmentIndex(const QModelIndex &parent);
 
   private:
     pb::mission::Mission _mission;

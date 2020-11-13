@@ -9,24 +9,29 @@
 #include <QIcon>
 
 // ===
+// === Define
+// ============================================================================ //
+
+#define CLASSNAME "ModelItem ::"
+
+// ===
 // === Function
 // ============================================================================ //
 
 // Creates then appends an item into the parent children with the specified
 // underlying protobuf message.
-MissionItem *appendRowItem(google::protobuf::Message *msg, MissionItem *parent)
+inline ModelItem *appendRowItem(google::protobuf::Message *protobuf, ModelItem *parent)
 {
-    auto item = new MissionItem(MissionBackend::data(msg), msg, parent);
+    auto item = new ModelItem(ModelBacken::data(protobuf), protobuf, parent);
     parent->appendChild(item);
-    qInfo() << "MissionItem :: succeed appending item" << item->data(1).toString();
     return item;
 }
 
 // Creates then appends an element into the parent children with the specified
 // underlying protobuf message.
-MissionItem *appendRowElement(pb::mission::Mission::Element *element, MissionItem *parent)
+inline ModelItem *appendRowElement(pb::mission::Mission::Element *element, ModelItem *parent)
 {
-    MissionItem *item = nullptr;
+    ModelItem *item = nullptr;
     switch (element->element_case()) {
         case pb::mission::Mission::Element::kPoint:
             item = appendRowItem(element->mutable_point(), parent);
@@ -42,7 +47,8 @@ MissionItem *appendRowElement(pb::mission::Mission::Element *element, MissionIte
             appendRowItem(element->mutable_segment()->mutable_p1(), item);
             break;
         default:
-            qWarning() << "MissionItem :: [Warning] in appendRowElement()";
+            qWarning() << CLASSNAME << "[Warning] fail appending row element, missing definition"
+                       << element->element_case();
             break;
     }
     return item;
@@ -50,7 +56,7 @@ MissionItem *appendRowElement(pb::mission::Mission::Element *element, MissionIte
 
 // Creates then appends a collection into the parent children with the specified
 // underlying protobuf message.
-MissionItem *appendRowCollection(pb::mission::Mission::Collection *collection, MissionItem *parent)
+inline ModelItem *appendRowCollection(pb::mission::Mission::Collection *collection, ModelItem *parent)
 {
     auto item = appendRowItem(collection, parent);
     for (auto &element : *collection->mutable_elements()) {
@@ -61,7 +67,7 @@ MissionItem *appendRowCollection(pb::mission::Mission::Collection *collection, M
 
 // Creates then appends a mission into the parent children with the specified
 // underlying protobuf message.
-MissionItem *appendRowMission(pb::mission::Mission *mission, MissionItem *parent)
+inline ModelItem *appendRowMission(pb::mission::Mission *mission, ModelItem *parent)
 {
     auto item = appendRowItem(mission, parent);
     for (auto &component : *mission->mutable_components()) {
@@ -83,20 +89,20 @@ MissionItem *appendRowMission(pb::mission::Mission *mission, MissionItem *parent
 // === Class
 // ============================================================================ //
 
-MissionItem::MissionItem(const QVector<QVariant> &data, google::protobuf::Message *protobuf, MissionItem *parent)
+ModelItem::ModelItem(const QVector<QVariant> &data, google::protobuf::Message *protobuf, ModelItem *parent)
     : _data(data)
     , _parent(parent)
     , _backend(protobuf, this)
 {
 }
 
-MissionItem::~MissionItem()
+ModelItem::~ModelItem()
 {
     qDeleteAll(_childs);
 }
 
 // Returns the child specified by the given row.
-MissionItem *MissionItem::child(int row)
+ModelItem *ModelItem::child(int row)
 {
     if (row < 0 || row >= _childs.size()) return nullptr;
 
@@ -104,7 +110,7 @@ MissionItem *MissionItem::child(int row)
 }
 
 // Returns the data specified by the column.
-QVariant MissionItem::data(int column) const
+QVariant ModelItem::data(int column) const
 {
     if (column < 0 || column >= _data.size()) {
         return QVariant();
@@ -112,74 +118,52 @@ QVariant MissionItem::data(int column) const
     return _data.at(column);
 }
 
-// Returns the number of rows of the item, it means that row is returning
-// the number of its children.
-int MissionItem::row() const
+// Returns the row of the item into the parent children.
+int ModelItem::row() const
 {
     if (_parent) {
-        return _parent->_childs.indexOf(const_cast<MissionItem *>(this));
+        return _parent->_childs.indexOf(const_cast<ModelItem *>(this));
     }
     return 0;
 }
 
 // Creates then appends a child into the parent children with the specified
 // underlying protobuf message.
-void MissionItem::appendRow(google::protobuf::Message *protobuf)
+void ModelItem::appendRow(google::protobuf::Message *protobuf)
 {
-    if (!protobuf) return;
+    if (!protobuf) {
+        qWarning() << CLASSNAME << "[Warning] fail appending row, null protobuf pointer";
+        return;
+    }
 
-    const auto &component = MissionBackend::componentType(protobuf);
-    if (component == MissionBackend::kMission) {
+    const auto &component_id = ModelBacken::component(protobuf);
+    if (component_id == ModelBacken::kMission) {
         appendRowMission(static_cast<pb::mission::Mission *>(protobuf), this);
-    } else if (component == MissionBackend::kCollection) {
+    } else if (component_id == ModelBacken::kCollection) {
         appendRowCollection(static_cast<pb::mission::Mission::Collection *>(protobuf), this);
     } else {
         appendRowElement(static_cast<pb::mission::Mission::Element *>(protobuf), this);
     }
 }
 
-void MissionItem::appendRow(const MissionBackend::Action action)
+// Creates then appends a child into the parent children with the specified action.
+void ModelItem::appendRow(const ModelBacken::Action action)
 {
-    appendRow(_backend.append(action));
+    appendRow(_backend.appendRow(action));
 }
 
-// Removes the child specified by the given row. This also removes the
-// underlying protobuf data through the backend.
-void MissionItem::removeRow(int row)
+// Removes the child specified by the given row. This also removes the underlying
+// protobuf data through the backend.
+void ModelItem::removeRow(int row)
 {
-    if (row < 0 || row >= _childs.size()) return;
+    if (row < 0 || row >= _childs.size()) {
+        qWarning() << CLASSNAME << "[Warning] fail removing row, row overrange";
+        return;
+    }
 
-    _backend.remove(row);
+    _backend.removeRow(row);
     auto *pointer = child(row);
     _childs.remove(row);
     delete pointer;
     pointer = nullptr;
 }
-
-// void MissionItem::addMission(google::protobuf::Message *protobuf)
-//{
-////    if (protobuf) {
-////        auto item = createItem(this, static_cast<pb::mission::Mission *>(protobuf));
-////        appendChild(item);
-////        qWarning() << "MissionItem :: adding existing mission" << _childs.last()->data(1).toString() << "succeed.";
-////    } else {
-////        auto item = _backend.addMission
-////        appendChild()
-////    }
-//}
-
-//// Adds a point under the specified parent index. This check if the parent is
-//// valid and if the "addPoint" action is enabled for the specified parent index.
-// void MissionItem::addPoint()
-//{
-//    if (_backend.hasEnableAction(MissionBackend::Action::kAddPoint)) {
-//        auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(_backend.addPoint());
-//        _childs.append(new MissionItem(
-//            {QString::fromStdString(protobuf->GetDescriptor()->name()), QString::fromStdString(protobuf->name())},
-//            protobuf, this));
-//        qWarning() << "MissionItem" << __func__ << "adding point succeed";
-
-//    } else {
-//        qWarning() << "MissionItem" << __func__ << "adding point fail because action is not enabled";
-//    }
-//}

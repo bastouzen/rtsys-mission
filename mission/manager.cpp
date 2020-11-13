@@ -8,20 +8,26 @@
 #include <QDebug>
 
 // ===
+// === Define
+// ============================================================================ //
+
+#define CLASSNAME "MissionManager ::"
+
+// ===
 // === Class
 // ============================================================================ //
 
 MissionManager::MissionManager(QObject *parent)
     : QObject(parent)
 {
-    setObjectName("MissionManager");
-
-    // Initialization of the mission data structure.
     newMission();
 }
 
 MissionManager::~MissionManager() {}
 
+// This loads a mission. First we remove the internal mission protobuf then
+// copy the specified mission protobuf into the internal mission protobuf and
+// finaly update the internal mission model.
 void MissionManager::loadMission(const pb::mission::Mission &mission)
 {
     removeMission();
@@ -29,6 +35,9 @@ void MissionManager::loadMission(const pb::mission::Mission &mission)
     _model.appendRow(QModelIndex(), &_mission);
 }
 
+// This creates a new mission. First we remove the internal mission protobuf
+// then set the internal mission protobuf name and finaly update the internal
+// mission model.
 void MissionManager::newMission()
 {
     removeMission();
@@ -36,45 +45,48 @@ void MissionManager::newMission()
     _model.appendRow(QModelIndex(), &_mission);
 }
 
+// This removes the mission. Here we suppose that the root item has only one
+// child which is the internal mission item.
 void MissionManager::removeMission()
 {
-    // Here we suppose that the root item has only one child which is the mission.
-    if (_model.root()->childCount() >= 1) {
-        removeIndex(_model.index(_model.root()->child(0)));
+    const auto root_child_count = _model.root()->childCount();
+
+    if (!root_child_count) return;
+
+    if (_model.root()->childCount() == 1) {
+        auto mission = _model.root()->child(0);
+        removeIndex(_model.index(mission));
+        return;
     }
+    qWarning() << CLASSNAME << "[Warning] fail removing mission, root item children" << _model.root()->childCount();
 }
 
-// Remove the index of the model specified by the given index. First we check if
-// the index is valid and then use its parent index and its row for removing it
+// Remove the specified model index from the internal model mission.
 void MissionManager::removeIndex(const QModelIndex &index)
 {
     if (index.isValid()) _model.removeRow(index.row(), index.parent());
 }
 
-// Adds a point under the specified parent index. This check if the parent is
-// valid and if the "addPoint" action is enabled for the specified parent index.
-void MissionManager::addPointIndex(const QModelIndex &index)
+// Adds a collection under the specified parent index.
+void MissionManager::addCollectionIndex(const QModelIndex &index)
 {
-    if (!index.isValid()) return;
-
-    _model.appendRow(index, MissionBackend::kAddPoint);
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddCollection);
 }
 
-//// Adds a rail under the specified parent index. This check if the parent is
-//// valid and if the "addRail" action is enabled for the specified parent index.
-// void MissionManager::addRail(const QModelIndex &parent)
-//{
-//    //    if (!parent.isValid()) return;
+// Adds a point under the specified parent index.
+void MissionManager::addPointIndex(const QModelIndex &index)
+{
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddPoint);
+}
 
-//    //    const auto &parent_backend = _model.item(parent)->backend();
-//    //    if (parent_backend.hasEnableAction(MissionBackend::Action::kAddRail)) {
-//    //        const auto &row = _model.rowCount(parent);
-//    //        auto *protobuf = static_cast<pb::mission::Mission::Element::Rail
-//    //        *>(_model.item(parent)->backend().addRail()); protobuf->set_name(QString("My Rail
-//    //        %1").arg(row).toStdString()); protobuf->mutable_p0()->set_name("P1");
-//    //        protobuf->mutable_p1()->set_name("P2");
-//    //        misc::appendRail(protobuf, _model.item(parent));
-//    //    } else {
-//    //        qWarning() << "MissionManager" << __func__ << "adding rail fail because action is not enabled";
-//    //    }
-//}
+// Adds a rail under the specified parent index.
+void MissionManager::addRailIndex(const QModelIndex &index)
+{
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddRail);
+}
+
+// Adds a segment under the specified parent index.
+void MissionManager::addSegmentIndex(const QModelIndex &index)
+{
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddSegment);
+}
