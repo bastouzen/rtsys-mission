@@ -37,7 +37,6 @@ class ModelBacken
     enum Action { kDelete, kAddCollection, kAddPoint, kAddRail, kAddSegment };
 
     static Component component(const google::protobuf::Message *protobuf);
-    static QVector<QVariant> data(const google::protobuf::Message *protobuf);
 
     explicit ModelBacken(google::protobuf::Message *protobuf = nullptr, ModelItem *item = nullptr);
 
@@ -49,6 +48,7 @@ class ModelBacken
     void removeRow(const int row);
     void clear();
     google::protobuf::Message *appendRow(const Action action);
+    QVariant data(const int column) const;
     bool setData(int column, const QVariant &value);
 
   private:

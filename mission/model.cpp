@@ -20,7 +20,7 @@
 
 MissionModel::MissionModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , _root(new ModelItem({tr("Component"), tr("Name")}))
+    , _root(new ModelItem())
 {
 }
 
@@ -54,8 +54,9 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
 // Returns the data for the given role and section in the header with the specified orientation.
 QVariant MissionModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    const QVector<QVariant> HEADER_DATA = {tr("Component"), tr("Name")};
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        return _root->data(section);
+        return HEADER_DATA[section];
     }
     return QVariant();
 }

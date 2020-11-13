@@ -60,37 +60,6 @@ ModelBacken::Component ModelBacken::component(const google::protobuf::Message *p
     }
 }
 
-// Returns the displayed data specified by the underlying protobuf message.
-QVector<QVariant> ModelBacken::data(const google::protobuf::Message *protobuf)
-{
-    if (!protobuf) {
-        qWarning() << CLASSNAME << "[Warning] fail getting displayed data, null protobuf pointer";
-        return {QVariant(), QVariant()};
-    }
-
-    const auto &name = protobuf->GetDescriptor()->name();
-
-    if (name == ComponentTypeMission) {
-        return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<const pb::mission::Mission *>(protobuf)->name())};
-    } else if (name == ComponentTypeCollection) {
-        return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<const pb::mission::Mission::Collection *>(protobuf)->name())};
-    } else if (name == ComponentTypePoint) {
-        return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<const pb::mission::Mission::Element::Point *>(protobuf)->name())};
-    } else if (name == ComponentTypeRail) {
-        return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<const pb::mission::Mission::Element::Rail *>(protobuf)->name())};
-    } else if (name == ComponentTypeSegment) {
-        return {QString::fromStdString(name),
-                QString::fromStdString(static_cast<const pb::mission::Mission::Element::Segment *>(protobuf)->name())};
-    } else {
-        qWarning() << CLASSNAME << "[Warning] fail getting displayed data, missing definition" << name.data();
-        return {QVariant(), QVariant()};
-    }
-}
-
 // Remove an index of a google protobuf repeated field. As the current repeated
 // field doesn't provide any removeAt function we use the SwapElements and the
 // RemoveLast function.
@@ -344,11 +313,47 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
     return nullptr;
 }
 
+// Returns the data specified by the column of the underlying protobuf message.
+QVariant ModelBacken::data(const int column) const
+{
+    // Here we use some king to inline template function thank to C++14 (lambda function with auto parameter);
+    auto getter = [&](auto *message) -> QVariant {
+        if (column == 0) { // Composant Name
+            return QString::fromStdString(message->GetDescriptor()->name());
+        } else if (column == 1) { // User Name
+            return QString::fromStdString(message->name());
+        }
+        return QVariant();
+    };
+
+    const auto &component_id = component();
+
+    if (component_id == ModelBacken::kMission) {
+        return getter(static_cast<pb::mission::Mission *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kCollection) {
+        return getter(static_cast<pb::mission::Mission::Collection *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kPoint) {
+        return getter(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kRail) {
+        return getter(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kSegment) {
+        return getter(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail getting data, missing definition" << component_id;
+        return false;
+    }
+}
+
 bool ModelBacken::setData(int column, const QVariant &value)
 {
     // Here we use some king to inline template function thank to C++14 (lambda function with auto parameter);
     auto setter = [&](auto *message) {
-        if (column == 1) {
+        if (column == 1) { // User Name
             message->set_name(value.toString().toStdString());
             return true;
         }

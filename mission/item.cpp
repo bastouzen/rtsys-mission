@@ -22,7 +22,7 @@
 // underlying protobuf message.
 inline ModelItem *appendRowItem(google::protobuf::Message *protobuf, ModelItem *parent)
 {
-    auto item = new ModelItem(ModelBacken::data(protobuf), protobuf, parent);
+    auto item = new ModelItem(protobuf, parent);
     parent->appendChild(item);
     return item;
 }
@@ -89,9 +89,8 @@ inline ModelItem *appendRowMission(pb::mission::Mission *mission, ModelItem *par
 // === Class
 // ============================================================================ //
 
-ModelItem::ModelItem(const QVector<QVariant> &data, google::protobuf::Message *protobuf, ModelItem *parent)
-    : _data(data)
-    , _parent(parent)
+ModelItem::ModelItem(google::protobuf::Message *protobuf, ModelItem *parent)
+    : _parent(parent)
     , _backend(protobuf, this)
 {
 }
@@ -112,10 +111,9 @@ ModelItem *ModelItem::child(int row)
 // Returns the data specified by the column.
 QVariant ModelItem::data(int column) const
 {
-    if (column < 0 || column >= _data.size()) {
-        return QVariant();
-    }
-    return _data.at(column);
+    if (column < 0 || column >= COLUMN_COUT) return QVariant();
+
+    return _backend.data(column);
 }
 
 // Returns the row of the item into the parent children.
@@ -131,8 +129,8 @@ int ModelItem::row() const
 // otherwise returns false.
 bool ModelItem::setData(int column, const QVariant &value)
 {
-    if (column < 0 || column >= _data.size()) return false;
-    _data[column] = value;
+    if (column < 0 || column >= COLUMN_COUT) return false;
+
     return _backend.setData(column, value);
 }
 

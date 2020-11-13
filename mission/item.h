@@ -27,9 +27,10 @@
 
 class ModelItem
 {
+    static const int COLUMN_COUT = 2;
+
   public:
-    explicit ModelItem(const QVector<QVariant> &data, google::protobuf::Message *protobuf = nullptr,
-                       ModelItem *parent = nullptr);
+    explicit ModelItem(google::protobuf::Message *protobuf = nullptr, ModelItem *parent = nullptr);
     ~ModelItem();
 
     void appendRow(google::protobuf::Message *protobuf);
@@ -40,7 +41,7 @@ class ModelItem
     void appendChild(ModelItem *child) { _childs.append(child); }
     ModelItem *child(int row);
     int childCount() const { return _childs.count(); }
-    int columnCount() const { return _data.count(); }
+    int columnCount() const { return COLUMN_COUT; }
     QVariant data(int column) const;
     int row() const;
     bool setData(int column, const QVariant &value);
@@ -50,7 +51,6 @@ class ModelItem
     friend class ModelBacken;
 
   private:
-    QVector<QVariant> _data;
     ModelItem *_parent;
     ModelBacken _backend;
     QVector<ModelItem *> _childs;
