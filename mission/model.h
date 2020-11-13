@@ -51,6 +51,7 @@ class MissionModel : public QAbstractItemModel
     MissionItem *item(const QModelIndex &index) const;
     QModelIndex index(MissionItem *item, int column = 0) const;
     void appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf = nullptr);
+    void appendRow(const QModelIndex &parent, const int action);
     void removeRow(int row, const QModelIndex &parent);
 
   private:

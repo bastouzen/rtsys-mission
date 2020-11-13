@@ -116,8 +116,16 @@ MissionItem *MissionModel::item(const QModelIndex &index) const
 // the parent item to the root item.
 void MissionModel::appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf)
 {
-    beginInsertRows(parent, parent.row(), parent.row() + 1);
+    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
     (parent.isValid() ? CastToItem(parent) : _root)->appendRow(protobuf);
+    endInsertRows();
+}
+
+void MissionModel::appendRow(const QModelIndex &parent, const int action)
+{
+
+    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
+    (parent.isValid() ? CastToItem(parent) : _root)->appendRow(static_cast<MissionBackend::Action>(action));
     endInsertRows();
 }
 

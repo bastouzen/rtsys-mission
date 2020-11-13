@@ -42,6 +42,7 @@ MissionItem *appendRowElement(pb::mission::Mission::Element *element, MissionIte
             appendRowItem(element->mutable_segment()->mutable_p1(), item);
             break;
         default:
+            qWarning() << "MissionItem :: [Warning] in appendRowElement()";
             break;
     }
     return item;
@@ -135,6 +136,11 @@ void MissionItem::appendRow(google::protobuf::Message *protobuf)
     } else {
         appendRowElement(static_cast<pb::mission::Mission::Element *>(protobuf), this);
     }
+}
+
+void MissionItem::appendRow(const MissionBackend::Action action)
+{
+    appendRow(_backend.append(action));
 }
 
 // Removes the child specified by the given row. This also removes the

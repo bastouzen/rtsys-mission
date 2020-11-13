@@ -53,9 +53,11 @@ void MissionManager::removeIndex(const QModelIndex &index)
 
 // Adds a point under the specified parent index. This check if the parent is
 // valid and if the "addPoint" action is enabled for the specified parent index.
-void MissionManager::addPointIndex(const QModelIndex &parent)
+void MissionManager::addPointIndex(const QModelIndex &index)
 {
-    //_model.addPoint(parent);
+    if (!index.isValid()) return;
+
+    _model.appendRow(index, MissionBackend::kAddPoint);
 }
 
 //// Adds a rail under the specified parent index. This check if the parent is

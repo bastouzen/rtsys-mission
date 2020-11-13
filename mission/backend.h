@@ -1,5 +1,5 @@
-#ifndef RTSYS_MISSION_BACKEND_H
-#define RTSYS_MISSION_BACKEND_H
+#ifndef RTSYS_MISSION_MODEL_BACKEND_H
+#define RTSYS_MISSION_MODEL_BACKEND_H
 
 // ===
 // === Include
@@ -30,7 +30,7 @@ class MissionBackend
   public:
     enum Component { kMission, kCollection, kPoint, kRail, kSegment, kNoComponent };
     enum Collection { kScenario, kRoute, kFamily };
-    enum Action { kDelete, kAddPoint, kAddRail, kAddSegment, kAddCollection };
+    enum Action { kDelete, kAddCollection, kAddPoint, kAddRail, kAddSegment };
 
     static QVector<QVariant> data(google::protobuf::Message *protobuf);
     static Component componentType(google::protobuf::Message *protobuf);
@@ -45,6 +45,7 @@ class MissionBackend
     bool hasAction(const Action action, const unsigned int mask) const { return (mask >> action) & 1; }
     void remove(const int row);
     void clear();
+    google::protobuf::Message *append(const Action action);
 
   private:
     Component parentComponentType() const;
@@ -54,9 +55,4 @@ class MissionBackend
     MissionItem *_item;
 };
 
-//    google::protobuf::Message *addPoint();
-//    google::protobuf::Message *addRail();
-//    google::protobuf::Message *addSegment();
-//    google::protobuf::Message *addCollection();
-
-#endif // RTSYS_MISSION_BACKEND_H
+#endif // RTSYS_MISSION_MODEL_BACKEND_H

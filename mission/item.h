@@ -29,6 +29,7 @@ class MissionItem
     ~MissionItem();
 
     void appendRow(google::protobuf::Message *protobuf);
+    void appendRow(const MissionBackend::Action action);
     void removeRow(int row);
 
     // Getters and Setters

@@ -214,96 +214,75 @@ void MissionBackend::clear()
     if (_protobuf) _protobuf->Clear();
 }
 
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
+google::protobuf::Message *MissionBackend::append(const Action action)
+{
+    if (!hasAction(action)) return nullptr;
 
-//// Adds a point protobuf message under the underlying protobuf message.
-//// Depending on the component type, the point is added either into the
-//// component or the collection.
-// google::protobuf::Message *MissionBackend::addPoint()
-//{
-//    const auto &component_type = componentType();
+    const auto &component_type = componentType();
 
-//    pb::mission::Mission::Element::Point *element = nullptr;
-//    AddElement(point);
+    if (action == kAddCollection) {
+        if (component_type == MissionBackend::kMission) {
+            auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_collection();
+            protobuf->set_name(QString("Collection %1").arg(_item->childCount()).toStdString());
+            return protobuf;
+        } else {
+            qWarning() << "MissionBackend :: Warning 1";
+            return nullptr;
+        }
+    }
 
-//    element->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
-//    return element;
-//}
+    else if (action == kAddPoint) {
+        if (component_type == kMission) {
+            auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
+            protobuf->mutable_point()->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
+            return protobuf;
+        } else if (component_type == kCollection) {
+            auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
+            protobuf->mutable_point()->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
+            return protobuf;
+        } else {
+            qWarning() << "MissionBackend :: Warning 2";
+            return nullptr;
+        }
+    }
 
-//// Adds a rail protobuf message under the underlying protobuf message.
-//// Depending on the component type, the rail is added either into the
-//// component or the collection.
-// google::protobuf::Message *MissionBackend::addRail()
-//{
-//    const auto &component_type = componentType();
+    else if (action == kAddRail) {
+        if (component_type == kMission) {
+            auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
+            protobuf->mutable_rail()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_rail()->mutable_p0()->set_name("JA");
+            protobuf->mutable_rail()->mutable_p1()->set_name("JB");
+            return protobuf;
+        } else if (component_type == kCollection) {
+            auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
+            protobuf->mutable_rail()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_rail()->mutable_p0()->set_name("JA");
+            protobuf->mutable_rail()->mutable_p1()->set_name("JB");
+            return protobuf;
+        } else {
+            qWarning() << "MissionBackend :: Warning 2";
+            return nullptr;
+        }
+    }
 
-//    pb::mission::Mission::Element::Rail *element = nullptr;
-//    AddElement(rail);
+    else if (action == kAddSegment) {
+        if (component_type == kMission) {
+            auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
+            protobuf->mutable_segment()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_segment()->mutable_p0()->set_name("SA");
+            protobuf->mutable_segment()->mutable_p1()->set_name("SB");
+            return protobuf;
+        } else if (component_type == kCollection) {
+            auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
+            protobuf->mutable_segment()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_segment()->mutable_p0()->set_name("SA");
+            protobuf->mutable_segment()->mutable_p1()->set_name("SB");
+            return protobuf;
+        } else {
+            qWarning() << "MissionBackend :: Warning 3";
+            return nullptr;
+        }
+    }
 
-//    element->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
-//    element->mutable_p0()->set_name("JA");
-//    element->mutable_p0()->set_name("JB");
-//    return element;
-//}
-
-//// Adds a segment protobuf message under the underlying protobuf message.
-//// Depending on the component type, the segment is added either into the
-//// component or the collection.
-// google::protobuf::Message *MissionBackend::addSegment()
-//{
-//    const auto &component_type = componentType();
-
-//    pb::mission::Mission::Element::Segment *element = nullptr;
-//    AddElement(segment);
-
-//    element->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
-//    element->mutable_p0()->set_name("SA");
-//    element->mutable_p0()->set_name("SB");
-//    return element;
-//}
-
-//// Adds a collection protobuf message under the underlying protobuf message.
-// google::protobuf::Message *MissionBackend::addCollection()
-//{
-//    const auto &component_type = componentType();
-
-//    pb::mission::Mission::Collection *collection = nullptr;
-//    if (component_type == MissionBackend::kMission)
-//        collection = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_collection();
-//    if (!collection) {
-//        qWarning() << "MissionBackend" << __func__ << "adding collection not implemented for component type"
-//                   << component_type;
-//        return collection;
-//    }
-
-//    collection->set_name(QString("Collection %1").arg(_item->childCount()).toStdString());
-//    return collection;
-//}
-
-//#define AddElement(name)                                                                                               \
-//    if (component_type == kMission)                                                                                    \
-//        element =                                                                                                      \
-//            static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_##name();     \
-//    if (component_type == kCollection)                                                                                 \
-//        element = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_##name();        \
-//                                                                                                                       \
-//    if (!element) {                                                                                                    \
-//        qWarning() << "MissionBackend" << __func__ << "adding" << #name << "not implemented for component type"        \
-//                   << component_type;                                                                                  \
-//        return element;                                                                                                \
-//    }
+    return nullptr;
+}
