@@ -117,6 +117,7 @@ void MissionManager::loadMission(const pb::mission::Mission &mission)
     removeMission();
     _mission.CopyFrom(mission);
     _model.appendRow(QModelIndex(), &_mission);
+    emit loadMissionDone();
 }
 
 // This creates a new mission. First we remove the internal mission protobuf

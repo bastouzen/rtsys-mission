@@ -349,6 +349,7 @@ QVariant ModelBacken::data(const int column) const
     }
 }
 
+// This sets the data specified by the column of the underlying protobuf message.
 bool ModelBacken::setData(int column, const QVariant &value)
 {
     // Here we use some king to inline template function thank to C++14 (lambda function with auto parameter);

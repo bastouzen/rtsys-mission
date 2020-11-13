@@ -50,6 +50,7 @@ class ModelBacken
     google::protobuf::Message *appendRow(const Action action);
     QVariant data(const int column) const;
     bool setData(int column, const QVariant &value);
+    google::protobuf::Message *protobuf() { return _protobuf; }
 
   private:
     Component parentComponent() const;

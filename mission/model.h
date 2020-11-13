@@ -55,6 +55,14 @@ class MissionModel : public QAbstractItemModel
     //    bool insertRows(int position, int rows,const QModelIndex &parent = QModelIndex()) override;
     //    bool removeRows(int position, int rows,const QModelIndex &parent = QModelIndex()) override;
 
+    // Drag & Drop
+    Qt::DropActions supportedDropActions() const override;
+    QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
+                         const QModelIndex &parent) const override;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
+                      const QModelIndex &parent) override;
+
     ModelItem *root() { return _root; }
     ModelItem *item(const QModelIndex &index) const;
     QModelIndex index(ModelItem *item, int column = 0) const;

@@ -39,6 +39,9 @@ class MissionManager : public QObject
     void addRailIndex(const QModelIndex &parent);
     void addSegmentIndex(const QModelIndex &parent);
 
+  signals:
+    void loadMissionDone();
+
   private:
     pb::mission::Mission _mission;
     MissionModel _model;

@@ -17,21 +17,25 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     ui->setupUi(this);
     // ui->treeView->setModel(_manager.model());
 
-    // ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->treeView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+    ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    // ui->treeView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     // ui->treeView->setSelectionModel()
 
     // Enable right-click context.
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MissionTreeWidget::createCustomContexMenu);
 
+    // Enable drag&drop.
+    ui->treeView->setDragEnabled(true);
+    ui->treeView->viewport()->setAcceptDrops(true);
+    ui->treeView->setDropIndicatorShown(true);
+    //    ui->treeView->setDragDropMode(QAbstractItemView::InternalMove);
+
     // connect(ui->actionSelectAll, &QAction::triggered, ui->treeView, &QTreeView::selectAll);
     connect(ui->treeView, &QTreeView::doubleClicked, this, [](const QModelIndex &index) {
         // qDebug() << index;
         // qDebug() << _manager._mission.DebugString().data();
     });
-
-    // connect(ui->actionNewMission, &QAction::triggered, this, [&]() { _manager.addMission(_index); });
 }
 
 MissionTreeWidget::~MissionTreeWidget()
@@ -59,6 +63,10 @@ void MissionTreeWidget::setManager(MissionManager *manager)
         _manager->openMission(QFileDialog::getOpenFileName(
             this, tr("Open Mission File"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
             tr("JSON (*.json)")));
+    });
+    connect(_manager, &MissionManager::loadMissionDone, ui->treeView, [this]() {
+        ui->treeView->expandAll();
+        ui->treeView->resizeColumnToContents(0);
     });
 }
 

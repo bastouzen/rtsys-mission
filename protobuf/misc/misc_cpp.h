@@ -19,7 +19,7 @@ namespace misc {
 /**
  * @brief This serializes the message in prefixed-size format.
  */
-std::string serializeDelimitedToString(const google::protobuf::MessageLite &message)
+inline std::string serializeDelimitedToString(const google::protobuf::MessageLite &message)
 {
     std::string raw_stream;
     google::protobuf::io::StringOutputStream zero_copy_stream(&raw_stream);
@@ -30,7 +30,7 @@ std::string serializeDelimitedToString(const google::protobuf::MessageLite &mess
 /**
  * @brief This parses the prefixed-size formatted message.
  */
-void parseDelimitedFromString(google::protobuf::MessageLite *message, const std::string &raw_stream)
+inline void parseDelimitedFromString(google::protobuf::MessageLite *message, const std::string &raw_stream)
 {
     bool *clean_eof = nullptr;
     google::protobuf::io::ArrayInputStream zero_copy_stream(raw_stream.data(), static_cast<int>(raw_stream.length()));
@@ -40,7 +40,8 @@ void parseDelimitedFromString(google::protobuf::MessageLite *message, const std:
 /**
  * @brief This serializes the message in json format.
  */
-google::protobuf::util::Status serializeToJson(const google::protobuf::Message &message, std::string *json_stream)
+inline google::protobuf::util::Status serializeToJson(const google::protobuf::Message &message,
+                                                      std::string *json_stream)
 {
     google::protobuf::util::JsonOptions json_options;
     json_options.add_whitespace = true;
@@ -51,7 +52,7 @@ google::protobuf::util::Status serializeToJson(const google::protobuf::Message &
 /**
  * @brief This parses the json formatted message.
  */
-google::protobuf::util::Status parseFromJson(google::protobuf::Message *message, const std::string &json_stream)
+inline google::protobuf::util::Status parseFromJson(google::protobuf::Message *message, const std::string &json_stream)
 {
     return google::protobuf::util::JsonStringToMessage(json_stream, message);
 }

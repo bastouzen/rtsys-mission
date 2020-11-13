@@ -4,9 +4,12 @@
 
 #include "mission/model.h"
 #include "mission/item.h"
+#include "protobuf/misc/misc_cpp.h"
 #include "protobuf/mission.pb.h"
 
+#include <QDataStream>
 #include <QDebug>
+#include <QMimeData>
 
 // ===
 // === Define
@@ -109,7 +112,7 @@ Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
     if (index.column() > 0)
         return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
     else
-        return QAbstractItemModel::flags(index);
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | QAbstractItemModel::flags(index);
 }
 
 bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -121,6 +124,51 @@ bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int 
         emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
     }
     return result;
+}
+
+// =============================
+// Drag & Drop
+// =============================
+
+// Returns the drop actions supported by this view.
+Qt::DropActions MissionModel::supportedDropActions() const
+{
+    return Qt::MoveAction;
+}
+
+QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData *mime_data = new QMimeData;
+    QByteArray encoded_data;
+    QDataStream stream(&encoded_data, QIODevice::WriteOnly);
+
+    for (const QModelIndex &index : indexes) {
+        if (index.isValid()) {
+            stream << QString::fromStdString(
+                rtsys::protobuf::misc::serializeDelimitedToString(*CastToItem(index)->backend().protobuf()));
+        }
+    }
+
+    mime_data->setData(mimeTypes().first(), encoded_data);
+    return mime_data;
+}
+
+bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
+                                   const QModelIndex &parent) const
+{
+    auto result = QAbstractItemModel::canDropMimeData(data, action, row, column, parent);
+
+    // assert(parent.isValid());
+
+    qDebug() << parent;
+
+    return result;
+}
+
+bool MissionModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
+                                const QModelIndex &parent)
+{
+    return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
 }
 
 // ============================================================================ //
