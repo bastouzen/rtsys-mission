@@ -29,26 +29,22 @@ MissionModel::~MissionModel()
     delete _root;
 }
 
-// Returns the item flags for the given index.
-Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
-{
-    return index.isValid() ? QAbstractItemModel::flags(index) : Qt::NoItemFlags;
-}
+// =============================
+// Read-only Model
+// =============================
 
 // Returns the data stored under the given role for the specified index.
 QVariant MissionModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
 
-    auto *item = CastToItem(index);
-
-    if (role == Qt::DisplayRole) {
-        return item->data(index.column());
+    if (role == Qt::DisplayRole || role == Qt::EditRole) {
+        return CastToItem(index)->data(index.column());
     }
 
     if (role == Qt::DecorationRole) {
         if (index.column() == 0) {
-            return item->backend().icon();
+            return CastToItem(index)->backend().icon();
         };
     }
 
@@ -99,6 +95,34 @@ QModelIndex MissionModel::parent(const QModelIndex &child) const
     }
     return QModelIndex();
 }
+
+// =============================
+// Editing and Resizing Row-only
+// =============================
+
+// Returns the item flags for the given index.
+Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()) return Qt::NoItemFlags;
+
+    if (index.column() > 0)
+        return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    else
+        return QAbstractItemModel::flags(index);
+}
+
+bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (role != Qt::EditRole) return false;
+
+    bool result = CastToItem(index)->setData(index.column(), value);
+    if (result) {
+        emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
+    }
+    return result;
+}
+
+// ============================================================================ //
 
 // Creates then returns the index specified by the given item and column.
 QModelIndex MissionModel::index(ModelItem *item, int column) const

@@ -321,13 +321,13 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
     else if (action == kAddSegment) {
         if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
-            protobuf->mutable_segment()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_segment()->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
             protobuf->mutable_segment()->mutable_p0()->set_name("SA");
             protobuf->mutable_segment()->mutable_p1()->set_name("SB");
             return protobuf;
         } else if (component_id == kCollection) {
             auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
-            protobuf->mutable_segment()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_segment()->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
             protobuf->mutable_segment()->mutable_p0()->set_name("SA");
             protobuf->mutable_segment()->mutable_p1()->set_name("SB");
             return protobuf;
@@ -342,4 +342,38 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
     }
 
     return nullptr;
+}
+
+bool ModelBacken::setData(int column, const QVariant &value)
+{
+    // Here we use some king to inline template function thank to C++14 (lambda function with auto parameter);
+    auto setter = [&](auto *message) {
+        if (column == 1) {
+            message->set_name(value.toString().toStdString());
+            return true;
+        }
+        return false;
+    };
+
+    const auto &component_id = component();
+
+    if (component_id == ModelBacken::kMission) {
+        return setter(static_cast<pb::mission::Mission *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kCollection) {
+        return setter(static_cast<pb::mission::Mission::Collection *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kPoint) {
+        return setter(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kRail) {
+        return setter(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
+
+    } else if (component_id == ModelBacken::kSegment) {
+        return setter(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail setting data, missing definition" << component_id;
+        return false;
+    }
 }

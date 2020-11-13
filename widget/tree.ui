@@ -66,6 +66,30 @@
     <string>New Mission</string>
    </property>
   </action>
+  <action name="actionSaveMissionAs">
+   <property name="text">
+    <string>Save Mission As</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Mission As</string>
+   </property>
+  </action>
+  <action name="actionOpenMission">
+   <property name="text">
+    <string>Open Mission</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Mission</string>
+   </property>
+  </action>
+  <action name="actionSaveMission">
+   <property name="text">
+    <string>Save Mission</string>
+   </property>
+   <property name="toolTip">
+    <string>Save Mission</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

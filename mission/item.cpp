@@ -127,6 +127,15 @@ int ModelItem::row() const
     return 0;
 }
 
+// Sets the data at the specified coloum and value. Returns true if successful
+// otherwise returns false.
+bool ModelItem::setData(int column, const QVariant &value)
+{
+    if (column < 0 || column >= _data.size()) return false;
+    _data[column] = value;
+    return _backend.setData(column, value);
+}
+
 // Creates then appends a child into the parent children with the specified
 // underlying protobuf message.
 void ModelItem::appendRow(google::protobuf::Message *protobuf)

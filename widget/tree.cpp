@@ -5,7 +5,9 @@
 #include "widget/tree.h"
 
 #include <QDebug>
+#include <QFileDialog>
 #include <QMenu>
+#include <QStandardPaths>
 
 MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     : QWidget(parent)
@@ -25,7 +27,7 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
 
     // connect(ui->actionSelectAll, &QAction::triggered, ui->treeView, &QTreeView::selectAll);
     connect(ui->treeView, &QTreeView::doubleClicked, this, [](const QModelIndex &index) {
-        qDebug() << index;
+        // qDebug() << index;
         // qDebug() << _manager._mission.DebugString().data();
     });
 
@@ -47,6 +49,17 @@ void MissionTreeWidget::setManager(MissionManager *manager)
     connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addPointIndex(_index); });
     connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addRailIndex(_index); });
     connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addSegmentIndex(_index); });
+    connect(ui->actionSaveMission, &QAction::triggered, this, [&]() { _manager->saveMission(); });
+    connect(ui->actionSaveMissionAs, &QAction::triggered, this, [&]() {
+        _manager->saveMissionAs(QFileDialog::getSaveFileName(
+            this, tr("Save Mission File"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
+            tr("JSON (*.json)")));
+    });
+    connect(ui->actionOpenMission, &QAction::triggered, this, [&]() {
+        _manager->openMission(QFileDialog::getOpenFileName(
+            this, tr("Open Mission File"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
+            tr("JSON (*.json)")));
+    });
 }
 
 void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
@@ -72,6 +85,13 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
                 if (backend.isActionAuthorized(ModelBacken::Action::kAddCollection, mask_action))
                     add->addAction(ui->actionAddCollection);
             }
+
+            if (backend.component() == ModelBacken::kMission) {
+                menu.addAction(ui->actionNewMission);
+                menu.addAction(ui->actionOpenMission);
+                menu.addAction(ui->actionSaveMission);
+                menu.addAction(ui->actionSaveMissionAs);
+            }
             menu.exec(ui->treeView->viewport()->mapToGlobal(position));
         }
     } else {
@@ -80,6 +100,7 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
             QMenu menu(this);
             QMenu *add = menu.addMenu(tr("Add"));
             add->addAction(ui->actionNewMission);
+            add->addAction(ui->actionOpenMission);
             menu.exec(ui->treeView->viewport()->mapToGlobal(position));
         }
     }

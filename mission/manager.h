@@ -17,6 +17,8 @@ class MissionManager : public QObject
     Q_OBJECT
 
   public:
+    static pb::mission::Mission getMissionTemplate();
+
     explicit MissionManager(QObject *parent = nullptr);
     ~MissionManager();
 
@@ -26,6 +28,9 @@ class MissionManager : public QObject
     void loadMission(const pb::mission::Mission &mission);
     void newMission();
     void removeMission();
+    void saveMissionAs(const QString &filename);
+    void openMission(const QString &filename);
+    void saveMission();
 
     // Interface Tree view
     void removeIndex(const QModelIndex &index);
@@ -37,6 +42,7 @@ class MissionManager : public QObject
   private:
     pb::mission::Mission _mission;
     MissionModel _model;
+    QString _current_mission_filename;
 };
 
 #endif // RTSYS_MISSION_MANAGER_H

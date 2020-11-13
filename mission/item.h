@@ -43,6 +43,7 @@ class ModelItem
     int columnCount() const { return _data.count(); }
     QVariant data(int column) const;
     int row() const;
+    bool setData(int column, const QVariant &value);
     ModelItem *parent() { return _parent; }
     ModelBacken &backend() { return _backend; }
 
