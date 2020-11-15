@@ -33,7 +33,8 @@ class ModelItem
     explicit ModelItem(google::protobuf::Message *protobuf = nullptr, ModelItem *parent = nullptr);
     ~ModelItem();
 
-    void appendRow(google::protobuf::Message *protobuf);
+    void insertRow(const int row, google::protobuf::Message *protobuf = nullptr);
+    bool appendRow(google::protobuf::Message *protobuf);
     void appendRow(const ModelBacken::Action action);
     void removeRow(int row);
 

@@ -134,33 +134,8 @@ bool ModelItem::setData(int column, const QVariant &value)
     return _backend.setData(column, value);
 }
 
-// Creates then appends a child into the parent children with the specified
-// underlying protobuf message.
-void ModelItem::appendRow(google::protobuf::Message *protobuf)
-{
-    if (!protobuf) {
-        qWarning() << CLASSNAME << "[Warning] fail appending row, null protobuf pointer";
-        return;
-    }
-
-    const auto &component_id = ModelBacken::component(protobuf);
-    if (component_id == ModelBacken::kMission) {
-        appendRowMission(static_cast<pb::mission::Mission *>(protobuf), this);
-    } else if (component_id == ModelBacken::kCollection) {
-        appendRowCollection(static_cast<pb::mission::Mission::Collection *>(protobuf), this);
-    } else {
-        appendRowElement(static_cast<pb::mission::Mission::Element *>(protobuf), this);
-    }
-}
-
-// Creates then appends a child into the parent children with the specified action.
-void ModelItem::appendRow(const ModelBacken::Action action)
-{
-    appendRow(_backend.appendRow(action));
-}
-
-// Removes the child specified by the given row. This also removes the underlying
-// protobuf data through the backend.
+// Removes the child item specified by the given row. This also removes the
+// underlying protobuf data through the backend.
 void ModelItem::removeRow(int row)
 {
     if (row < 0 || row >= _childs.size()) {
@@ -173,4 +148,46 @@ void ModelItem::removeRow(int row)
     _childs.remove(row);
     delete pointer;
     pointer = nullptr;
+}
+
+// Creates then appends a child into the parent children with the specified
+// underlying protobuf message.
+bool ModelItem::appendRow(google::protobuf::Message *protobuf)
+{
+    if (!protobuf) {
+        qWarning() << CLASSNAME << "[Warning] fail appending row, null protobuf pointer";
+        return false;
+    }
+
+    const auto &component_id = ModelBacken::component(protobuf);
+    if (component_id == ModelBacken::kMission) {
+        appendRowMission(static_cast<pb::mission::Mission *>(protobuf), this);
+    } else if (component_id == ModelBacken::kCollection) {
+        appendRowCollection(static_cast<pb::mission::Mission::Collection *>(protobuf), this);
+    } else {
+        appendRowElement(static_cast<pb::mission::Mission::Element *>(protobuf), this);
+    }
+    return true;
+}
+
+void ModelItem::insertRow(const int row, google::protobuf::Message *protobuf)
+{
+    if (row < 0 || row >= _childs.size()) {
+        qWarning() << CLASSNAME << "[Warning] fail inserting row, row overrange";
+        return;
+    }
+
+    if (appendRow(protobuf)) {
+        _backend.moveLastRowAt(row);
+        _childs.insert(row, _childs.last());
+        _childs.removeLast();
+    }
+
+    return;
+}
+
+// Creates then appends a child into the parent children with the specified action.
+void ModelItem::appendRow(const ModelBacken::Action action)
+{
+    appendRow(_backend.appendRow(action));
 }

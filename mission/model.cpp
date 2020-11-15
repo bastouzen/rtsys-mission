@@ -126,6 +126,19 @@ bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int 
     return result;
 }
 
+bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    if (count != 1) {
+        qDebug() << "Ein Bug Problem";
+        return false;
+    }
+
+    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
+    (parent.isValid() ? CastToItem(parent) : _root)->insertRow(row);
+    endInsertRows();
+    return true;
+}
+
 // =============================
 // Drag & Drop
 // =============================
@@ -149,6 +162,7 @@ QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
         }
     }
 
+    qDebug() << "::mimeData" << mime_data;
     mime_data->setData(mimeTypes().first(), encoded_data);
     return mime_data;
 }
@@ -158,17 +172,32 @@ bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
 {
     auto result = QAbstractItemModel::canDropMimeData(data, action, row, column, parent);
 
-    // assert(parent.isValid());
-
-    qDebug() << parent;
-
+    // Need to check if the target will be accepted
+    qDebug() << "::canDropMimeData" << result << row << column << parent;
     return result;
 }
 
 bool MissionModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
                                 const QModelIndex &parent)
 {
-    return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
+    // auto result = QAbstractItemModel::dropMimeData(data, action, row, column, parent);
+    // qDebug() << "::dropMimeData" << result;
+    // return result;
+
+    // check if the action is supported
+    if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction)) return false;
+    // check if the format is supported
+    QStringList types = mimeTypes();
+    if (types.isEmpty()) return false;
+    QString format = types.at(0);
+    if (!data->hasFormat(format)) return false;
+    if (row > rowCount(parent)) row = rowCount(parent);
+    if (row == -1) row = rowCount(parent);
+    if (column == -1) column = 0;
+    // decode and insert
+    QByteArray encoded = data->data(format);
+    QDataStream stream(&encoded, QIODevice::ReadOnly);
+    return decodeData(row, column, parent, stream);
 }
 
 // ============================================================================ //

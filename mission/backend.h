@@ -45,12 +45,13 @@ class ModelBacken
     bool isActionAuthorized(const Action action) const { return isActionAuthorized(action, authorizedAction()); }
     bool isActionAuthorized(const Action action, const unsigned int mask) const { return (mask >> action) & 1; }
     Component component() const;
-    void removeRow(const int row);
-    void clear();
+    bool removeRow(const int row);
     google::protobuf::Message *appendRow(const Action action);
+    void clear();
     QVariant data(const int column) const;
     bool setData(int column, const QVariant &value);
     google::protobuf::Message *protobuf() { return _protobuf; }
+    bool moveLastAt(const int row);
 
   private:
     Component parentComponent() const;

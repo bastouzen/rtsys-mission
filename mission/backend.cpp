@@ -72,6 +72,17 @@ void RepeatedFieldRemoveAt(const int row, google::protobuf::RepeatedPtrField<T> 
     repeated->RemoveLast();
 }
 
+// Move the last index of a google protobuf repeated field. As the current
+// repeated field doesn't provide any MoveAr function we use the SwapElements
+// function.
+template <class T>
+void RepeatedFieldMoveLastAt(const int row, google::protobuf::RepeatedPtrField<T> *repeated)
+{
+    for (int i = repeated->size(); i < row; i--) {
+        repeated->SwapElements(i, i - 1);
+    }
+}
+
 // ===
 // === Class
 // ============================================================================ //
@@ -193,7 +204,7 @@ unsigned int ModelBacken::authorizedAction() const
 }
 
 // Remove the row-protobuf message of the underlying protobuf message specified by the row.
-void ModelBacken::removeRow(const int row)
+bool ModelBacken::removeRow(const int row)
 {
     const auto &component_id = component();
 
@@ -212,11 +223,15 @@ void ModelBacken::removeRow(const int row)
             _item->child(row)->backend().clear();
         } else {
             qWarning() << CLASSNAME << "[Warning] fail removing row, missing item child" << row;
+            return false;
         }
 
     } else {
         qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << component_id;
+        return false;
     }
+
+    return true;
 }
 
 // Clears the underlying protobuf message.
@@ -313,6 +328,33 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
     return nullptr;
 }
 
+// TODO
+bool ModelBacken::moveLastRowAt(const int row)
+{
+    const auto &component_id = component();
+
+    if (component_id == ModelBacken::kMission) {
+        RepeatedFieldMoveLastAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
+
+    } else if (component_id == ModelBacken::kCollection) {
+        RepeatedFieldMoveLastAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
+
+    } else if (component_id == ModelBacken::kNoComponent) {
+        // In this case we want to remove a top-level row-protobuf message, it
+        // means this backend is the one linked to the root item. In order to
+        // remove the row-protobuf message, we first retrieve the child item
+        // specified by the row and then clear the underlying protobuf message.
+        qCritical() << CLASSNAME << "[Critical] fail inserting row, not implemented"; // TODO
+        return false;
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << component_id;
+        return false;
+    }
+
+    return true;
+}
+
 // Returns the data specified by the column of the underlying protobuf message.
 QVariant ModelBacken::data(const int column) const
 {
@@ -323,7 +365,7 @@ QVariant ModelBacken::data(const int column) const
         } else if (column == 1) { // User Name
             return QString::fromStdString(message->name());
         }
-        return QVariant();
+        return QVariant("No Column");
     };
 
     const auto &component_id = component();
@@ -345,7 +387,7 @@ QVariant ModelBacken::data(const int column) const
 
     } else {
         qWarning() << CLASSNAME << "[Warning] fail getting data, missing definition" << component_id;
-        return false;
+        return QVariant("No Component ID");
     }
 }
 
