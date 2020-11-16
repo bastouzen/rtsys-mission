@@ -32,21 +32,20 @@ class ModelItem;
 class ModelBacken
 {
   public:
-    enum Component { kMission, kCollection, kElement, kPoint, kRail, kSegment, kNoComponent };
+    enum Component { kMission, kCollection, kElement, kPoint, kRail, kSegment, kNoComponent, kDelete };
     enum Collection { kScenario, kRoute, kFamily };
-    enum Action { kDelete, kAddCollection, kAddPoint, kAddRail, kAddSegment };
 
     static Component component(const google::protobuf::Message *protobuf);
 
     explicit ModelBacken(google::protobuf::Message *protobuf = nullptr, ModelItem *item = nullptr);
 
     QVariant icon() const;
-    unsigned int authorizedAction() const;
-    bool isActionAuthorized(const Action action) const { return isActionAuthorized(action, authorizedAction()); }
-    bool isActionAuthorized(const Action action, const unsigned int mask) const { return (mask >> action) & 1; }
+    unsigned int authorization() const;
+    bool isAuthorized(const Component component) const { return isAuthorized(component, authorization()); }
+    bool isAuthorized(const Component component, const unsigned int mask) const { return (mask >> component) & 1; }
     Component component() const;
     bool removeRow(const int row);
-    google::protobuf::Message *appendRow(const Action action);
+    google::protobuf::Message *appendRow(const Component new_component);
     void clear();
     QVariant data(const int column) const;
     bool setData(int column, const QVariant &value);

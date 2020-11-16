@@ -116,7 +116,7 @@ void MissionManager::loadMission(const pb::mission::Mission &mission)
 {
     removeMission();
     _mission.CopyFrom(mission);
-    _model.appendRow(QModelIndex(), &_mission);
+    _model.appendRow(&_mission);
     emit loadMissionDone();
 }
 
@@ -127,20 +127,19 @@ void MissionManager::newMission()
 {
     removeMission();
     _mission.set_name(QString(tr("My New Mission")).toStdString());
-    _model.appendRow(QModelIndex(), &_mission);
+    _model.appendRow(&_mission);
 }
 
 // This removes the mission. Here we suppose that the root item has only one
 // child which is the internal mission item.
 void MissionManager::removeMission()
 {
-    const auto root_child_count = _model.root()->childCount();
+    const auto &root_child_count = _model.root()->childCount();
 
     if (!root_child_count) return;
 
     if (_model.root()->childCount() == 1) {
-        auto mission = _model.root()->child(0);
-        removeIndex(_model.index(mission));
+        removeIndex(_model.index(_model.root()->child(0)));
         return;
     }
     qWarning() << CLASSNAME << "[Warning] fail removing mission, root item children" << _model.root()->childCount();
@@ -203,23 +202,23 @@ void MissionManager::removeIndex(const QModelIndex &index)
 // Adds a collection under the specified parent index.
 void MissionManager::addCollectionIndex(const QModelIndex &index)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddCollection);
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kCollection);
 }
 
 // Adds a point under the specified parent index.
 void MissionManager::addPointIndex(const QModelIndex &index)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddPoint);
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kPoint);
 }
 
 // Adds a rail under the specified parent index.
 void MissionManager::addRailIndex(const QModelIndex &index)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddRail);
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kRail);
 }
 
 // Adds a segment under the specified parent index.
 void MissionManager::addSegmentIndex(const QModelIndex &index)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kAddSegment);
+    if (index.isValid()) _model.appendRow(index, ModelBacken::kSegment);
 }

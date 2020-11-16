@@ -33,9 +33,9 @@ class ModelItem
     explicit ModelItem(google::protobuf::Message *protobuf = nullptr, ModelItem *parent = nullptr);
     ~ModelItem();
 
-    void insertRow(const int row, google::protobuf::Message *protobuf = nullptr);
-    bool appendRow(google::protobuf::Message *protobuf);
-    void appendRow(const ModelBacken::Action action);
+    //void insertRow(const int row, google::protobuf::Message *protobuf = nullptr);
+    void appendRow(google::protobuf::Message *protobuf);
+    void appendRow(const ModelBacken::Component component);
     void removeRow(int row);
 
     // Getters and Setters

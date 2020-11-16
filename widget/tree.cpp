@@ -78,19 +78,16 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
 
     if (item) {
         auto &backend = item->backend();
-        const auto &mask_action = backend.authorizedAction();
+        const auto &mask_action = backend.authorization();
         if (mask_action) {
             QMenu menu(this);
-            if (backend.isActionAuthorized(ModelBacken::Action::kDelete, mask_action)) menu.addAction(ui->actionDelete);
+            if (backend.isAuthorized(ModelBacken::kDelete, mask_action)) menu.addAction(ui->actionDelete);
             if (mask_action > 1) {
                 QMenu *add = menu.addMenu(tr("Add"));
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddPoint, mask_action))
-                    add->addAction(ui->actionAddPoint);
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddRail, mask_action))
-                    add->addAction(ui->actionAddRail);
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddSegment, mask_action))
-                    add->addAction(ui->actionAddSegment);
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddCollection, mask_action))
+                if (backend.isAuthorized(ModelBacken::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
+                if (backend.isAuthorized(ModelBacken::kRail, mask_action)) add->addAction(ui->actionAddRail);
+                if (backend.isAuthorized(ModelBacken::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
+                if (backend.isAuthorized(ModelBacken::kCollection, mask_action))
                     add->addAction(ui->actionAddCollection);
             }
 

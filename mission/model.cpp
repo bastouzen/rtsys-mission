@@ -134,7 +134,7 @@ bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
     }
 
     beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
-    (parent.isValid() ? CastToItem(parent) : _root)->insertRow(row);
+    //(parent.isValid() ? CastToItem(parent) : _root)->insertRow(row);
     endInsertRows();
     return true;
 }
@@ -217,20 +217,23 @@ ModelItem *MissionModel::item(const QModelIndex &index) const
     return index.isValid() ? CastToItem(index) : nullptr;
 }
 
-// Appends an item to the specified parent children for the specified underlying
-// protobug message.
-void MissionModel::appendRow(const QModelIndex &parent, google::protobuf::Message *protobuf)
+// Appends an item to the root children for the specified underlying protobuf
+// message.
+void MissionModel::appendRow(google::protobuf::Message *protobuf)
 {
+    QModelIndex parent;
     beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
-    (parent.isValid() ? CastToItem(parent) : _root)->appendRow(protobuf);
+    _root->appendRow(protobuf);
     endInsertRows();
 }
 
-// Appends an item to the specified parent children for the specified action.
-void MissionModel::appendRow(const QModelIndex &parent, const int action)
+// Appends an item to the specified parent children for the specified component.
+void MissionModel::appendRow(const QModelIndex &parent, const int component)
 {
+    if (!parent.isValid()) return;
+
     beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
-    (parent.isValid() ? CastToItem(parent) : _root)->appendRow(static_cast<ModelBacken::Action>(action));
+    CastToItem(parent)->appendRow(static_cast<ModelBacken::Component>(component));
     endInsertRows();
 }
 

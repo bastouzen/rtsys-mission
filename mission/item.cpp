@@ -150,13 +150,13 @@ void ModelItem::removeRow(int row)
     pointer = nullptr;
 }
 
-// Creates then appends a child into the parent children with the specified
-// underlying protobuf message.
-bool ModelItem::appendRow(google::protobuf::Message *protobuf)
+// Appends a child into the parent children with the specified underlying protobuf
+// message.
+void ModelItem::appendRow(google::protobuf::Message *protobuf)
 {
     if (!protobuf) {
         qWarning() << CLASSNAME << "[Warning] fail appending row, null protobuf pointer";
-        return false;
+        return;
     }
 
     const auto &component_id = ModelBacken::component(protobuf);
@@ -167,27 +167,27 @@ bool ModelItem::appendRow(google::protobuf::Message *protobuf)
     } else {
         appendRowElement(static_cast<pb::mission::Mission::Element *>(protobuf), this);
     }
-    return true;
 }
 
-void ModelItem::insertRow(const int row, google::protobuf::Message *protobuf)
+// Appends a child into the parent children with the specified action.
+void ModelItem::appendRow(const ModelBacken::Component component)
 {
-    if (row < 0 || row >= _childs.size()) {
-        qWarning() << CLASSNAME << "[Warning] fail inserting row, row overrange";
-        return;
-    }
-
-    if (appendRow(protobuf)) {
-        _backend.moveLastRowAt(row);
-        _childs.insert(row, _childs.last());
-        _childs.removeLast();
-    }
-
-    return;
+    auto protobuf = _backend.appendRow(component);
+    appendRow(protobuf);
 }
 
-// Creates then appends a child into the parent children with the specified action.
-void ModelItem::appendRow(const ModelBacken::Action action)
-{
-    appendRow(_backend.appendRow(action));
-}
+// void ModelItem::insertRow(const int row, google::protobuf::Message *protobuf)
+//{
+//    //    if (row < 0 || row >= _childs.size()) {
+//    //        qWarning() << CLASSNAME << "[Warning] fail inserting row, row overrange";
+//    //        return;
+//    //    }
+
+//    //    if (appendRow(protobuf)) {
+//    //        //_backend.moveLastRowAt(row);
+//    //        _childs.insert(row, _childs.last());
+//    //        _childs.removeLast();
+//    //    }
+
+//    return;
+//}

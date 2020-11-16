@@ -178,15 +178,15 @@ ModelBacken::Collection ModelBacken::collection() const
 // Returns the authorized action of the underlying protobuf message. This
 // depends on the component and parent component identifer of the underlying
 // protobuf message.
-unsigned int ModelBacken::authorizedAction() const
+unsigned int ModelBacken::authorization() const
 {
     const auto &component_id = component();
 
     if (component_id == ModelBacken::kMission) {
-        return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment) | (1 << kAddCollection);
+        return (1 << kDelete) | (1 << kPoint) | (1 << kRail) | (1 << kSegment) | (1 << kCollection);
 
     } else if (component_id == ModelBacken::kCollection) {
-        return (1 << kDelete) | (1 << kAddPoint) | (1 << kAddRail) | (1 << kAddSegment);
+        return (1 << kDelete) | (1 << kPoint) | (1 << kRail) | (1 << kSegment);
 
     } else if (component_id == ModelBacken::kRail || component_id == ModelBacken::kSegment) {
         return (1 << kDelete);
@@ -196,6 +196,7 @@ unsigned int ModelBacken::authorizedAction() const
         if (parent_component_id != ModelBacken::kRail && parent_component_id != ModelBacken::kSegment) {
             return (1 << kDelete);
         }
+
     } else {
         qWarning() << CLASSNAME << "[Warning] fail getting authorized action, missing definition" << component_id;
     }
@@ -245,19 +246,19 @@ void ModelBacken::clear()
     _protobuf->Clear();
 }
 
-// Create then appends a protobuf element into the underlying protobuf message.
+// Creates and appends a protobuf element into the underlying protobuf message.
 // The created protobuf message depends on the specified action.
-google::protobuf::Message *ModelBacken::appendRow(const Action action)
+google::protobuf::Message *ModelBacken::appendRow(const Component new_component)
 {
-    if (!isActionAuthorized(action)) {
+    if (!isAuthorized(new_component)) {
         qWarning() << CLASSNAME << "[Warning] fail appending row, action not authorized";
         return nullptr;
     }
 
     const auto &component_id = component();
 
-    if (action == kAddCollection) {
-        if (component_id == ModelBacken::kMission) {
+    if (new_component == kCollection) {
+        if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_collection();
             protobuf->set_name(QString("Collection %1").arg(_item->childCount()).toStdString());
             return protobuf;
@@ -266,9 +267,8 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
                        << component_id;
             return nullptr;
         }
-    }
 
-    else if (action == kAddPoint) {
+    } else if (new_component == kPoint) {
         if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
             protobuf->mutable_point()->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
@@ -281,9 +281,8 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
             qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a point into component" << component_id;
             return nullptr;
         }
-    }
 
-    else if (action == kAddRail) {
+    } else if (new_component == kRail) {
         if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
             protobuf->mutable_rail()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
@@ -300,9 +299,8 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
             qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a rail into component" << component_id;
             return nullptr;
         }
-    }
 
-    else if (action == kAddSegment) {
+    } else if (new_component == kSegment) {
         if (component_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
             protobuf->mutable_segment()->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
@@ -322,14 +320,14 @@ google::protobuf::Message *ModelBacken::appendRow(const Action action)
         }
 
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail appending row, missing definition" << action;
+        qWarning() << CLASSNAME << "[Warning] fail appending row, missing definition" << new_component;
     }
 
     return nullptr;
 }
 
 // TODO
-bool ModelBacken::moveLastRowAt(const int row)
+bool ModelBacken::moveLastAt(const int row)
 {
     const auto &component_id = component();
 
