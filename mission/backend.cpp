@@ -26,6 +26,7 @@ const auto ResourceIconPoint = QStringLiteral(":/resource/point.png");
 const auto ResourceIconRailPoint = QStringLiteral(":/resource/rail.png");
 
 const auto ComponentTypeMission = pb::mission::Mission::descriptor() -> name();
+const auto ComponentTypeComponant = pb::mission::Mission::Component::descriptor() -> name();
 const auto ComponentTypeCollection = pb::mission::Mission::Collection::descriptor() -> name();
 const auto ComponentTypeElement = pb::mission::Mission::Element::descriptor() -> name();
 const auto ComponentTypePoint = pb::mission::Mission::Element::Point::descriptor() -> name();
@@ -36,59 +37,31 @@ const auto ComponentTypeSegment = pb::mission::Mission::Element::Segment::descri
 // === Function
 // ============================================================================ //
 
-// Returns the component identifier specified by the underlying protobuf message.
-ModelBacken::Component ModelBacken::component(const Protobuf *protobuf)
+// Returns the flag identifier specified by the underlying protobuf message.
+ModelBacken::Flag ModelBacken::flag(const Protobuf *protobuf)
 {
-    if (!protobuf) return Component::kNoComponent;
+    if (!protobuf) return Flag::kUndefined;
 
     const auto &name = protobuf->GetDescriptor()->name();
 
     if (name == ComponentTypeMission) {
-        return Component::kMission;
+        return Flag::kMission;
+    } else if (name == ComponentTypeComponant) {
+        return Flag::kComponent;
     } else if (name == ComponentTypeCollection) {
-        return Component::kCollection;
+        return Flag::kCollection;
     } else if (name == ComponentTypeElement) {
-        return Component::kElement;
+        return Flag::kElement;
     } else if (name == ComponentTypePoint) {
-        return Component::kPoint;
+        return Flag::kPoint;
     } else if (name == ComponentTypeRail) {
-        return Component::kRail;
+        return Flag::kRail;
     } else if (name == ComponentTypeSegment) {
-        return Component::kSegment;
+        return Flag::kSegment;
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail getting component identifier, missing definition" << name.data();
-        return Component::kNoComponent;
+        qWarning() << CLASSNAME << "[Warning] fail getting flag identifier, missing definition" << name.data();
+        return Flag::kUndefined;
     }
-}
-
-// TODO
-ModelBacken::Protobuf *ModelBacken::factory(const Component component, const QByteArray &stream)
-{
-    google::protobuf::Message *protobuf = nullptr;
-
-    if (component == kMission) {
-        protobuf = new pb::mission::Mission();
-
-    } else if (component == kCollection) {
-        protobuf = new pb::mission::Mission::Collection();
-
-    } else if (component == kPoint) {
-        protobuf = new pb::mission::Mission::Element::Point();
-
-    } else if (component == kRail) {
-        protobuf = new pb::mission::Mission::Element::Rail();
-
-    } else if (component == kSegment) {
-        protobuf = new pb::mission::Mission::Element::Segment();
-
-    } else {
-        qWarning() << CLASSNAME << "[Warning] fail factoring component identifier, missing definition" << component;
-    }
-
-    if (protobuf) {
-        rtsys::protobuf::misc::parseDelimitedFromString(protobuf, stream.data());
-    }
-    return protobuf;
 }
 
 // Remove an index of a google protobuf repeated field. As the current repeated
@@ -118,8 +91,8 @@ void RepeatedFieldMoveUpLastAt(const int row, google::protobuf::RepeatedPtrField
 // === Class
 // ============================================================================ //
 
-ModelBacken::ModelBacken(Protobuf *protobuf, ModelItem *item)
-    : _protobuf(protobuf)
+ModelBacken::ModelBacken(ModelItem *item)
+    : _protobuf(nullptr)
     , _item(item)
 {
 }
@@ -128,130 +101,131 @@ ModelBacken::ModelBacken(Protobuf *protobuf, ModelItem *item)
 // is figured out by looking at the componenet and collection type.
 QVariant ModelBacken::icon() const
 {
-    const auto &component_id = component();
-    if (component_id == Component::kMission) {
+    const auto &flag_id = flag();
+    if (flag_id == kMission) {
         return QIcon(ResourceIconMission);
-    } else if (component_id == Component::kCollection) {
-        const auto &collection_type = collection();
-        if (collection_type == Collection::kRoute) {
+    } else if (flag_id == kCollection) {
+        const auto &collection_flag_id = collectionFlag();
+        if (collection_flag_id == kRoute) {
             return QIcon(ResourceIconRoute);
-        } else if (collection_type == Collection::kFamily) {
+        } else if (collection_flag_id == kFamily) {
             return QIcon(ResourceIconFamily);
         } else {
             return QIcon(ResourceIconCollection);
         }
-    } else if (component_id == Component::kRail) {
+    } else if (flag_id == kRail) {
         return QIcon(ResourceIconRail);
-    } else if (component_id == Component::kSegment) {
+    } else if (flag_id == kSegment) {
         return QIcon(ResourceIconSegment);
-    } else if (component_id == Component::kPoint) {
-        const auto &parent_component_id = parentComponent();
-        if (parent_component_id == Component::kRail) {
+    } else if (flag_id == kPoint) {
+        const auto &pareng_flag_id = parentFlag();
+        if (pareng_flag_id == kRail) {
             return QIcon(ResourceIconRailPoint);
-        } else if (parent_component_id == Component::kSegment) {
+        } else if (pareng_flag_id == kSegment) {
             return QIcon(ResourceIconRailPoint);
         } else {
             return QIcon(ResourceIconPoint);
         }
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail getting displayed icon, missing definition" << component_id;
+        qWarning() << CLASSNAME << "[Warning] fail getting displayed icon, missing definition" << flag_id;
         return QVariant();
     }
 }
 
 // Returns the component identifier of the underlying protobuf message.
-ModelBacken::Component ModelBacken::component() const
+ModelBacken::Flag ModelBacken::flag() const
 {
-    return component(_protobuf);
+    return flag(_protobuf);
 }
 
 // Returns the component identifier of the underlying protobuf message for the
 // parent item.
-ModelBacken::Component ModelBacken::parentComponent() const
+ModelBacken::Flag ModelBacken::parentFlag() const
 {
     if (!_item || !_item->parent()) {
-        qWarning() << CLASSNAME << "[Warning] fail getting parent component identifier, null item pointer";
-        return Component::kNoComponent;
+        qWarning() << CLASSNAME << "[Warning] fail getting parent flag identifier, null item pointer";
+        return Flag::kUndefined;
     }
 
-    return _item->parent()->backend().component();
+    return _item->parent()->flag();
 }
 
-// Returns the collection identifier of the underlying protobuf message.
-// The collection identifier type is figured out by looking at the item
-// children component identifier.
+// Returns the flag collection identifier of the underlying protobuf message.
+// The flag collection identifier type is figured out by looking at the item
+// children flag identifier.
 //  - A Route is a collection of Point.
 //  - A Family is a collection of Rail.
-ModelBacken::Collection ModelBacken::collection() const
+ModelBacken::Flag ModelBacken::collectionFlag() const
 {
     if (!_item) {
-        qWarning() << CLASSNAME << "[Warning] fail getting collection identifier, null item pointer";
-        return Collection::kScenario;
+        qWarning() << CLASSNAME << "[Warning] fail getting flag collection identifier, null item pointer";
+        return kScenario;
     }
 
-    if (_item->childCount()) {
+    if (_item->countChild()) {
         auto is_route = true;
         auto is_family = true;
         for (auto *child_item : _item->_childs) {
-            const auto &component_id = child_item->backend().component();
-            is_route &= component_id == Component::kPoint;
-            is_family &= component_id == Component::kRail;
+            const auto &flag_id = child_item->backend().flag();
+            is_route &= flag_id == kPoint;
+            is_family &= flag_id == kRail;
         }
         if (is_route) {
-            return Collection::kRoute;
+            return kRoute;
         } else if (is_family) {
-            return Collection::kFamily;
+            return kFamily;
         }
     }
-    return Collection::kScenario;
+    return kScenario;
 }
 
-// Returns the authorized action of the underlying protobuf message. This
-// depends on the component and parent component identifer of the underlying
-// protobuf message.
-unsigned int ModelBacken::supportedComponent() const
+// Returns the supported flag of the underlying protobuf message. This depends
+// on the component and parent component identifer of the underlying protobuf
+// message.
+unsigned int ModelBacken::supportedFlags() const
 {
-    const auto &component_id = component();
+    const auto &flag_id = flag();
 
-    if (component_id == ModelBacken::kMission) {
+    if (flag_id == kMission) {
         return (1 << kDelete) | (1 << kPoint) | (1 << kRail) | (1 << kSegment) | (1 << kCollection);
 
-    } else if (component_id == ModelBacken::kCollection) {
+    } else if (flag_id == kCollection) {
         return (1 << kDelete) | (1 << kPoint) | (1 << kRail) | (1 << kSegment);
 
-    } else if (component_id == ModelBacken::kRail || component_id == ModelBacken::kSegment) {
+    } else if (flag_id == kRail || flag_id == kSegment) {
         return (1 << kDelete);
 
-    } else if (component_id == ModelBacken::kPoint) {
-        const auto &parent_component_id = parentComponent();
-        if (parent_component_id != ModelBacken::kRail && parent_component_id != ModelBacken::kSegment) {
+    } else if (flag_id == kPoint) {
+        const auto &parent_flag_id = parentFlag();
+        if (parent_flag_id != kRail && parent_flag_id != kSegment) {
             return (1 << kDelete);
         }
 
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail getting authorized action, missing definition" << component_id;
+        qWarning() << CLASSNAME << "[Warning] fail getting suported flags, missing definition" << flag_id;
     }
 
     return 0;
 }
 
-// Remove the row-protobuf message of the underlying protobuf message specified by the row.
+// Remove the part-protobuf message of the underlying protobuf message
+// specified by the row.
 bool ModelBacken::removeRow(const int row)
 {
-    const auto &component_id = component();
+    const auto &flag_id = flag();
 
-    if (component_id == ModelBacken::kMission) {
+    if (flag_id == kMission) {
         RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
 
-    } else if (component_id == ModelBacken::kCollection) {
+    } else if (flag_id == kCollection) {
         RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
 
-    } else if (component_id == ModelBacken::kNoComponent) {
+    } else if (flag_id == kUndefined) {
         // In this case we want to remove a top-level row-protobuf message, it
         // means this backend is the one linked to the root item. In order to
         // remove the row-protobuf message, we first retrieve the child item
         // specified by the row and then clear the underlying protobuf message.
-        if (_item->childCount() >= row) {
+        if (_item->countChild() >= row) {
             _item->child(row)->backend().protobuf()->Clear();
         } else {
             qWarning() << CLASSNAME << "[Warning] fail removing row, missing item child" << row;
@@ -259,213 +233,197 @@ bool ModelBacken::removeRow(const int row)
         }
 
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << component_id;
+        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << flag_id;
         return false;
     }
 
     return true;
 }
 
-// Appends a protobuf chunk into the underlying protobuf message. This creates
-// the protobuf chunk message depending on the specified new_component.
-ModelBacken::Protobuf *ModelBacken::appendRow(const Component new_component)
+// Appends a part-protobuf message into the underlying protobuf message.
+// This creates the part-protobuf message depending on the specified new_flag.
+ModelBacken::Protobuf *ModelBacken::appendRow(const Flag new_flag)
 {
-    if (!canSupport(new_component)) {
-        qWarning() << CLASSNAME << "[Warning] fail appending row, action not authorized";
+    if (!canSupportFlag(new_flag)) {
+        qWarning() << CLASSNAME << "[Warning] fail appending row, flag not supported";
         return nullptr;
     }
 
-    const auto &component_id = component();
+    const auto &flag_id = flag();
 
-    if (new_component == kCollection) {
-        if (component_id == kMission) {
+    if (new_flag == kCollection) {
+        if (flag_id == kMission) {
             auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_collection();
-            protobuf->set_name(QString("Collection %1").arg(_item->childCount()).toStdString());
+            protobuf->set_name(QString("Collection %1").arg(_item->countChild()).toStdString());
             return protobuf;
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a collection into component"
-                       << component_id;
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a collection into flag" << flag_id;
             return nullptr;
         }
 
-    } else if (new_component == kPoint) {
-        if (component_id == kMission) {
+    } else if (new_flag == kPoint) {
+        if (flag_id == kMission) {
             auto *protobuf =
                 static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_point();
-            protobuf->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
+            protobuf->set_name(QString("Point %1").arg(_item->countChild()).toStdString());
             return protobuf;
-        } else if (component_id == kCollection) {
+        } else if (flag_id == kCollection) {
             auto *protobuf =
                 static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_point();
-            protobuf->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
+            protobuf->set_name(QString("Point %1").arg(_item->countChild()).toStdString());
             return protobuf;
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a point into component" << component_id;
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a point into flag" << flag_id;
             return nullptr;
         }
 
-    } else if (new_component == kRail) {
-        if (component_id == kMission) {
+    } else if (new_flag == kRail) {
+        if (flag_id == kMission) {
             auto *protobuf =
                 static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_rail();
-            protobuf->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->set_name(QString("Rail %1").arg(_item->countChild()).toStdString());
             protobuf->mutable_p0()->set_name("JA");
             protobuf->mutable_p1()->set_name("JB");
             return protobuf;
-        } else if (component_id == kCollection) {
+        } else if (flag_id == kCollection) {
             auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_rail();
-            protobuf->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->set_name(QString("Rail %1").arg(_item->countChild()).toStdString());
             protobuf->mutable_p0()->set_name("JA");
             protobuf->mutable_p1()->set_name("JB");
             return protobuf;
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a rail into component" << component_id;
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a rail into flag" << flag_id;
             return nullptr;
         }
 
-    } else if (new_component == kSegment) {
-        if (component_id == kMission) {
+    } else if (new_flag == kSegment) {
+        if (flag_id == kMission) {
             auto *protobuf =
                 static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_segment();
-            protobuf->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
+            protobuf->set_name(QString("Segment %1").arg(_item->countChild()).toStdString());
             protobuf->mutable_p0()->set_name("SA");
             protobuf->mutable_p1()->set_name("SB");
             return protobuf;
-        } else if (component_id == kCollection) {
+        } else if (flag_id == kCollection) {
             auto *protobuf =
                 static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_segment();
-            protobuf->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
+            protobuf->set_name(QString("Segment %1").arg(_item->countChild()).toStdString());
             protobuf->mutable_p0()->set_name("SA");
             protobuf->mutable_p1()->set_name("SB");
             return protobuf;
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a segment into component"
-                       << component_id;
+            qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a segment into flag" << flag_id;
             return nullptr;
         }
 
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail appending row, missing definition" << new_component;
+        qWarning() << CLASSNAME << "[Warning] fail appending row, missing definition" << new_flag;
     }
 
     return nullptr;
 }
 
-// Returns the data specified by the column of the underlying protobuf message.
-QVariant ModelBacken::data(const int column) const
+// Inserts a part-protobuf message into the underlying protobuf message.
+// This creates the part-protobuf message depending on the specified row and new_flag.
+ModelBacken::Protobuf *ModelBacken::insertRow(const int row, const Flag new_flag)
 {
-    // Here we use some king to inline template function thank to C++14 (lambda function with auto parameter);
-    auto getter = [&](auto *message) -> QVariant {
-        if (column == 0) { // Composant Name
-            return QString::fromStdString(message->GetDescriptor()->name());
-        } else if (column == 1) { // User Name
-            return QString::fromStdString(message->name());
-        }
-        return QVariant("No Column");
-    };
+    auto *protobuf = appendRow(new_flag);
 
-    const auto &component_id = component();
-
-    if (component_id == ModelBacken::kMission) {
-        return getter(static_cast<pb::mission::Mission *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kCollection) {
-        return getter(static_cast<pb::mission::Mission::Collection *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kPoint) {
-        return getter(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kRail) {
-        return getter(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kSegment) {
-        return getter(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
-
-    } else {
-        qWarning() << CLASSNAME << "[Warning] fail getting data, missing definition" << component_id;
-        return QVariant("No Component ID");
-    }
-}
-
-// This sets the data specified by the column of the underlying protobuf message.
-bool ModelBacken::setData(int column, const QVariant &value)
-{
-    // Here we use some king to inline template function thank to C++14 (lambda function with auto parameter);
-    auto setter = [&](auto *message) {
-        if (column == 1) { // User Name
-            message->set_name(value.toString().toStdString());
-            return true;
-        }
-        return false;
-    };
-
-    const auto &component_id = component();
-
-    if (component_id == ModelBacken::kMission) {
-        return setter(static_cast<pb::mission::Mission *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kCollection) {
-        return setter(static_cast<pb::mission::Mission::Collection *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kPoint) {
-        return setter(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kRail) {
-        return setter(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
-
-    } else if (component_id == ModelBacken::kSegment) {
-        return setter(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
-
-    } else {
-        qWarning() << CLASSNAME << "[Warning] fail setting data, missing definition" << component_id;
-        return false;
-    }
-}
-
-// TODO
-bool ModelBacken::canDropComponent(const Component drop_component) const
-{
-    const auto &supported = supportedComponent();
-
-    if (drop_component == kCollection) {
-        return canSupport(kCollection, supported);
-
-    } else if (drop_component == kPoint) {
-        return canSupport(kPoint, supported);
-
-    } else if (drop_component == kRail) {
-        return canSupport(kRail, supported);
-
-    } else if (drop_component == kSegment) {
-        return canSupport(kSegment, supported);
-
-    } else {
-        qWarning() << CLASSNAME << "[Warning] fail dropping component, missing definition" << drop_component;
-        return false;
-    }
-}
-
-// TODO
-bool ModelBacken::moveUpLastRowAt(const int row)
-{
-    const auto &component_id = component();
-
-    if (component_id == kMission) {
+    // This code above moves up the last row (i.e the appended row) to the specified
+    // row index.
+    const auto &flag_id = flag();
+    if (flag_id == kMission) {
         RepeatedFieldMoveUpLastAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
-
-    } else if (component_id == kCollection) {
+    } else if (flag_id == kCollection) {
         RepeatedFieldMoveUpLastAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
-
-    } else if (component_id == kNoComponent) {
+    } else if (flag_id == kUndefined) {
         // In this case we want to remove a top-level row-protobuf message, it
         // means this backend is the one linked to the root item.
         qCritical() << CLASSNAME << "[Critical] fail inserting row, not implemented"; // TODO
-        return false;
-
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << component_id;
-        return false;
+        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << flag_id;
     }
 
-    return true;
+    return protobuf;
+}
+
+// Returns the data specified by the role of the underlying protobuf message.
+QVariant ModelBacken::data(const int role) const
+{
+    // Here we use some king to inline template function thank to C++14
+    // "lambda function with auto parameter"
+    auto getter = [&](auto *message) -> QVariant {
+        if (!message) return QVariant("No Pointer");
+        if (role == Qt::UserRoleFlagId) {
+            return QString::fromStdString(message->GetDescriptor()->name());
+        } else if (role == Qt::UserRoleFlagName) {
+            return QString::fromStdString(message->name());
+        } else if (role == Qt::UserRoleProtobufStream) {
+            return QByteArray::fromStdString(rtsys::protobuf::misc::serializeDelimitedToString(*_protobuf));
+        } else {
+            return QVariant("No Role");
+        }
+    };
+
+    const auto &flag_id = flag();
+
+    if (flag_id == kMission) {
+        return getter(static_cast<pb::mission::Mission *>(_protobuf));
+
+    } else if (flag_id == kCollection) {
+        return getter(static_cast<pb::mission::Mission::Collection *>(_protobuf));
+
+    } else if (flag_id == kPoint) {
+        return getter(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
+
+    } else if (flag_id == kRail) {
+        return getter(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
+
+    } else if (flag_id == kSegment) {
+        return getter(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail getting data, missing definition" << flag_id;
+        return QVariant("No Flag");
+    }
+}
+
+// Sets the data specified by the role of the underlying protobuf message.
+bool ModelBacken::setData(const QVariant &value, int role)
+{
+    // Here we use some king to inline template function thank to C++14
+    // "lambda function with auto parameter"
+    auto setter = [&](auto *message) {
+        if (role == Qt::UserRoleFlagName) {
+            message->set_name(value.toString().toStdString());
+            return true;
+        } else if (role == Qt::UserRoleProtobufStream) {
+            qWarning() << CLASSNAME << "[Warning] fail setting data, not implemented" << role; // TODO
+            return false;
+        } else {
+            return false;
+        }
+    };
+
+    const auto &flag_id = flag();
+
+    if (flag_id == kMission) {
+        return setter(static_cast<pb::mission::Mission *>(_protobuf));
+
+    } else if (flag_id == kCollection) {
+        return setter(static_cast<pb::mission::Mission::Collection *>(_protobuf));
+
+    } else if (flag_id == kPoint) {
+        return setter(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
+
+    } else if (flag_id == kRail) {
+        return setter(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
+
+    } else if (flag_id == kSegment) {
+        return setter(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail setting data, missing definition" << flag_id;
+        return false;
+    }
 }

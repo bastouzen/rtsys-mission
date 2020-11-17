@@ -74,6 +74,8 @@ class MissionModel : public QAbstractItemModel
     // void removeRow(int row, const QModelIndex &parent);
     // void insertRow(int row, const QModelIndex &parent, const google::protobuf::Message &protobuf);
 
+    void test(const QModelIndex &parent, const int component);
+
   private:
     ModelItem *_root;
 };

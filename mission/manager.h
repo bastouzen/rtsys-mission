@@ -43,6 +43,7 @@ class MissionManager : public QObject
     void loadMissionDone();
 
   private:
+    void addFlagIndex(const QModelIndex &parent, int flag);
     pb::mission::Mission _mission;
     MissionModel _model;
     QString _current_mission_filename;

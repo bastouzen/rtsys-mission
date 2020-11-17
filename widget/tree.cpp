@@ -77,21 +77,19 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
     auto *item = _manager->model()->item(_index);
 
     if (item) {
-        auto &backend = item->backend();
-        const auto &mask_action = backend.supportedComponent();
+        const auto &mask_action = item->supportedFlags();
         if (mask_action) {
             QMenu menu(this);
-            if (backend.canSupport(ModelBacken::kDelete, mask_action)) menu.addAction(ui->actionDelete);
+            if (item->isFlagSupported(ModelItem::kDelete, mask_action)) menu.addAction(ui->actionDelete);
             if (mask_action > 1) {
                 QMenu *add = menu.addMenu(tr("Add"));
-                if (backend.canSupport(ModelBacken::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
-                if (backend.canSupport(ModelBacken::kRail, mask_action)) add->addAction(ui->actionAddRail);
-                if (backend.canSupport(ModelBacken::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
-                if (backend.canSupport(ModelBacken::kCollection, mask_action))
-                    add->addAction(ui->actionAddCollection);
+                if (item->isFlagSupported(ModelItem::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
+                if (item->isFlagSupported(ModelItem::kRail, mask_action)) add->addAction(ui->actionAddRail);
+                if (item->isFlagSupported(ModelItem::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
+                if (item->isFlagSupported(ModelItem::kCollection, mask_action)) add->addAction(ui->actionAddCollection);
             }
 
-            if (backend.component() == ModelBacken::kMission) {
+            if (ModelItem::flag(item->protobuf()) == ModelItem::kMission) {
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);
                 menu.addAction(ui->actionSaveMission);
@@ -101,7 +99,7 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
         }
     } else {
         // Add new mission if the root item has no child.
-        if (!_manager->model()->root()->childCount()) {
+        if (!_manager->model()->root()->countChild()) {
             QMenu menu(this);
             QMenu *add = menu.addMenu(tr("Add"));
             add->addAction(ui->actionNewMission);

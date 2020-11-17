@@ -22,8 +22,16 @@ namespace protobuf {
 class Message;
 } // namespace protobuf
 } // namespace google
-
 class ModelItem;
+
+//namespace Qt {
+//enum MyRoles {
+//    UserRoleFlag = UserRole + 1,
+//    UserRoleFlagDescription,
+//    UserRoleFlagName,
+//    UserRoleProtobufStream,
+//};
+//} // namespace Qt
 
 // ===
 // === Class
@@ -33,34 +41,45 @@ class ModelBacken
 {
   public:
     typedef google::protobuf::Message Protobuf;
-    enum Component { kMission, kCollection, kElement, kPoint, kRail, kSegment, kNoComponent, kDelete };
-    enum Collection { kScenario, kRoute, kFamily };
 
-    static Component component(const Protobuf *protobuf);
-    static Protobuf *factory(const Component component, const QByteArray &stream);
+    enum Flag {
+        kUndefined,
+        kMission,
+        kComponent,
+        kCollection,
+        kElement,
+        kPoint,
+        kRail,
+        kSegment,
+        kDelete,
+        kScenario,
+        kRoute,
+        kFamily
+    };
 
-    explicit ModelBacken(Protobuf *protobuf = nullptr, ModelItem *item = nullptr);
+    static Flag flag(const Protobuf *protobuf);
+    explicit ModelBacken(ModelItem *item = nullptr);
 
     bool removeRow(const int row);
-    Protobuf *appendRow(const Component new_component);
+    Protobuf *insertRow(const int row, const Flag new_flag);
 
     QVariant icon() const;
-    unsigned int supportedComponent() const;
-    bool canSupport(const Component component) const { return canSupport(component, supportedComponent()); }
-    bool canSupport(const Component component, const unsigned int mask) const { return (mask >> component) & 1; }
-    bool canDropComponent(const Component drop_component) const;
-    Component component() const;
+    unsigned int supportedFlags() const;
+    bool canSupportFlag(const Flag flag, const unsigned int mask) const { return (mask >> flag) & 1; }
+    bool canSupportFlag(const Flag flag) const { return canSupportFlag(flag, supportedFlags()); }
+    bool canDropFlag(const Flag flag) const { return canSupportFlag(flag); }
+    Flag flag() const;
 
+    QVariant data(const int role) const;
+    bool setData(const QVariant &value, const int role);
+    void setDataProtobufPointer(Protobuf *protobuf) { _protobuf = protobuf; }
 
-    QVariant data(const int column) const;
-    bool setData(int column, const QVariant &value);
     Protobuf *protobuf() { return _protobuf; }
 
-    bool moveUpLastRowAt(const int row);
-
   private:
-    Component parentComponent() const;
-    Collection collection() const;
+    Protobuf *appendRow(const Flag new_flag);
+    Flag parentFlag() const;
+    Flag collectionFlag() const;
     Protobuf *_protobuf;
     ModelItem *_item;
 };

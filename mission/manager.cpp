@@ -106,10 +106,9 @@ MissionManager::MissionManager(QObject *parent)
 {
     newMission();
     addPointIndex(_model.index(_model.root()->child(0)));
-    addPointIndex(_model.index(_model.root()->child(0)));
-    addPointIndex(_model.index(_model.root()->child(0)));
-    addSegmentIndex(_model.index(_model.root()->child(0)));
     addRailIndex(_model.index(_model.root()->child(0)));
+    addSegmentIndex(_model.index(_model.root()->child(0)));
+    addCollectionIndex(_model.index(_model.root()->child(0)));
 }
 
 MissionManager::~MissionManager() {}
@@ -120,8 +119,12 @@ MissionManager::~MissionManager() {}
 void MissionManager::loadMission(const pb::mission::Mission &mission)
 {
     removeMission();
+    Q_ASSERT(_model.rowCount() == 0);
     _mission.CopyFrom(mission);
-    _model.appendRow(&_mission);
+    qDebug() << "Ref" << &_mission;
+    _model.insertRows(_model.rowCount(), 1);
+    _model.setData(_model.index(_model.root()->child(0)), QVariant::fromValue(ModelItem::wrap(&_mission)),
+                   Qt::UserRoleWrapper);
     emit loadMissionDone();
 }
 
@@ -131,23 +134,25 @@ void MissionManager::loadMission(const pb::mission::Mission &mission)
 void MissionManager::newMission()
 {
     removeMission();
+    Q_ASSERT(_model.rowCount() == 0);
     _mission.set_name(QString(tr("My New Mission")).toStdString());
-    _model.appendRow(&_mission);
+    _model.insertRows(_model.rowCount(), 1);
+    _model.setData(_model.index(_model.root()->child(0)), QVariant::fromValue(ModelItem::wrap(&_mission)),
+                   Qt::UserRoleWrapper);
 }
 
 // This removes the mission. Here we suppose that the root item has only one
 // child which is the internal mission item.
 void MissionManager::removeMission()
 {
-    const auto &root_child_count = _model.root()->childCount();
+    const auto &root_child_count = _model.root()->countChild();
 
     if (!root_child_count) return;
-
-    if (_model.root()->childCount() == 1) {
+    if (root_child_count == 1) {
         removeIndex(_model.index(_model.root()->child(0)));
         return;
     }
-    qWarning() << CLASSNAME << "[Warning] fail removing mission, root item children" << _model.root()->childCount();
+    qWarning() << CLASSNAME << "[Warning] fail removing mission, root item children" << _model.root()->countChild();
 }
 
 // This saves the mission into the specified filename path. This is using the
@@ -204,26 +209,36 @@ void MissionManager::removeIndex(const QModelIndex &index)
     if (index.isValid()) _model.removeRow(index.row(), index.parent());
 }
 
-// Adds a collection under the specified parent index.
-void MissionManager::addCollectionIndex(const QModelIndex &index)
+// Adds a flag identifier under the specified parent index.
+void MissionManager::addFlagIndex(const QModelIndex &parent, int flag)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kCollection);
+    if (!parent.isValid()) return;
+
+    auto row = _model.rowCount(parent);
+    _model.insertRows(row, 1, parent);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleFlag);
+}
+
+// Adds a collection under the specified parent index.
+void MissionManager::addCollectionIndex(const QModelIndex &parent)
+{
+    addFlagIndex(parent, ModelItem::kCollection);
 }
 
 // Adds a point under the specified parent index.
-void MissionManager::addPointIndex(const QModelIndex &index)
+void MissionManager::addPointIndex(const QModelIndex &parent)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kPoint);
+    addFlagIndex(parent, ModelItem::kPoint);
 }
 
 // Adds a rail under the specified parent index.
-void MissionManager::addRailIndex(const QModelIndex &index)
+void MissionManager::addRailIndex(const QModelIndex &parent)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kRail);
+    addFlagIndex(parent, ModelItem::kRail);
 }
 
 // Adds a segment under the specified parent index.
-void MissionManager::addSegmentIndex(const QModelIndex &index)
+void MissionManager::addSegmentIndex(const QModelIndex &parent)
 {
-    if (index.isValid()) _model.appendRow(index, ModelBacken::kSegment);
+    addFlagIndex(parent, ModelItem::kSegment);
 }
