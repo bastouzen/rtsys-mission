@@ -25,6 +25,13 @@
 // === Class
 // ============================================================================ //
 
+namespace Qt {
+enum MyRoles {
+    UserRoleItemComponent = UserRole + 1, // Define role for the item backend component
+    UserRoleItemProtobuf                  // Define role for the item backend protobuf data
+};
+} // namespace Qt
+
 class ModelItem
 {
     static const int COLUMN_COUT = 2;
@@ -33,19 +40,21 @@ class ModelItem
     explicit ModelItem(google::protobuf::Message *protobuf = nullptr, ModelItem *parent = nullptr);
     ~ModelItem();
 
-    //void insertRow(const int row, google::protobuf::Message *protobuf = nullptr);
+    // void insertRow(const int row, google::protobuf::Message *protobuf = nullptr);
     void appendRow(google::protobuf::Message *protobuf);
     void appendRow(const ModelBacken::Component component);
-    void removeRow(int row);
+    void removeRow(const int row);
+    //    void insertRow(const int row);
+    //    void insertRow(const int row, const google::protobuf::Message &protobuf);
 
     // Getters and Setters
     void appendChild(ModelItem *child) { _childs.append(child); }
     ModelItem *child(int row);
     int childCount() const { return _childs.count(); }
     int columnCount() const { return COLUMN_COUT; }
-    QVariant data(int column) const;
+    // QVariant data(int column) const;
     int row() const;
-    bool setData(int column, const QVariant &value);
+    //    bool setData(int column, const QVariant &value);
     ModelItem *parent() { return _parent; }
     ModelBacken &backend() { return _backend; }
 

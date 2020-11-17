@@ -32,30 +32,36 @@ class ModelItem;
 class ModelBacken
 {
   public:
+    typedef google::protobuf::Message Protobuf;
     enum Component { kMission, kCollection, kElement, kPoint, kRail, kSegment, kNoComponent, kDelete };
     enum Collection { kScenario, kRoute, kFamily };
 
-    static Component component(const google::protobuf::Message *protobuf);
+    static Component component(const Protobuf *protobuf);
+    static Protobuf *factory(const Component component, const QByteArray &stream);
 
-    explicit ModelBacken(google::protobuf::Message *protobuf = nullptr, ModelItem *item = nullptr);
+    explicit ModelBacken(Protobuf *protobuf = nullptr, ModelItem *item = nullptr);
+
+    bool removeRow(const int row);
+    Protobuf *appendRow(const Component new_component);
 
     QVariant icon() const;
-    unsigned int authorization() const;
-    bool isAuthorized(const Component component) const { return isAuthorized(component, authorization()); }
-    bool isAuthorized(const Component component, const unsigned int mask) const { return (mask >> component) & 1; }
+    unsigned int supportedComponent() const;
+    bool canSupport(const Component component) const { return canSupport(component, supportedComponent()); }
+    bool canSupport(const Component component, const unsigned int mask) const { return (mask >> component) & 1; }
+    bool canDropComponent(const Component drop_component) const;
     Component component() const;
-    bool removeRow(const int row);
-    google::protobuf::Message *appendRow(const Component new_component);
-    void clear();
+
+
     QVariant data(const int column) const;
     bool setData(int column, const QVariant &value);
-    google::protobuf::Message *protobuf() { return _protobuf; }
-    bool moveLastAt(const int row);
+    Protobuf *protobuf() { return _protobuf; }
+
+    bool moveUpLastRowAt(const int row);
 
   private:
     Component parentComponent() const;
     Collection collection() const;
-    google::protobuf::Message *_protobuf;
+    Protobuf *_protobuf;
     ModelItem *_item;
 };
 

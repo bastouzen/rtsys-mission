@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     widget.setManager(&manager);
     widget.show();
 
-    manager.loadMission(MissionManager::getMissionTemplate());
+    // manager.loadMission(MissionManager::getMissionTemplate());
 
     return app.exec();
 }

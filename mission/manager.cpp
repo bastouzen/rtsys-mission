@@ -105,6 +105,11 @@ MissionManager::MissionManager(QObject *parent)
     : QObject(parent)
 {
     newMission();
+    addPointIndex(_model.index(_model.root()->child(0)));
+    addPointIndex(_model.index(_model.root()->child(0)));
+    addPointIndex(_model.index(_model.root()->child(0)));
+    addSegmentIndex(_model.index(_model.root()->child(0)));
+    addRailIndex(_model.index(_model.root()->child(0)));
 }
 
 MissionManager::~MissionManager() {}

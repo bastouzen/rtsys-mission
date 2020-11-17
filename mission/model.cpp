@@ -15,6 +15,8 @@
 // === Define
 // ============================================================================ //
 
+#define CLASSNAME "MissionModel ::"
+
 #define CastToItem(index) static_cast<ModelItem *>(index.internalPointer())
 
 // ===
@@ -42,13 +44,22 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) return QVariant();
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        return CastToItem(index)->data(index.column());
+        return CastToItem(index)->backend().data(index.column());
     }
 
     if (role == Qt::DecorationRole) {
         if (index.column() == 0) {
             return CastToItem(index)->backend().icon();
-        };
+        }
+    }
+
+    if (role == Qt::UserRoleItemComponent) {
+        return CastToItem(index)->backend().component();
+    }
+
+    if (role == Qt::UserRoleItemProtobuf) {
+        return QByteArray::fromStdString(
+            rtsys::protobuf::misc::serializeDelimitedToString(*CastToItem(index)->backend().protobuf()));
     }
 
     return QVariant();
@@ -115,28 +126,47 @@ Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
         return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | QAbstractItemModel::flags(index);
 }
 
+// TODO
 bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role != Qt::EditRole) return false;
-
-    bool result = CastToItem(index)->setData(index.column(), value);
-    if (result) {
-        emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
+    if (role == Qt::EditRole) {
+        if (CastToItem(index)->backend().setData(index.column(), value)) {
+            emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
+            return true;
+        }
     }
-    return result;
+
+    qDebug() << "MissionModel::setData [debug] mission role definition" << role;
+
+    return QAbstractItemModel::setData(index, value, role);
 }
 
-bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
+// Removes the item specified by the given row and parent index.
+bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    if (count != 1) {
-        qDebug() << "Ein Bug Problem";
-        return false;
+    Q_ASSERT_X(count == 1, CLASSNAME, "fail removing row");
+
+    if (rowCount(parent) && rowCount(parent) >= row) {
+        beginRemoveRows(parent, row, row + 1);
+        (parent.isValid() ? CastToItem(parent) : _root)->removeRow(row);
+        endRemoveRows();
+        return true;
     }
 
-    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
-    //(parent.isValid() ? CastToItem(parent) : _root)->insertRow(row);
-    endInsertRows();
-    return true;
+    return QAbstractItemModel::removeRows(row, count, parent); // returns false
+}
+
+// Insert an item specified by the given row and parent index.
+bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    Q_ASSERT_X(count == 1, CLASSNAME, "fail inserting row");
+
+    //    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
+    //    (parent.isValid() ? CastToItem(parent) : _root)->insertRow(row);
+    //    endInsertRows();
+    //    return true;
+
+    return QAbstractItemModel::insertRows(row, count, parent); // returns false
 }
 
 // =============================
@@ -149,55 +179,82 @@ Qt::DropActions MissionModel::supportedDropActions() const
     return Qt::MoveAction;
 }
 
-QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
-{
-    QMimeData *mime_data = new QMimeData;
-    QByteArray encoded_data;
-    QDataStream stream(&encoded_data, QIODevice::WriteOnly);
+////// TODO
+// QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
+//{
+//    qDebug() << "::mimeData" << indexes;
+//    return QAbstractItemModel::mimeData(indexes);
 
-    for (const QModelIndex &index : indexes) {
-        if (index.isValid()) {
-            stream << QString::fromStdString(
-                rtsys::protobuf::misc::serializeDelimitedToString(*CastToItem(index)->backend().protobuf()));
-        }
-    }
+//    //    QMimeData *mime_data = new QMimeData;
+//    //    QByteArray encoded_data;
+//    //    QDataStream stream(&encoded_data, QIODevice::WriteOnly);
 
-    qDebug() << "::mimeData" << mime_data;
-    mime_data->setData(mimeTypes().first(), encoded_data);
-    return mime_data;
-}
+//    //    for (const QModelIndex &index : indexes) {
+//    //        if (index.isValid()) {
+//    //            stream << CastToItem(index)->backend().component();
+//    //            stream << QByteArray::fromStdString(
+//    //                rtsys::protobuf::misc::serializeDelimitedToString(*CastToItem(index)->backend().protobuf()));
+//    //        }
+//    //    }
 
+//    //    qDebug() << "::mimeData" << mime_data;
+//    //    mime_data->setData(mimeTypes().first(), encoded_data);
+//    //    return mime_data;
+//}
+
+// TODO
 bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
                                    const QModelIndex &parent) const
 {
-    auto result = QAbstractItemModel::canDropMimeData(data, action, row, column, parent);
+    // qDebug() << "::canDropMimeData" << data << action << row << column << parent;
+    return QAbstractItemModel::canDropMimeData(data, action, row, column, parent);
 
-    // Need to check if the target will be accepted
-    qDebug() << "::canDropMimeData" << result << row << column << parent;
-    return result;
+    //    Q_UNUSED(row)
+    //    Q_UNUSED(column)
+
+    //    auto retrieveComponent = [&]() {
+    //        QByteArray input = data->data(mimeTypes().first());
+    //        QDataStream stream(&input, QIODevice::ReadOnly);
+    //        int component_id;
+    //        stream >> component_id;
+    //        return static_cast<ModelBacken::Component>(component_id);
+    //    };
+
+    //    if (!(action & supportedDropActions())) return false;
+
+    //    qDebug() << "::canDropMimeData" << this->data(parent, Qt::DisplayRole) << parent << row << column;
+
+    //    if (parent.isValid()) {
+    //        return CastToItem(parent)->backend().canDropComponent(retrieveComponent());
+    //    }
+    //    return false;
 }
 
+// TODO
 bool MissionModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
                                 const QModelIndex &parent)
 {
-    // auto result = QAbstractItemModel::dropMimeData(data, action, row, column, parent);
-    // qDebug() << "::dropMimeData" << result;
-    // return result;
+    qDebug() << "::dropMimeData" << data << action << row << column << parent;
+    return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
 
-    // check if the action is supported
-    if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction)) return false;
-    // check if the format is supported
-    QStringList types = mimeTypes();
-    if (types.isEmpty()) return false;
-    QString format = types.at(0);
-    if (!data->hasFormat(format)) return false;
-    if (row > rowCount(parent)) row = rowCount(parent);
-    if (row == -1) row = rowCount(parent);
-    if (column == -1) column = 0;
-    // decode and insert
-    QByteArray encoded = data->data(format);
-    QDataStream stream(&encoded, QIODevice::ReadOnly);
-    return decodeData(row, column, parent, stream);
+    //    QByteArray input = data->data(mimeTypes().first());
+    //    QDataStream stream(&input, QIODevice::ReadOnly);
+    //    int component;
+    //    QByteArray buffer;
+    //    stream >> component;
+    //    stream >> buffer;
+
+    //    QScopedPointer<google::protobuf::Message> protobuf(
+    //        ModelBacken::factory(static_cast<ModelBacken::Component>(component), buffer));
+    //    qDebug() << protobuf->DebugString().data();
+
+    //    auto result = QAbstractItemModel::dropMimeData(data, action, row, column, parent);
+    //    qDebug() << "::dropMimeData" << row << column << parent << result << this->data(parent, Qt::DisplayRole);
+
+    //    //insertRow(row, parent, *protobuf);
+    //    // removeRow();
+
+    //    return result;
 }
 
 // ============================================================================ //
@@ -237,12 +294,14 @@ void MissionModel::appendRow(const QModelIndex &parent, const int component)
     endInsertRows();
 }
 
-// Removes the item specified by the given row and parent index.
-void MissionModel::removeRow(int row, const QModelIndex &parent)
+QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
 {
-    if (rowCount(parent) && rowCount(parent) >= row) {
-        beginRemoveRows(parent, row, row + 1);
-        (parent.isValid() ? CastToItem(parent) : _root)->removeRow(row);
-        endRemoveRows();
-    }
+    qDebug() << "::itemData" << index;
+    return QAbstractItemModel::itemData(index);
+}
+
+bool MissionModel::setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles)
+{
+    qDebug() << "::setItemData" << index << roles;
+    return QAbstractItemModel::setItemData(index, roles);
 }

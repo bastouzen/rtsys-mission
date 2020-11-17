@@ -4,6 +4,7 @@
 
 #include "mission/backend.h"
 #include "mission/item.h"
+#include "protobuf/misc/misc_cpp.h"
 #include "protobuf/mission.pb.h"
 
 #include <QDebug>
@@ -36,7 +37,7 @@ const auto ComponentTypeSegment = pb::mission::Mission::Element::Segment::descri
 // ============================================================================ //
 
 // Returns the component identifier specified by the underlying protobuf message.
-ModelBacken::Component ModelBacken::component(const google::protobuf::Message *protobuf)
+ModelBacken::Component ModelBacken::component(const Protobuf *protobuf)
 {
     if (!protobuf) return Component::kNoComponent;
 
@@ -60,6 +61,36 @@ ModelBacken::Component ModelBacken::component(const google::protobuf::Message *p
     }
 }
 
+// TODO
+ModelBacken::Protobuf *ModelBacken::factory(const Component component, const QByteArray &stream)
+{
+    google::protobuf::Message *protobuf = nullptr;
+
+    if (component == kMission) {
+        protobuf = new pb::mission::Mission();
+
+    } else if (component == kCollection) {
+        protobuf = new pb::mission::Mission::Collection();
+
+    } else if (component == kPoint) {
+        protobuf = new pb::mission::Mission::Element::Point();
+
+    } else if (component == kRail) {
+        protobuf = new pb::mission::Mission::Element::Rail();
+
+    } else if (component == kSegment) {
+        protobuf = new pb::mission::Mission::Element::Segment();
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail factoring component identifier, missing definition" << component;
+    }
+
+    if (protobuf) {
+        rtsys::protobuf::misc::parseDelimitedFromString(protobuf, stream.data());
+    }
+    return protobuf;
+}
+
 // Remove an index of a google protobuf repeated field. As the current repeated
 // field doesn't provide any removeAt function we use the SwapElements and the
 // RemoveLast function.
@@ -73,10 +104,10 @@ void RepeatedFieldRemoveAt(const int row, google::protobuf::RepeatedPtrField<T> 
 }
 
 // Move the last index of a google protobuf repeated field. As the current
-// repeated field doesn't provide any MoveAr function we use the SwapElements
+// repeated field doesn't provide any MoveAt function we use the SwapElements
 // function.
 template <class T>
-void RepeatedFieldMoveLastAt(const int row, google::protobuf::RepeatedPtrField<T> *repeated)
+void RepeatedFieldMoveUpLastAt(const int row, google::protobuf::RepeatedPtrField<T> *repeated)
 {
     for (int i = repeated->size(); i < row; i--) {
         repeated->SwapElements(i, i - 1);
@@ -87,7 +118,7 @@ void RepeatedFieldMoveLastAt(const int row, google::protobuf::RepeatedPtrField<T
 // === Class
 // ============================================================================ //
 
-ModelBacken::ModelBacken(google::protobuf::Message *protobuf, ModelItem *item)
+ModelBacken::ModelBacken(Protobuf *protobuf, ModelItem *item)
     : _protobuf(protobuf)
     , _item(item)
 {
@@ -178,7 +209,7 @@ ModelBacken::Collection ModelBacken::collection() const
 // Returns the authorized action of the underlying protobuf message. This
 // depends on the component and parent component identifer of the underlying
 // protobuf message.
-unsigned int ModelBacken::authorization() const
+unsigned int ModelBacken::supportedComponent() const
 {
     const auto &component_id = component();
 
@@ -221,7 +252,7 @@ bool ModelBacken::removeRow(const int row)
         // remove the row-protobuf message, we first retrieve the child item
         // specified by the row and then clear the underlying protobuf message.
         if (_item->childCount() >= row) {
-            _item->child(row)->backend().clear();
+            _item->child(row)->backend().protobuf()->Clear();
         } else {
             qWarning() << CLASSNAME << "[Warning] fail removing row, missing item child" << row;
             return false;
@@ -235,22 +266,11 @@ bool ModelBacken::removeRow(const int row)
     return true;
 }
 
-// Clears the underlying protobuf message.
-void ModelBacken::clear()
+// Appends a protobuf chunk into the underlying protobuf message. This creates
+// the protobuf chunk message depending on the specified new_component.
+ModelBacken::Protobuf *ModelBacken::appendRow(const Component new_component)
 {
-    if (!_protobuf) {
-        qWarning() << CLASSNAME << "[Warning] fail clearing, null protobuf pointer";
-        return;
-    }
-
-    _protobuf->Clear();
-}
-
-// Creates and appends a protobuf element into the underlying protobuf message.
-// The created protobuf message depends on the specified action.
-google::protobuf::Message *ModelBacken::appendRow(const Component new_component)
-{
-    if (!isAuthorized(new_component)) {
+    if (!canSupport(new_component)) {
         qWarning() << CLASSNAME << "[Warning] fail appending row, action not authorized";
         return nullptr;
     }
@@ -270,12 +290,14 @@ google::protobuf::Message *ModelBacken::appendRow(const Component new_component)
 
     } else if (new_component == kPoint) {
         if (component_id == kMission) {
-            auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
-            protobuf->mutable_point()->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
+            auto *protobuf =
+                static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_point();
+            protobuf->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
             return protobuf;
         } else if (component_id == kCollection) {
-            auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
-            protobuf->mutable_point()->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
+            auto *protobuf =
+                static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_point();
+            protobuf->set_name(QString("Point %1").arg(_item->childCount()).toStdString());
             return protobuf;
         } else {
             qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a point into component" << component_id;
@@ -284,16 +306,17 @@ google::protobuf::Message *ModelBacken::appendRow(const Component new_component)
 
     } else if (new_component == kRail) {
         if (component_id == kMission) {
-            auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
-            protobuf->mutable_rail()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
-            protobuf->mutable_rail()->mutable_p0()->set_name("JA");
-            protobuf->mutable_rail()->mutable_p1()->set_name("JB");
+            auto *protobuf =
+                static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_rail();
+            protobuf->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_p0()->set_name("JA");
+            protobuf->mutable_p1()->set_name("JB");
             return protobuf;
         } else if (component_id == kCollection) {
-            auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
-            protobuf->mutable_rail()->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
-            protobuf->mutable_rail()->mutable_p0()->set_name("JA");
-            protobuf->mutable_rail()->mutable_p1()->set_name("JB");
+            auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_rail();
+            protobuf->set_name(QString("Rail %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_p0()->set_name("JA");
+            protobuf->mutable_p1()->set_name("JB");
             return protobuf;
         } else {
             qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a rail into component" << component_id;
@@ -302,16 +325,18 @@ google::protobuf::Message *ModelBacken::appendRow(const Component new_component)
 
     } else if (new_component == kSegment) {
         if (component_id == kMission) {
-            auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element();
-            protobuf->mutable_segment()->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
-            protobuf->mutable_segment()->mutable_p0()->set_name("SA");
-            protobuf->mutable_segment()->mutable_p1()->set_name("SB");
+            auto *protobuf =
+                static_cast<pb::mission::Mission *>(_protobuf)->add_components()->mutable_element()->mutable_segment();
+            protobuf->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_p0()->set_name("SA");
+            protobuf->mutable_p1()->set_name("SB");
             return protobuf;
         } else if (component_id == kCollection) {
-            auto *protobuf = static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements();
-            protobuf->mutable_segment()->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
-            protobuf->mutable_segment()->mutable_p0()->set_name("SA");
-            protobuf->mutable_segment()->mutable_p1()->set_name("SB");
+            auto *protobuf =
+                static_cast<pb::mission::Mission::Collection *>(_protobuf)->add_elements()->mutable_segment();
+            protobuf->set_name(QString("Segment %1").arg(_item->childCount()).toStdString());
+            protobuf->mutable_p0()->set_name("SA");
+            protobuf->mutable_p1()->set_name("SB");
             return protobuf;
         } else {
             qWarning() << CLASSNAME << "[Warning] fail appending row, can't add a segment into component"
@@ -324,33 +349,6 @@ google::protobuf::Message *ModelBacken::appendRow(const Component new_component)
     }
 
     return nullptr;
-}
-
-// TODO
-bool ModelBacken::moveLastAt(const int row)
-{
-    const auto &component_id = component();
-
-    if (component_id == ModelBacken::kMission) {
-        RepeatedFieldMoveLastAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
-
-    } else if (component_id == ModelBacken::kCollection) {
-        RepeatedFieldMoveLastAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
-
-    } else if (component_id == ModelBacken::kNoComponent) {
-        // In this case we want to remove a top-level row-protobuf message, it
-        // means this backend is the one linked to the root item. In order to
-        // remove the row-protobuf message, we first retrieve the child item
-        // specified by the row and then clear the underlying protobuf message.
-        qCritical() << CLASSNAME << "[Critical] fail inserting row, not implemented"; // TODO
-        return false;
-
-    } else {
-        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << component_id;
-        return false;
-    }
-
-    return true;
 }
 
 // Returns the data specified by the column of the underlying protobuf message.
@@ -422,4 +420,52 @@ bool ModelBacken::setData(int column, const QVariant &value)
         qWarning() << CLASSNAME << "[Warning] fail setting data, missing definition" << component_id;
         return false;
     }
+}
+
+// TODO
+bool ModelBacken::canDropComponent(const Component drop_component) const
+{
+    const auto &supported = supportedComponent();
+
+    if (drop_component == kCollection) {
+        return canSupport(kCollection, supported);
+
+    } else if (drop_component == kPoint) {
+        return canSupport(kPoint, supported);
+
+    } else if (drop_component == kRail) {
+        return canSupport(kRail, supported);
+
+    } else if (drop_component == kSegment) {
+        return canSupport(kSegment, supported);
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail dropping component, missing definition" << drop_component;
+        return false;
+    }
+}
+
+// TODO
+bool ModelBacken::moveUpLastRowAt(const int row)
+{
+    const auto &component_id = component();
+
+    if (component_id == kMission) {
+        RepeatedFieldMoveUpLastAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
+
+    } else if (component_id == kCollection) {
+        RepeatedFieldMoveUpLastAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
+
+    } else if (component_id == kNoComponent) {
+        // In this case we want to remove a top-level row-protobuf message, it
+        // means this backend is the one linked to the root item.
+        qCritical() << CLASSNAME << "[Critical] fail inserting row, not implemented"; // TODO
+        return false;
+
+    } else {
+        qWarning() << CLASSNAME << "[Warning] fail removing row, missing definition" << component_id;
+        return false;
+    }
+
+    return true;
 }
