@@ -101,8 +101,6 @@ class ModelItem
     void setProtobuf(Protobuf *protobuf) { _protobuf = protobuf; }
 
   private:
-    // void appendRow(google::protobuf::Message *protobuf);
-    // void appendRow(const ModelBacken::Flag component);
     Flag parentFlag() const;
     Flag collectionFlag() const;
     void setDataFromFlag(const Flag new_flag);
@@ -112,6 +110,6 @@ class ModelItem
     QVector<ModelItem *> _childs;
 };
 
-Q_DECLARE_METATYPE(ModelItem::Wrapper); // TODO: Add why adding that stuff
+Q_DECLARE_METATYPE(ModelItem::Wrapper); // Allow using Qt building Drag&Drop MimeData
 
 #endif // RTSYS_MISSION_MODEL_ITEM_H
