@@ -163,7 +163,7 @@ bool ModelItem::setData(const QVariant &value, int role)
         ModelItem::Wrapper w = value.value<ModelItem::Wrapper>();
         return setDataFromProtobuf(w.pointer);
 
-    } else if (role == Qt::UserRoleFlag) {
+    } else if (role == Qt::UserRoleFlagId) {
         setDataFromFlag(static_cast<Flag>(value.toInt()));
         return true;
 
@@ -200,19 +200,21 @@ QVariant ModelItem::data(const int role) const
     // "lambda function with auto parameter"
     auto getter = [&](auto *message) -> QVariant {
         if (!message) return QVariant("Null Pointer");
-        if (role == Qt::UserRoleFlagId) {
+        if (role == Qt::UserRoleFlagStr) {
             return QString::fromStdString(message->GetDescriptor()->name());
-        } else if (role == Qt::UserRoleFlagName) {
+        } else if (role == Qt::UserRoleName) {
             return QString::fromStdString(message->name());
         } else {
             return QVariant("Miss. Role");
         }
     };
 
-    // First of all we consume the wrapper if available.
     if (role == Qt::DecorationRole) {
         return icon();
-
+    } else if (role == Qt::UserRoleFlagId) {
+        return flag(_protobuf);
+    } else if (role == Qt::UserRoleWrapper) {
+        return QVariant::fromValue(ModelItem::wrap(_protobuf));
     } else {
         const auto &flag_id = flag(_protobuf);
         if (flag_id == kMission) {

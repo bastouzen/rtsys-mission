@@ -32,9 +32,9 @@ class ModelItem;
 
 namespace Qt {
 enum MyRoles {
-    UserRoleFlag = UserRole + 1,
-    UserRoleFlagId,
-    UserRoleFlagName,
+    UserRoleFlagId = UserRole + 1,
+    UserRoleFlagStr,
+    UserRoleName,
     UserRoleWrapper,
 };
 } // namespace Qt

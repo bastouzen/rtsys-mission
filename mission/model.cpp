@@ -45,10 +45,10 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         if (index.column() == 0) {
-            return CastToItem(index)->data(Qt::UserRoleFlagId);
+            return CastToItem(index)->data(Qt::UserRoleFlagStr);
         }
         if (index.column() == 1) {
-            return CastToItem(index)->data(Qt::UserRoleFlagName);
+            return CastToItem(index)->data(Qt::UserRoleName);
         }
     }
 
@@ -58,14 +58,13 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
         }
     }
 
-    //    if (role == Qt::UserRoleItemComponent) {
-    //        return CastToItem(index)->backend().flag();
-    //    }
+    if (role == Qt::UserRoleFlagId) {
+        return CastToItem(index)->data(Qt::UserRoleFlagId);
+    }
 
-    //    if (role == Qt::UserRoleItemProtobuf) {
-    //        return QByteArray::fromStdString(
-    //            rtsys::protobuf::misc::serializeDelimitedToString(*CastToItem(index)->backend().protobuf()));
-    //    }
+    if (role == Qt::UserRoleWrapper) {
+        return CastToItem(index)->data(Qt::UserRoleWrapper);
+    }
 
     return QVariant();
 }
@@ -131,11 +130,12 @@ Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
         return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | QAbstractItemModel::flags(index);
 }
 
-// TODO
+// Sets the data for the specified value and role. Returns true if successful
+// otherwise returns false.
 bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == Qt::EditRole) {
-        if (CastToItem(index)->setData(value, Qt::UserRoleFlagName)) {
+        if (CastToItem(index)->setData(value, Qt::UserRoleName)) {
             emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
             return true;
         }
@@ -182,55 +182,57 @@ Qt::DropActions MissionModel::supportedDropActions() const
     return Qt::MoveAction;
 }
 
-////// TODO
-// QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
-//{
-//    qDebug() << "::mimeData" << indexes;
-//    return QAbstractItemModel::mimeData(indexes);
+QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
+{
+    if (indexes.count() <= 0) return 0;
+    QStringList types = mimeTypes();
+    if (types.isEmpty()) return 0;
+    QMimeData *data = new QMimeData();
+    QString format = types.at(0);
+    QByteArray encoded;
+    QDataStream stream(&encoded, QIODevice::WriteOnly);
+    encodeData(indexes, stream);
+    data->setData(format, encoded);
 
-//    //    QMimeData *mime_data = new QMimeData;
-//    //    QByteArray encoded_data;
-//    //    QDataStream stream(&encoded_data, QIODevice::WriteOnly);
+    qDebug() << "==============> CCCCCC";
+    qDebug() << data;
 
-//    //    for (const QModelIndex &index : indexes) {
-//    //        if (index.isValid()) {
-//    //            stream << CastToItem(index)->backend().component();
-//    //            stream << QByteArray::fromStdString(
-//    //                rtsys::protobuf::misc::serializeDelimitedToString(*CastToItem(index)->backend().protobuf()));
-//    //        }
-//    //    }
+    return data;
+}
 
-//    //    qDebug() << "::mimeData" << mime_data;
-//    //    mime_data->setData(mimeTypes().first(), encoded_data);
-//    //    return mime_data;
-//}
+// Returns a map with values for all predefined roles in the model for the item
+// at the given index.
+QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
+{
+    auto roles = QAbstractItemModel::itemData(index);
+    roles.insert(Qt::UserRoleFlagId, data(index, Qt::UserRoleFlagId));
 
-// TODO
+    qDebug() << "==============================A";
+    qDebug() << roles;
+    qDebug() << "==============================B";
+    return roles;
+}
+
+// Returns true if the model can accept a drop of the data.
 bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
                                    const QModelIndex &parent) const
 {
-    // qDebug() << "::canDropMimeData" << data << action << row << column << parent;
-    return QAbstractItemModel::canDropMimeData(data, action, row, column, parent);
+    if (!QAbstractItemModel::canDropMimeData(data, action, row, column, parent)) return false;
 
-    //    Q_UNUSED(row)
-    //    Q_UNUSED(column)
+    qDebug() << "::canDropMimeData" << data << action << row << column << parent;
+    auto child_index = index(row, column, parent);
+    if (child_index.isValid()) {
+        qDebug() << "===>" << parent.data(Qt::UserRoleFlagId) << "|" << child_index.data(Qt::UserRoleFlagId);
+        return CastToItem(parent)->isFlagSupported(
+            static_cast<ModelItem::Flag>(child_index.data(Qt::UserRoleFlagId).toInt()));
+    }
+    return false;
+}
 
-    //    auto retrieveComponent = [&]() {
-    //        QByteArray input = data->data(mimeTypes().first());
-    //        QDataStream stream(&input, QIODevice::ReadOnly);
-    //        int component_id;
-    //        stream >> component_id;
-    //        return static_cast<ModelBacken::Component>(component_id);
-    //    };
-
-    //    if (!(action & supportedDropActions())) return false;
-
-    //    qDebug() << "::canDropMimeData" << this->data(parent, Qt::DisplayRole) << parent << row << column;
-
-    //    if (parent.isValid()) {
-    //        return CastToItem(parent)->backend().canDropComponent(retrieveComponent());
-    //    }
-    //    return false;
+bool MissionModel::setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles)
+{
+    qDebug() << "::setItemData" << index << roles;
+    return QAbstractItemModel::setItemData(index, roles);
 }
 
 // TODO
@@ -295,23 +297,4 @@ void MissionModel::appendRow(const QModelIndex &parent, const int component)
     //    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
     //    CastToItem(parent)->appendRow(static_cast<ModelBacken::Flag>(component));
     //    endInsertRows();
-}
-
-void MissionModel::test(const QModelIndex &parent, const int component)
-{
-    //    if (!parent.isValid()) return;
-    //    insertRows(rowCount(parent), 1, parent);
-    //    setData(index(rowCount(parent), 0, parent), QVariant(component), Qt::UserRoleItemComponent);
-}
-
-QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
-{
-    qDebug() << "::itemData" << index;
-    return QAbstractItemModel::itemData(index);
-}
-
-bool MissionModel::setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles)
-{
-    qDebug() << "::setItemData" << index << roles;
-    return QAbstractItemModel::setItemData(index, roles);
 }

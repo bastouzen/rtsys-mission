@@ -214,7 +214,7 @@ void MissionManager::addFlagIndex(const QModelIndex &parent, int flag)
 
     auto row = _model.rowCount(parent);
     _model.insertRows(row, 1, parent);
-    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleFlag);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleFlagId);
 }
 
 // Adds a collection under the specified parent index.
