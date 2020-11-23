@@ -4,7 +4,6 @@
 
 #include "mission/manager.h"
 #include "mission/item.h"
-#include "mission/misc.h"
 #include "protobuf/misc/misc_cpp.h"
 
 #include <QDebug>
@@ -121,7 +120,6 @@ void MissionManager::loadMission(const pb::mission::Mission &mission)
     removeMission();
     Q_ASSERT(_model.rowCount() == 0);
     _mission.CopyFrom(mission);
-    qDebug() << "Ref" << &_mission;
     _model.insertRows(_model.rowCount(), 1);
     _model.setData(_model.index(_model.root()->child(0)), QVariant::fromValue(ModelItem::wrap(&_mission)),
                    Qt::UserRoleWrapper);

@@ -2,8 +2,7 @@
 // === Include
 // ============================================================================ //
 
-#include "mission/item.h"
-#include "protobuf/mission.pb.h"
+#include "mission/item_misc.h"
 
 #include <QDebug>
 #include <QIcon>
@@ -61,114 +60,6 @@ ModelItem::Flag ModelItem::flag(const Protobuf *protobuf)
         return Flag::kUndefined;
     }
 }
-
-// Remove an index of a google protobuf repeated field. As the current repeated
-// field doesn't provide any removeAt function we use the SwapElements and the
-// RemoveLast function.
-template <class T>
-void RepeatedFieldRemoveAt(const int row, google::protobuf::RepeatedPtrField<T> *repeated)
-{
-    for (int i = row; i < repeated->size() - 1; i++) {
-        repeated->SwapElements(i, i + 1);
-    }
-    repeated->RemoveLast();
-}
-
-// Move the last index of a google protobuf repeated field. As the current
-// repeated field doesn't provide any MoveAt function we use the SwapElements
-// function.
-template <class T>
-void RepeatedFieldMoveUpLastAt(const int row, google::protobuf::RepeatedPtrField<T> *repeated)
-{
-    for (int i = repeated->size(); i < row; i--) {
-        repeated->SwapElements(i, i - 1);
-    }
-}
-
-// Creates an item into the parent children and then set its data from the specified
-// protobuf message.
-inline ModelItem *addItem(ModelItem::Protobuf *protobuf, ModelItem *parent)
-{
-    parent->insertChild();                                // add child at last position
-    auto *item = parent->child(parent->countChild() - 1); // retrieve the created item and set it
-    item->setData(QVariant::fromValue(ModelItem::wrap(protobuf)), Qt::UserRoleWrapper);
-    return item;
-}
-
-// Creates an point item into the parent children with the specified protobuf message.
-inline ModelItem *addPoint(pb::mission::Mission::Element::Point *point, ModelItem *parent)
-{
-    return addItem(point, parent);
-}
-
-// Creates an rail item into the parent children with the specified protobuf message.
-inline ModelItem *addRail(pb::mission::Mission::Element::Rail *rail, ModelItem *parent)
-{
-    auto *item = addItem(rail, parent);
-    addItem(rail->mutable_p0(), item);
-    addItem(rail->mutable_p1(), item);
-    return item;
-}
-
-// Creates an segment item into the parent children with the specified protobuf message.
-inline ModelItem *addSegment(pb::mission::Mission::Element::Segment *segment, ModelItem *parent)
-{
-    auto *item = addItem(segment, parent);
-    addItem(segment->mutable_p0(), item);
-    addItem(segment->mutable_p1(), item);
-    return item;
-}
-
-// Creates an element item into the parent children with the specified protobuf message.
-inline ModelItem *addElement(pb::mission::Mission::Element *element, ModelItem *parent)
-{
-    ModelItem *item = nullptr;
-    switch (element->element_case()) {
-        case pb::mission::Mission::Element::kPoint:
-            item = addPoint(element->mutable_point(), parent);
-            break;
-        case pb::mission::Mission::Element::kRail:
-            item = addRail(element->mutable_rail(), parent);
-            break;
-        case pb::mission::Mission::Element::kSegment:
-            item = addSegment(element->mutable_segment(), parent);
-            break;
-        default:
-            qWarning() << CLASSNAME << "[Warning] fail appending row element, missing definition"
-                       << element->element_case();
-            break;
-    }
-    return item;
-};
-
-// Creates an collection item into the parent children with the specified protobuf message.
-inline ModelItem *addCollection(pb::mission::Mission::Collection *collection, ModelItem *parent)
-{
-    auto item = addItem(collection, parent);
-    for (auto &element : *collection->mutable_elements()) {
-        addElement(&element, item);
-    }
-    return item;
-};
-
-// Creates an mission item into the parent children with the specified protobuf message.
-inline ModelItem *addMission(pb::mission::Mission *mission, ModelItem *parent)
-{
-    auto item = addItem(mission, parent);
-    for (auto &component : *mission->mutable_components()) {
-        switch (component.component_case()) {
-            case pb::mission::Mission::Component::kElement:
-                addElement(component.mutable_element(), item);
-                break;
-            case pb::mission::Mission::Component::kCollection:
-                addCollection(component.mutable_collection(), item);
-                break;
-            default:
-                break;
-        }
-    }
-    return item;
-};
 
 // ===
 // === Class
@@ -270,15 +161,13 @@ bool ModelItem::setData(const QVariant &value, int role)
     // First of all we consume the wrapper if available.
     if (role == Qt::UserRoleWrapper) {
         ModelItem::Wrapper w = value.value<ModelItem::Wrapper>();
-        qDebug() << w.pointer;
-        setProtobuf(w.pointer);
-        return true;
+        return setDataFromProtobuf(w.pointer);
 
     } else if (role == Qt::UserRoleFlag) {
-        setProtobuf(static_cast<Flag>(value.toInt()));
+        setDataFromFlag(static_cast<Flag>(value.toInt()));
         return true;
 
-    } else {
+    } else if (role == Qt::EditRole) {
         const auto &flag_id = flag(_protobuf);
         if (flag_id == kMission) {
             static_cast<pb::mission::Mission *>(_protobuf)->set_name(value.toString().toStdString());
@@ -300,6 +189,8 @@ bool ModelItem::setData(const QVariant &value, int role)
             return false;
         }
     }
+
+    return false;
 }
 
 // Returns the data specified by the role.
@@ -399,8 +290,9 @@ ModelItem::Flag ModelItem::collectionFlag() const
     return kScenario;
 }
 
-// Sets the part-protobuf message specified flag identifier.
-void ModelItem::setProtobuf(const ModelItem::Flag new_flag)
+// Sets the data from the specified flag identifier this also create all dependant
+// children.
+void ModelItem::setDataFromFlag(const ModelItem::Flag new_flag)
 {
     if (!_parent->isFlagSupported(new_flag)) {
         qWarning() << CLASSNAME << "[Warning] fail setting protobuf, flag not supported";
@@ -410,133 +302,97 @@ void ModelItem::setProtobuf(const ModelItem::Flag new_flag)
     const auto &parent_flag_id = ModelItem::flag(_parent->protobuf());
     const auto &parent_count_child = _parent->countChild() - 1;
 
-    auto add_point = [&]() {
-        Protobuf *protobuf = nullptr;
-        if (parent_flag_id == ModelItem::kMission) {
-            protobuf = static_cast<pb::mission::Mission *>(_parent->_protobuf)
-                           ->add_components()
-                           ->mutable_element()
-                           ->mutable_point();
-        }
-        if (parent_flag_id == ModelItem::kCollection) {
-            protobuf =
-                static_cast<pb::mission::Mission::Collection *>(_parent->_protobuf)->add_elements()->mutable_point();
-        }
-        return protobuf;
-    };
-
-    auto add_rail = [&]() {
-        Protobuf *protobuf = nullptr;
-        if (parent_flag_id == ModelItem::kMission) {
-            protobuf = static_cast<pb::mission::Mission *>(_parent->_protobuf)
-                           ->add_components()
-                           ->mutable_element()
-                           ->mutable_rail();
-        }
-        if (parent_flag_id == ModelItem::kCollection) {
-            protobuf =
-                static_cast<pb::mission::Mission::Collection *>(_parent->_protobuf)->add_elements()->mutable_rail();
-        }
-        return protobuf;
-    };
-
-    auto add_segment = [&]() {
-        Protobuf *protobuf = nullptr;
-        if (parent_flag_id == ModelItem::kMission) {
-            protobuf = static_cast<pb::mission::Mission *>(_parent->_protobuf)
-                           ->add_components()
-                           ->mutable_element()
-                           ->mutable_segment();
-        }
-        if (parent_flag_id == ModelItem::kCollection) {
-            protobuf =
-                static_cast<pb::mission::Mission::Collection *>(_parent->_protobuf)->add_elements()->mutable_segment();
-        }
-        return protobuf;
-    };
-
     if (new_flag == ModelItem::kCollection) {
-        if (parent_flag_id == kMission) {
-            auto *protobuf =
-                static_cast<pb::mission::Mission *>(_parent->_protobuf)->add_components()->mutable_collection();
+        auto *protobuf = static_cast<pb::mission::Mission *>(addCollectionProtobuf(parent_flag_id, _parent->_protobuf));
+        if (protobuf) {
             protobuf->set_name(QString("Collection %1").arg(parent_count_child).toStdString());
             _protobuf = protobuf;
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail setting protobuf, can't add a collection into flag"
+            qWarning() << CLASSNAME << "[Warning] fail setting data from flag, can't add a collection into flag"
                        << parent_flag_id;
         }
 
     } else if (new_flag == ModelItem::kPoint) {
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(add_point());
+        auto *protobuf =
+            static_cast<pb::mission::Mission::Element::Point *>(addPointProtobuf(parent_flag_id, _parent->_protobuf));
         if (protobuf) {
             protobuf->set_name(QString("Point %1").arg(parent_count_child).toStdString());
             _protobuf = protobuf;
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail setting protobuf, can't add a point into flag" << parent_flag_id;
+            qWarning() << CLASSNAME << "[Warning] fail setting data from flag, can't add a point into flag"
+                       << parent_flag_id;
         }
 
     } else if (new_flag == ModelItem::kRail) {
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Rail *>(add_rail());
+        auto *protobuf =
+            static_cast<pb::mission::Mission::Element::Rail *>(addRailProtobuf(parent_flag_id, _parent->_protobuf));
         if (protobuf) {
             protobuf->set_name(QString("Rail %1").arg(parent_count_child).toStdString());
             protobuf->mutable_p0()->set_name("JA");
             protobuf->mutable_p1()->set_name("JB");
             _protobuf = protobuf;
-            addItem(protobuf->mutable_p0(), this);
-            addItem(protobuf->mutable_p1(), this);
+            addChild(protobuf->mutable_p0(), this);
+            addChild(protobuf->mutable_p1(), this);
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail setting protobuf, can't add a rail into flag" << parent_flag_id;
+            qWarning() << CLASSNAME << "[Warning] fail setting data from flag, can't add a rail into flag"
+                       << parent_flag_id;
         }
 
     } else if (new_flag == ModelItem::kSegment) {
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Segment *>(add_segment());
+        auto *protobuf = static_cast<pb::mission::Mission::Element::Segment *>(
+            addSegmentProtobuf(parent_flag_id, _parent->_protobuf));
         if (protobuf) {
             protobuf->set_name(QString("Segment %1").arg(parent_count_child).toStdString());
             protobuf->mutable_p0()->set_name("SA");
             protobuf->mutable_p1()->set_name("SB");
             _protobuf = protobuf;
-            addItem(protobuf->mutable_p0(), this);
-            addItem(protobuf->mutable_p1(), this);
+            addChild(protobuf->mutable_p0(), this);
+            addChild(protobuf->mutable_p1(), this);
         } else {
-            qWarning() << CLASSNAME << "[Warning] fail setting protobuf, can't add a rail into flag" << parent_flag_id;
+            qWarning() << CLASSNAME << "[Warning] fail setting data from flag, can't add a rail into flag"
+                       << parent_flag_id;
         }
 
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail setting protobuf, missing flag" << new_flag;
+        qWarning() << CLASSNAME << "[Warning] fail setting data from flag, missing flag" << new_flag;
     }
 }
 
-// Appends a child into the parent children with the specified underlying protobuf
-// message.
-
-void ModelItem::setProtobuf(Protobuf *protobuf)
+// Sets the data from the specified protobuf message this also expands the protobuf
+// message in order to create all children.
+bool ModelItem::setDataFromProtobuf(Protobuf *protobuf)
 {
     if (!protobuf) {
-        qWarning() << CLASSNAME << "[Warning] fail appending child, null protobuf pointer";
-        return;
+        qWarning() << CLASSNAME << "[Warning] setting protobuf and expanding, null protobuf pointer";
+        return false;
     }
 
-    const auto &flag_id = flag(protobuf);
+    setProtobuf(protobuf);
+
+    const auto &flag_id = flag(_protobuf);
 
     if (flag_id == kMission) {
-        addMission(static_cast<pb::mission::Mission *>(protobuf), this);
+        expandMissionProtobuf(static_cast<pb::mission::Mission *>(_protobuf), this);
 
     } else if (flag_id == kCollection) {
-        addCollection(static_cast<pb::mission::Mission::Collection *>(protobuf), this);
+        expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
 
     } else if (flag_id == kElement) {
-        addElement(static_cast<pb::mission::Mission::Element *>(protobuf), this);
+        expandElementProtobuf(static_cast<pb::mission::Mission::Element *>(_protobuf), this);
 
     } else if (flag_id == kPoint) {
-        addPoint(static_cast<pb::mission::Mission::Element::Point *>(protobuf), this);
+        expandPointProtobuf(static_cast<pb::mission::Mission::Element::Point *>(_protobuf), this);
 
     } else if (flag_id == kRail) {
-        addRail(static_cast<pb::mission::Mission::Element::Rail *>(protobuf), this);
+        expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
 
     } else if (flag_id == kSegment) {
-        addSegment(static_cast<pb::mission::Mission::Element::Segment *>(protobuf), this);
+        expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
 
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail setting protobuf, missing flag" << flag_id;
+        qWarning() << CLASSNAME << "[Warning] fail setting protobuf and expanding, missing flag" << flag_id;
+        return false;
     }
+
+    return true;
 }

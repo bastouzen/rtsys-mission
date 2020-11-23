@@ -98,19 +98,20 @@ class ModelItem
     QVariant data(int role) const;
     QVariant icon() const;
     bool setData(const QVariant &value, int role);
+    void setProtobuf(Protobuf *protobuf) { _protobuf = protobuf; }
 
   private:
     // void appendRow(google::protobuf::Message *protobuf);
     // void appendRow(const ModelBacken::Flag component);
     Flag parentFlag() const;
     Flag collectionFlag() const;
-    void setProtobuf(const Flag new_flag);
-    void setProtobuf(Protobuf *protobuf);
+    void setDataFromFlag(const Flag new_flag);
+    bool setDataFromProtobuf(Protobuf *protobuf);
     ModelItem *_parent;
     Protobuf *_protobuf;
     QVector<ModelItem *> _childs;
 };
 
-Q_DECLARE_METATYPE(ModelItem::Wrapper);
+Q_DECLARE_METATYPE(ModelItem::Wrapper); // TODO: Add why adding that stuff
 
 #endif // RTSYS_MISSION_MODEL_ITEM_H
