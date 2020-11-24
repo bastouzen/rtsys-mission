@@ -28,14 +28,13 @@ namespace protobuf {
 class Message;
 } // namespace protobuf
 } // namespace google
-class ModelItem;
+class MissionItem;
 
 namespace Qt {
 enum MyRoles {
-    UserRoleFlagId = UserRole + 1,
-    UserRoleFlagStr,
+    UserRoleFlag = UserRole + 1,
     UserRoleName,
-    UserRoleWrapper,
+    UserRolePack,
 };
 } // namespace Qt
 
@@ -43,8 +42,10 @@ enum MyRoles {
 // === Class
 // ============================================================================ //
 
-class ModelItem
+class MissionItem
 {
+    Q_GADGET
+
     static const int COLUMNS = 2;
 
   public:
@@ -68,17 +69,14 @@ class ModelItem
         kRoute,
         kFamily
     };
+    Q_ENUM(Flag);
 
     static Flag flag(const Protobuf *protobuf);
-    static Wrapper wrap(Protobuf *pointer)
-    {
-        Wrapper p;
-        p.pointer = pointer;
-        return p;
-    }
+    static QByteArray pack(const Protobuf &protobuf);
+    static QSharedPointer<Protobuf> unpack(const QByteArray &array);
 
-    explicit ModelItem(ModelItem *parent = nullptr);
-    ~ModelItem();
+    explicit MissionItem(MissionItem *parent = nullptr);
+    ~MissionItem();
 
     void removeChild(const int row);
     void insertChild(const int row = -1);
@@ -88,12 +86,12 @@ class ModelItem
     bool isFlagSupported(const Flag flag) const { return isFlagSupported(flag, supportedFlags()); }
 
     // Getters and Setters
-    ModelItem *parent() { return _parent; }
+    MissionItem *parent() { return _parent; }
     Protobuf *protobuf() { return _protobuf; }
-    ModelItem *child(int row) { return _childs.at(row); }
+    MissionItem *child(int row) { return _childs.at(row); }
     int countChild() const { return _childs.count(); }
     int column() const { return COLUMNS; }
-    int row() const { return _parent ? _parent->_childs.indexOf(const_cast<ModelItem *>(this)) : 0; }
+    int row() const { return _parent ? _parent->_childs.indexOf(const_cast<MissionItem *>(this)) : 0; }
 
     QVariant data(int role) const;
     QVariant icon() const;
@@ -105,11 +103,10 @@ class ModelItem
     Flag collectionFlag() const;
     void setDataFromFlag(const Flag new_flag);
     bool setDataFromProtobuf(Protobuf *protobuf);
-    ModelItem *_parent;
+    bool setDataFromProtobuf(const QByteArray stream);
+    MissionItem *_parent;
     Protobuf *_protobuf;
-    QVector<ModelItem *> _childs;
+    QVector<MissionItem *> _childs;
 };
-
-Q_DECLARE_METATYPE(ModelItem::Wrapper); // Allow using Qt building Drag&Drop MimeData
 
 #endif // RTSYS_MISSION_MODEL_ITEM_H

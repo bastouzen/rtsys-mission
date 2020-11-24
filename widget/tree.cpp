@@ -49,10 +49,10 @@ void MissionTreeWidget::setManager(MissionManager *manager)
     ui->treeView->setModel(_manager->model());
     connect(ui->actionNewMission, &QAction::triggered, _manager, &MissionManager::newMission);
     connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager->removeIndex(_index); });
-    connect(ui->actionAddCollection, &QAction::triggered, this, [&]() { _manager->addCollectionIndex(_index); });
-    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addPointIndex(_index); });
-    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addRailIndex(_index); });
-    connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addSegmentIndex(_index); });
+    connect(ui->actionAddCollection, &QAction::triggered, this, [&]() { _manager->addIndexCollection(_index); });
+    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addIndexPoint(_index); });
+    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addIndexRail(_index); });
+    connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addIndexSegment(_index); });
     connect(ui->actionSaveMission, &QAction::triggered, this, [&]() { _manager->saveMission(); });
     connect(ui->actionSaveMissionAs, &QAction::triggered, this, [&]() {
         _manager->saveMissionAs(QFileDialog::getSaveFileName(
@@ -80,16 +80,16 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
         const auto &mask_action = item->supportedFlags();
         if (mask_action) {
             QMenu menu(this);
-            if (item->isFlagSupported(ModelItem::kDelete, mask_action)) menu.addAction(ui->actionDelete);
+            if (item->isFlagSupported(MissionItem::kDelete, mask_action)) menu.addAction(ui->actionDelete);
             if (mask_action > 1) {
                 QMenu *add = menu.addMenu(tr("Add"));
-                if (item->isFlagSupported(ModelItem::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
-                if (item->isFlagSupported(ModelItem::kRail, mask_action)) add->addAction(ui->actionAddRail);
-                if (item->isFlagSupported(ModelItem::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
-                if (item->isFlagSupported(ModelItem::kCollection, mask_action)) add->addAction(ui->actionAddCollection);
+                if (item->isFlagSupported(MissionItem::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
+                if (item->isFlagSupported(MissionItem::kRail, mask_action)) add->addAction(ui->actionAddRail);
+                if (item->isFlagSupported(MissionItem::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
+                if (item->isFlagSupported(MissionItem::kCollection, mask_action)) add->addAction(ui->actionAddCollection);
             }
 
-            if (ModelItem::flag(item->protobuf()) == ModelItem::kMission) {
+            if (MissionItem::flag(item->protobuf()) == MissionItem::kMission) {
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);
                 menu.addAction(ui->actionSaveMission);

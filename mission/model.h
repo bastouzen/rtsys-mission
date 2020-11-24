@@ -1,7 +1,7 @@
 /*
  * This defines the mission model. The mission model is represented as a tree, each
  * element of the tree (item) is linked to the root item in either parent or child
- * relationship. The items of the tree are instance of 'ModelItem'. In other words
+ * relationship. The items of the tree are instance of 'MissionItem'. In other words
  *the mission model holds all its data through the root item.
  */
 
@@ -26,7 +26,7 @@ class Message;
 } // namespace protobuf
 } // namespace google
 
-class ModelItem;
+class MissionItem;
 
 // ===
 // === Class
@@ -46,7 +46,7 @@ class MissionModel : public QAbstractItemModel
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 
     // Editing and Resizing Model
@@ -62,22 +62,15 @@ class MissionModel : public QAbstractItemModel
                          const QModelIndex &parent) const override;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
                       const QModelIndex &parent) override;
-
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     bool setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles) override;
 
-    ModelItem *root() { return _root; }
-    ModelItem *item(const QModelIndex &index) const;
-    QModelIndex index(ModelItem *item, int column = 0) const;
-    void appendRow(google::protobuf::Message *protobuf);
-    void appendRow(const QModelIndex &parent, const int component);
-    // void removeRow(int row, const QModelIndex &parent);
-    // void insertRow(int row, const QModelIndex &parent, const google::protobuf::Message &protobuf);
-
-    void test(const QModelIndex &parent, const int component);
+    MissionItem *root() { return _root; }
+    MissionItem *item(const QModelIndex &index) const;
+    QModelIndex index(MissionItem *item, int column = 0) const;
 
   private:
-    ModelItem *_root;
+    MissionItem *_root;
 };
 
 #endif // RTSYS_MISSION_MODEL_H

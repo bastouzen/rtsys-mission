@@ -49,10 +49,10 @@ void RepeatedFieldMoveUpLastAt(const int row, google::protobuf::RepeatedPtrField
 
 // Adds a collection protobuf message to the specified protobuf message. It depends
 // on the parent flag identifier.
-inline ModelItem::Protobuf *addCollectionProtobuf(const ModelItem::Flag parent_flag_id, ModelItem::Protobuf *parent)
+inline MissionItem::Protobuf *addCollectionProtobuf(const MissionItem::Flag parent_flag_id, MissionItem::Protobuf *parent)
 {
-    ModelItem::Protobuf *protobuf = nullptr;
-    if (parent_flag_id == ModelItem::kMission) {
+    MissionItem::Protobuf *protobuf = nullptr;
+    if (parent_flag_id == MissionItem::kMission) {
         protobuf = static_cast<pb::mission::Mission *>(parent)->add_components()->mutable_collection();
     }
     return protobuf;
@@ -60,13 +60,13 @@ inline ModelItem::Protobuf *addCollectionProtobuf(const ModelItem::Flag parent_f
 
 // Adds a point protobuf message to the specified protobuf message. It depends
 // on the parent flag identifier.
-inline ModelItem::Protobuf *addPointProtobuf(const ModelItem::Flag parent_flag_id, ModelItem::Protobuf *parent)
+inline MissionItem::Protobuf *addPointProtobuf(const MissionItem::Flag parent_flag_id, MissionItem::Protobuf *parent)
 {
-    ModelItem::Protobuf *protobuf = nullptr;
-    if (parent_flag_id == ModelItem::kMission) {
+    MissionItem::Protobuf *protobuf = nullptr;
+    if (parent_flag_id == MissionItem::kMission) {
         protobuf = static_cast<pb::mission::Mission *>(parent)->add_components()->mutable_element()->mutable_point();
     }
-    if (parent_flag_id == ModelItem::kCollection) {
+    if (parent_flag_id == MissionItem::kCollection) {
         protobuf = static_cast<pb::mission::Mission::Collection *>(parent)->add_elements()->mutable_point();
     }
     return protobuf;
@@ -74,13 +74,13 @@ inline ModelItem::Protobuf *addPointProtobuf(const ModelItem::Flag parent_flag_i
 
 // Adds a rail protobuf message to the specified protobuf message. It depends
 // on the parent flag identifier.
-inline ModelItem::Protobuf *addRailProtobuf(const ModelItem::Flag parent_flag_id, ModelItem::Protobuf *parent)
+inline MissionItem::Protobuf *addRailProtobuf(const MissionItem::Flag parent_flag_id, MissionItem::Protobuf *parent)
 {
-    ModelItem::Protobuf *protobuf = nullptr;
-    if (parent_flag_id == ModelItem::kMission) {
+    MissionItem::Protobuf *protobuf = nullptr;
+    if (parent_flag_id == MissionItem::kMission) {
         protobuf = static_cast<pb::mission::Mission *>(parent)->add_components()->mutable_element()->mutable_rail();
     }
-    if (parent_flag_id == ModelItem::kCollection) {
+    if (parent_flag_id == MissionItem::kCollection) {
         protobuf = static_cast<pb::mission::Mission::Collection *>(parent)->add_elements()->mutable_rail();
     }
     return protobuf;
@@ -88,13 +88,13 @@ inline ModelItem::Protobuf *addRailProtobuf(const ModelItem::Flag parent_flag_id
 
 // Adds a segment protobuf message to the specified protobuf message. It depends
 // on the parent flag identifier.
-inline ModelItem::Protobuf *addSegmentProtobuf(const ModelItem::Flag parent_flag_id, ModelItem::Protobuf *parent)
+inline MissionItem::Protobuf *addSegmentProtobuf(const MissionItem::Flag parent_flag_id, MissionItem::Protobuf *parent)
 {
-    ModelItem::Protobuf *protobuf = nullptr;
-    if (parent_flag_id == ModelItem::kMission) {
+    MissionItem::Protobuf *protobuf = nullptr;
+    if (parent_flag_id == MissionItem::kMission) {
         protobuf = static_cast<pb::mission::Mission *>(parent)->add_components()->mutable_element()->mutable_segment();
     }
-    if (parent_flag_id == ModelItem::kCollection) {
+    if (parent_flag_id == MissionItem::kCollection) {
         protobuf = static_cast<pb::mission::Mission::Collection *>(parent)->add_elements()->mutable_segment();
     }
     return protobuf;
@@ -102,7 +102,7 @@ inline ModelItem::Protobuf *addSegmentProtobuf(const ModelItem::Flag parent_flag
 
 // Adds a child item into the parent children and then set its data from the specified
 // protobuf message.
-inline ModelItem *addChild(ModelItem::Protobuf *protobuf, ModelItem *parent, bool insert_child = true)
+inline MissionItem *addChild(MissionItem::Protobuf *protobuf, MissionItem *parent, bool insert_child = true)
 {
     if (insert_child) parent->insertChild();              // add child at last position
     auto *item = parent->child(parent->countChild() - 1); // retrieve the created item and set it
@@ -111,14 +111,14 @@ inline ModelItem *addChild(ModelItem::Protobuf *protobuf, ModelItem *parent, boo
 }
 
 // Expands the point protobuf message from its parent item.
-inline void expandPointProtobuf(pb::mission::Mission::Element::Point *point, ModelItem *parent,
+inline void expandPointProtobuf(pb::mission::Mission::Element::Point *point, MissionItem *parent,
                                 bool insert_child = true)
 {
     addChild(point, parent, insert_child);
 };
 
 // Expands the rail protobuf message from its parent item.
-inline void expandRailProtobuf(pb::mission::Mission::Element::Rail *rail, ModelItem *parent, bool insert_child = true)
+inline void expandRailProtobuf(pb::mission::Mission::Element::Rail *rail, MissionItem *parent, bool insert_child = true)
 {
     auto item = addChild(rail, parent, insert_child);
     addChild(rail->mutable_p0(), item);
@@ -126,7 +126,7 @@ inline void expandRailProtobuf(pb::mission::Mission::Element::Rail *rail, ModelI
 };
 
 // Expands the segment protobuf message from its parent item.
-inline void expandSegmentProtobuf(pb::mission::Mission::Element::Segment *segment, ModelItem *parent,
+inline void expandSegmentProtobuf(pb::mission::Mission::Element::Segment *segment, MissionItem *parent,
                                   bool insert_child = true)
 {
     auto item = addChild(segment, parent, insert_child);
@@ -135,7 +135,7 @@ inline void expandSegmentProtobuf(pb::mission::Mission::Element::Segment *segmen
 };
 
 // Expands the element protobuf message from its parent item.
-inline void expandElementProtobuf(pb::mission::Mission::Element *element, ModelItem *parent, bool insert_child = true)
+inline void expandElementProtobuf(pb::mission::Mission::Element *element, MissionItem *parent, bool insert_child = true)
 {
     switch (element->element_case()) {
         case pb::mission::Mission::Element::kPoint:
@@ -153,7 +153,7 @@ inline void expandElementProtobuf(pb::mission::Mission::Element *element, ModelI
 };
 
 // Expands the collection protobuf message from its parent item.
-inline void expandCollectionProtobuf(pb::mission::Mission::Collection *collection, ModelItem *parent,
+inline void expandCollectionProtobuf(pb::mission::Mission::Collection *collection, MissionItem *parent,
                                      bool make_parent = true)
 {
     auto item = make_parent ? addChild(collection, parent) : parent;
@@ -163,7 +163,7 @@ inline void expandCollectionProtobuf(pb::mission::Mission::Collection *collectio
 };
 
 // Expands the mission protobuf message from its parent item.
-inline void expandMissionProtobuf(pb::mission::Mission *mission, ModelItem *parent)
+inline void expandMissionProtobuf(pb::mission::Mission *mission, MissionItem *parent)
 {
     for (auto &component : *mission->mutable_components()) {
         switch (component.component_case()) {

@@ -17,7 +17,8 @@
 
 #define CLASSNAME "MissionModel ::"
 
-#define CastToItem(index) static_cast<ModelItem *>(index.internalPointer())
+#define _Item(index) static_cast<MissionItem *>(index.internalPointer())
+#define _ItemOrRoot(index) (index.isValid() ? _Item(index) : _root)
 
 // ===
 // === Class
@@ -25,7 +26,7 @@
 
 MissionModel::MissionModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , _root(new ModelItem())
+    , _root(new MissionItem())
 {
 }
 
@@ -43,30 +44,11 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
 
-    if (role == Qt::DisplayRole || role == Qt::EditRole) {
-        if (index.column() == 0) {
-            return CastToItem(index)->data(Qt::UserRoleFlagStr);
-        }
-        if (index.column() == 1) {
-            return CastToItem(index)->data(Qt::UserRoleName);
-        }
-    }
+    if (role == Qt::DecorationRole && index.column() != 0) role = Qt::UserRole;
+    if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 0) role = Qt::UserRoleFlag;
+    if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 1) role = Qt::UserRoleName;
 
-    if (role == Qt::DecorationRole) {
-        if (index.column() == 0) {
-            return CastToItem(index)->data(Qt::DecorationRole);
-        }
-    }
-
-    if (role == Qt::UserRoleFlagId) {
-        return CastToItem(index)->data(Qt::UserRoleFlagId);
-    }
-
-    if (role == Qt::UserRoleWrapper) {
-        return CastToItem(index)->data(Qt::UserRoleWrapper);
-    }
-
-    return QVariant();
+    return _Item(index)->data(role);
 }
 
 // Returns the data for the given role and section in the header with the specified orientation.
@@ -84,13 +66,13 @@ QVariant MissionModel::headerData(int section, Qt::Orientation orientation, int 
 // of parent index.
 int MissionModel::rowCount(const QModelIndex &parent) const
 {
-    return (parent.isValid() ? CastToItem(parent) : _root)->countChild();
+    return _ItemOrRoot(parent)->countChild();
 }
 
 // Returns the number of columns for the children of the given parent index.
 int MissionModel::columnCount(const QModelIndex &parent) const
 {
-    return (parent.isValid() ? CastToItem(parent) : _root)->column();
+    return _ItemOrRoot(parent)->column();
 }
 
 // Creates then returns the index specified by the given row, column and parent index.
@@ -98,10 +80,9 @@ QModelIndex MissionModel::index(int row, int column, const QModelIndex &parent) 
 {
     if (!hasIndex(row, column, parent)) return QModelIndex();
 
-    auto *parent_item = parent.isValid() ? CastToItem(parent) : _root;
-    auto *child_item = parent_item->child(row);
-    if (child_item) {
-        return createIndex(row, column, child_item);
+    auto *child = _ItemOrRoot(parent)->child(row);
+    if (child) {
+        return createIndex(row, column, child);
     }
     return QModelIndex();
 }
@@ -110,7 +91,7 @@ QModelIndex MissionModel::index(int row, int column, const QModelIndex &parent) 
 QModelIndex MissionModel::parent(const QModelIndex &child) const
 {
     if (child.isValid()) {
-        return index(CastToItem(child)->parent(), 0);
+        return index(_Item(child)->parent(), 0);
     }
     return QModelIndex();
 }
@@ -134,14 +115,13 @@ Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
 // otherwise returns false.
 bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role == Qt::EditRole) {
-        if (CastToItem(index)->setData(value, Qt::UserRoleName)) {
-            emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
-            return true;
-        }
-    }
+    if (!index.isValid()) return false;
 
-    return CastToItem(index)->setData(value, role);
+    if (_Item(index)->setData(value, role)) {
+        emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
+        return true;
+    }
+    return false;
 }
 
 // Removes the item specified by the given row and parent index.
@@ -151,7 +131,7 @@ bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 
     if (rowCount(parent) && rowCount(parent) >= row) {
         beginRemoveRows(parent, row, row + 1);
-        (parent.isValid() ? CastToItem(parent) : _root)->removeChild(row);
+        _ItemOrRoot(parent)->removeChild(row);
         endRemoveRows();
         return true;
     }
@@ -165,11 +145,9 @@ bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
     Q_ASSERT_X(count == 1, CLASSNAME, "fail inserting row");
 
     beginInsertRows(parent, row, row + 1);
-    (parent.isValid() ? CastToItem(parent) : _root)->insertChild(row);
+    _ItemOrRoot(parent)->insertChild(row);
     endInsertRows();
     return true;
-
-    return QAbstractItemModel::insertRows(row, count, parent); // returns false
 }
 
 // =============================
@@ -205,7 +183,7 @@ QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
 QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
 {
     auto roles = QAbstractItemModel::itemData(index);
-    roles.insert(Qt::UserRoleFlagId, data(index, Qt::UserRoleFlagId));
+    roles.insert(Qt::UserRoleFlag, data(index, Qt::UserRoleFlag));
 
     qDebug() << "==============================A";
     qDebug() << roles;
@@ -222,9 +200,9 @@ bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
     qDebug() << "::canDropMimeData" << data << action << row << column << parent;
     auto child_index = index(row, column, parent);
     if (child_index.isValid()) {
-        qDebug() << "===>" << parent.data(Qt::UserRoleFlagId) << "|" << child_index.data(Qt::UserRoleFlagId);
-        return CastToItem(parent)->isFlagSupported(
-            static_cast<ModelItem::Flag>(child_index.data(Qt::UserRoleFlagId).toInt()));
+        qDebug() << "===>" << parent.data(Qt::UserRoleFlag) << "|" << child_index.data(Qt::UserRoleFlag);
+        return _Item(parent)->isFlagSupported(
+            static_cast<MissionItem::Flag>(child_index.data(Qt::UserRoleFlag).toInt()));
     }
     return false;
 }
@@ -265,7 +243,7 @@ bool MissionModel::dropMimeData(const QMimeData *data, Qt::DropAction action, in
 // ============================================================================ //
 
 // Creates then returns the index specified by the given item and column.
-QModelIndex MissionModel::index(ModelItem *item, int column) const
+QModelIndex MissionModel::index(MissionItem *item, int column) const
 {
     if (!item || (item == _root)) {
         return QModelIndex(); // the root has no valid index model.
@@ -274,27 +252,7 @@ QModelIndex MissionModel::index(ModelItem *item, int column) const
 }
 
 // Returns the item specified by the given index.
-ModelItem *MissionModel::item(const QModelIndex &index) const
+MissionItem *MissionModel::item(const QModelIndex &index) const
 {
-    return index.isValid() ? CastToItem(index) : nullptr;
-}
-
-// Appends an item to the root children for the specified underlying protobuf
-// message.
-void MissionModel::appendRow(google::protobuf::Message *protobuf)
-{
-    //    QModelIndex parent;
-    //    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
-    //    _root->appendRow(protobuf);
-    //    endInsertRows();
-}
-
-// Appends an item to the specified parent children for the specified component.
-void MissionModel::appendRow(const QModelIndex &parent, const int component)
-{
-    if (!parent.isValid()) return;
-
-    //    beginInsertRows(parent, rowCount(parent), rowCount(parent) + 1);
-    //    CastToItem(parent)->appendRow(static_cast<ModelBacken::Flag>(component));
-    //    endInsertRows();
+    return index.isValid() ? _Item(index) : nullptr;
 }

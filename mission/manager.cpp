@@ -104,40 +104,13 @@ MissionManager::MissionManager(QObject *parent)
     : QObject(parent)
 {
     newMission();
-    addPointIndex(_model.index(_model.root()->child(0)));
-    addRailIndex(_model.index(_model.root()->child(0)));
-    addSegmentIndex(_model.index(_model.root()->child(0)));
-    addCollectionIndex(_model.index(_model.root()->child(0)));
+    addIndexPoint(_model.index(0, 0, QModelIndex()));
+    addIndexRail(_model.index(0, 0, QModelIndex()));
+    addIndexSegment(_model.index(0, 0, QModelIndex()));
+    addIndexCollection(_model.index(0, 0, QModelIndex()));
 }
 
 MissionManager::~MissionManager() {}
-
-// This loads a mission. First we remove the internal mission protobuf then
-// copy the specified mission protobuf into the internal mission protobuf and
-// finaly update the internal mission model.
-void MissionManager::loadMission(const pb::mission::Mission &mission)
-{
-    removeMission();
-    Q_ASSERT(_model.rowCount() == 0);
-    _mission.CopyFrom(mission);
-    _model.insertRows(_model.rowCount(), 1);
-    _model.setData(_model.index(_model.root()->child(0)), QVariant::fromValue(ModelItem::wrap(&_mission)),
-                   Qt::UserRoleWrapper);
-    emit loadMissionDone();
-}
-
-// This creates a new mission. First we remove the internal mission protobuf
-// then set the internal mission protobuf name and finaly update the internal
-// mission model.
-void MissionManager::newMission()
-{
-    removeMission();
-    Q_ASSERT(_model.rowCount() == 0);
-    _mission.set_name(QString(tr("My New Mission")).toStdString());
-    _model.insertRows(_model.rowCount(), 1);
-    _model.setData(_model.index(_model.root()->child(0)), QVariant::fromValue(ModelItem::wrap(&_mission)),
-                   Qt::UserRoleWrapper);
-}
 
 // This removes the mission. Here we suppose that the root item has only one
 // child which is the internal mission item.
@@ -151,6 +124,28 @@ void MissionManager::removeMission()
         return;
     }
     qWarning() << CLASSNAME << "[Warning] fail removing mission, root item children" << _model.root()->countChild();
+}
+
+// This creates a new mission.
+void MissionManager::newMission()
+{
+    removeMission();
+    Q_ASSERT(_model.rowCount() == 0); // assert root item has no children
+
+    auto parent = QModelIndex();
+    auto row = _model.rowCount(parent);
+    _model.insertRow(row, parent);
+    _model.item(_model.index(row, 0, parent))->setProtobuf(&_mission);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::kMission), Qt::UserRoleFlag);
+}
+
+// This loads a mission.
+void MissionManager::loadMission(const pb::mission::Mission &mission)
+{
+    newMission();
+    auto index = _model.index(0, 0, QModelIndex()); // index of the root children for the mission
+    _model.setData(index, QVariant::fromValue(MissionItem::pack(mission)), Qt::UserRolePack);
+    emit loadMissionDone();
 }
 
 // This saves the mission into the specified filename path. This is using the
@@ -208,35 +203,11 @@ void MissionManager::removeIndex(const QModelIndex &index)
 }
 
 // Adds a flag identifier under the specified parent index.
-void MissionManager::addFlagIndex(const QModelIndex &parent, int flag)
+void MissionManager::addIndexFromFlag(const QModelIndex &parent, int flag)
 {
     if (!parent.isValid()) return;
 
     auto row = _model.rowCount(parent);
-    _model.insertRows(row, 1, parent);
-    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleFlagId);
-}
-
-// Adds a collection under the specified parent index.
-void MissionManager::addCollectionIndex(const QModelIndex &parent)
-{
-    addFlagIndex(parent, ModelItem::kCollection);
-}
-
-// Adds a point under the specified parent index.
-void MissionManager::addPointIndex(const QModelIndex &parent)
-{
-    addFlagIndex(parent, ModelItem::kPoint);
-}
-
-// Adds a rail under the specified parent index.
-void MissionManager::addRailIndex(const QModelIndex &parent)
-{
-    addFlagIndex(parent, ModelItem::kRail);
-}
-
-// Adds a segment under the specified parent index.
-void MissionManager::addSegmentIndex(const QModelIndex &parent)
-{
-    addFlagIndex(parent, ModelItem::kSegment);
+    _model.insertRow(row, parent);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleFlag);
 }
