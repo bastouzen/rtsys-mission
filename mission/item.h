@@ -15,45 +15,104 @@
 // === Include
 // ============================================================================ //
 
-#include "mission/backend.h"
-
 #include <QAbstractItemModel>
 #include <QModelIndex>
 #include <QVariant>
 
 // ===
+// === Define
+// ============================================================================ //
+
+namespace google {
+namespace protobuf {
+class Message;
+} // namespace protobuf
+} // namespace google
+class MissionItem;
+
+namespace Qt {
+enum MyRoles {
+    UserRoleFlag = UserRole + 1,
+    UserRoleName,
+    UserRolePack,
+    UserRoleWrapper,
+};
+} // namespace Qt
+
+// ===
 // === Class
 // ============================================================================ //
 
-class ModelItem
+class MissionItem
 {
-  public:
-    explicit ModelItem(const QVector<QVariant> &data, google::protobuf::Message *protobuf = nullptr,
-                       ModelItem *parent = nullptr);
-    ~ModelItem();
+    Q_GADGET
 
-    void appendRow(google::protobuf::Message *protobuf);
-    void appendRow(const ModelBacken::Action action);
-    void removeRow(int row);
+    static const int COLUMNS = 2;
+
+  public:
+    typedef google::protobuf::Message Protobuf;
+
+    struct Wrapper {
+        Protobuf *pointer;
+    };
+
+    enum Flag {
+        kUndefined,
+        kMission,
+        kComponent,
+        kCollection,
+        kElement,
+        kPoint,
+        kRail,
+        kSegment,
+        kDelete,
+        kScenario,
+        kRoute,
+        kFamily
+    };
+    Q_ENUM(Flag);
+
+    static Flag flag(const Protobuf *protobuf);
+    static Flag flag(const Protobuf &protobuf) { return flag(&protobuf); }
+    static Wrapper wrap(Protobuf *protobuf)
+    {
+        MissionItem::Wrapper wrapper;
+        wrapper.pointer = protobuf;
+        return wrapper;
+    }
+    static QByteArray pack(const Protobuf &protobuf);
+
+    explicit MissionItem(MissionItem *parent = nullptr);
+    ~MissionItem();
+
+    void removeChild(const int row);
+    void insertChild(const int row = -1);
+
+    unsigned int supportedFlags() const;
+    bool isFlagSupported(const Flag flag, const unsigned int mask) const { return (mask >> flag) & 1; }
+    bool isFlagSupported(const Flag flag) const { return isFlagSupported(flag, supportedFlags()); }
 
     // Getters and Setters
-    void appendChild(ModelItem *child) { _childs.append(child); }
-    ModelItem *child(int row);
-    int childCount() const { return _childs.count(); }
-    int columnCount() const { return _data.count(); }
-    QVariant data(int column) const;
-    int row() const;
-    bool setData(int column, const QVariant &value);
-    ModelItem *parent() { return _parent; }
-    ModelBacken &backend() { return _backend; }
+    MissionItem *parent() { return _parent; }
+    MissionItem *child(int row) { return _childs.at(row); }
+    int countChild() const { return _childs.count(); }
+    int column() const { return COLUMNS; }
+    int row() const { return _parent ? _parent->_childs.indexOf(const_cast<MissionItem *>(this)) : 0; }
 
-    friend class ModelBacken;
+    QVariant data(int role, const int column = 0) const;
+    bool setData(const QVariant &value, int role);
 
   private:
-    QVector<QVariant> _data;
-    ModelItem *_parent;
-    ModelBacken _backend;
-    QVector<ModelItem *> _childs;
+    QVariant icon() const;
+    Flag parentFlag() const;
+    Flag collectionFlag() const;
+    void setDataFromFlag(const Flag new_flag);
+    bool setDataFromProtobuf(const QByteArray &packed);
+    MissionItem *_parent;
+    Protobuf *_protobuf;
+    QVector<MissionItem *> _childs;
 };
+
+Q_DECLARE_METATYPE(MissionItem::Wrapper);
 
 #endif // RTSYS_MISSION_MODEL_ITEM_H

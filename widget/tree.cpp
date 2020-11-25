@@ -17,21 +17,26 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     ui->setupUi(this);
     // ui->treeView->setModel(_manager.model());
 
-    // ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->treeView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+    ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    // ui->treeView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     // ui->treeView->setSelectionModel()
 
     // Enable right-click context.
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeView, &QTreeView::customContextMenuRequested, this, &MissionTreeWidget::createCustomContexMenu);
 
-    // connect(ui->actionSelectAll, &QAction::triggered, ui->treeView, &QTreeView::selectAll);
-    connect(ui->treeView, &QTreeView::doubleClicked, this, [](const QModelIndex &index) {
-        // qDebug() << index;
-        // qDebug() << _manager._mission.DebugString().data();
-    });
+    // Enable drag&drop.
+    ui->treeView->setDragEnabled(true);
+    ui->treeView->viewport()->setAcceptDrops(true);
+    ui->treeView->setDropIndicatorShown(true);
+    //    ui->treeView->setDragDropMode(QAbstractItemView::InternalMove);
 
-    // connect(ui->actionNewMission, &QAction::triggered, this, [&]() { _manager.addMission(_index); });
+    // connect(ui->actionSelectAll, &QAction::triggered, ui->treeView, &QTreeView::selectAll);
+    connect(ui->treeView, &QTreeView::doubleClicked, this, [&](const QModelIndex &index) {
+        qDebug() << index;
+        auto *protobuf = index.data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
+        qDebug() << protobuf->DebugString().data();
+    });
 }
 
 MissionTreeWidget::~MissionTreeWidget()
@@ -45,10 +50,10 @@ void MissionTreeWidget::setManager(MissionManager *manager)
     ui->treeView->setModel(_manager->model());
     connect(ui->actionNewMission, &QAction::triggered, _manager, &MissionManager::newMission);
     connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager->removeIndex(_index); });
-    connect(ui->actionAddCollection, &QAction::triggered, this, [&]() { _manager->addCollectionIndex(_index); });
-    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addPointIndex(_index); });
-    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addRailIndex(_index); });
-    connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addSegmentIndex(_index); });
+    connect(ui->actionAddCollection, &QAction::triggered, this, [&]() { _manager->addIndexCollection(_index); });
+    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addIndexPoint(_index); });
+    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addIndexRail(_index); });
+    connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addIndexSegment(_index); });
     connect(ui->actionSaveMission, &QAction::triggered, this, [&]() { _manager->saveMission(); });
     connect(ui->actionSaveMissionAs, &QAction::triggered, this, [&]() {
         _manager->saveMissionAs(QFileDialog::getSaveFileName(
@@ -60,6 +65,10 @@ void MissionTreeWidget::setManager(MissionManager *manager)
             this, tr("Open Mission File"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
             tr("JSON (*.json)")));
     });
+    connect(_manager, &MissionManager::loadMissionDone, ui->treeView, [this]() {
+        ui->treeView->expandAll();
+        ui->treeView->resizeColumnToContents(0);
+    });
 }
 
 void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
@@ -69,24 +78,20 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
     auto *item = _manager->model()->item(_index);
 
     if (item) {
-        auto &backend = item->backend();
-        const auto &mask_action = backend.authorizedAction();
+        const auto &mask_action = item->supportedFlags();
         if (mask_action) {
             QMenu menu(this);
-            if (backend.isActionAuthorized(ModelBacken::Action::kDelete, mask_action)) menu.addAction(ui->actionDelete);
-            if (mask_action > 1) {
+            if (item->isFlagSupported(MissionItem::kDelete, mask_action)) menu.addAction(ui->actionDelete);
+            if (mask_action ^ (1 << MissionItem::kDelete)) {
                 QMenu *add = menu.addMenu(tr("Add"));
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddPoint, mask_action))
-                    add->addAction(ui->actionAddPoint);
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddRail, mask_action))
-                    add->addAction(ui->actionAddRail);
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddSegment, mask_action))
-                    add->addAction(ui->actionAddSegment);
-                if (backend.isActionAuthorized(ModelBacken::Action::kAddCollection, mask_action))
+                if (item->isFlagSupported(MissionItem::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
+                if (item->isFlagSupported(MissionItem::kRail, mask_action)) add->addAction(ui->actionAddRail);
+                if (item->isFlagSupported(MissionItem::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
+                if (item->isFlagSupported(MissionItem::kCollection, mask_action))
                     add->addAction(ui->actionAddCollection);
             }
 
-            if (backend.component() == ModelBacken::kMission) {
+            if (item->data(Qt::UserRoleFlag) == MissionItem::kMission) {
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);
                 menu.addAction(ui->actionSaveMission);
@@ -96,7 +101,7 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
         }
     } else {
         // Add new mission if the root item has no child.
-        if (!_manager->model()->root()->childCount()) {
+        if (!_manager->model()->root()->countChild()) {
             QMenu menu(this);
             QMenu *add = menu.addMenu(tr("Add"));
             add->addAction(ui->actionNewMission);

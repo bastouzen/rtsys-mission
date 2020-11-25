@@ -6,7 +6,7 @@
 #include "widget/tree.h"
 
 #include <QApplication>
-#include <QDebug>
+#include <QLoggingCategory>
 
 // ===
 // === Main
@@ -14,6 +14,8 @@
 
 int main(int argc, char *argv[])
 {
+    QLoggingCategory::setFilterRules("rtsys.*.debug=true");
+
     QApplication app(argc, argv);
     MissionManager manager;
 
@@ -22,7 +24,7 @@ int main(int argc, char *argv[])
     widget.setManager(&manager);
     widget.show();
 
-    manager.loadMission(MissionManager::getMissionTemplate());
+    // manager.loadMission(MissionManager::getMissionTemplate());
 
     return app.exec();
 }
