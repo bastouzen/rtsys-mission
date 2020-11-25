@@ -33,7 +33,6 @@ class MissionItem;
 namespace Qt {
 enum MyRoles {
     UserRoleFlag = UserRole + 1,
-    UserRoleName,
     UserRolePack,
     UserRoleWrapper,
 };

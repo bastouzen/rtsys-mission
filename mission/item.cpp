@@ -172,11 +172,7 @@ void MissionItem::insertChild(int row)
 // otherwise returns false.
 bool MissionItem::setData(const QVariant &value, int role)
 {
-    if (role == Qt::UserRoleFlag) {
-        setDataFromFlag(value.value<MissionItem::Flag>());
-        return true;
-
-    } else if (role == Qt::UserRoleName || role == Qt::EditRole) {
+    if (role == Qt::EditRole) {
         // Here we use some king to inline template function thank to C++14
         // "lambda function with auto parameter"
         auto setUserRoleName = [&](auto *protobuf) { protobuf->set_name(value.toString().toStdString()); };
@@ -196,6 +192,10 @@ bool MissionItem::setData(const QVariant &value, int role)
             qCWarning(LC_RMI) << "fail setting data, missing flag [" << flag_id << "]";
             return false;
         }
+        return true;
+
+    } else if (role == Qt::UserRoleFlag) {
+        setDataFromFlag(value.value<MissionItem::Flag>());
         return true;
 
     } else if (role == Qt::UserRolePack) {
@@ -220,7 +220,7 @@ QVariant MissionItem::data(const int role, const int column) const
         // Use reflection property of Qt for getting the name of the flag identifier.
         return QString(QMetaEnum::fromType<Flag>().valueToKey(flag(_protobuf))).mid(1, -1);
 
-    } else if ((role == Qt::DisplayRole && column == 1) || role == Qt::UserRoleName) {
+    } else if ((role == Qt::DisplayRole && column == 1) || role == Qt::EditRole) {
         // Here we use some king to inline template function thank to C++14
         // "lambda function with auto parameter"
         auto getUserName = [&](auto *message) -> QVariant {
