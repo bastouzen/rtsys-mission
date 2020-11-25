@@ -123,8 +123,6 @@ bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int 
 // Removes the item specified by the given row and parent index.
 bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    qCDebug(LC_RMM) << "[removeRows] row" << row << "count" << count << "parent" << parent;
-
     Q_ASSERT(count == 1);
 
     if (rowCount(parent) && rowCount(parent) >= row) {
@@ -140,12 +138,9 @@ bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 // Insert an item specified by the given row and parent index.
 bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    qCDebug(LC_RMM) << "[insertRows] row:" << row << "count:" << count << "parent:" << parent
-                    << data(parent, Qt::UserRoleName) << "rowCount:" << rowCount(parent);
-
     Q_ASSERT(count == 1);
 
-    beginInsertRows(parent, row, row + 1);
+    beginInsertRows(parent, row, row);
     _ItemOrRoot(parent)->insertChild(row);
     endInsertRows();
 
@@ -217,3 +212,12 @@ MissionItem *MissionModel::item(const QModelIndex &index) const
 {
     return index.isValid() ? _Item(index) : nullptr;
 }
+
+// void MissionModel::debugPrintItem(MissionItem *item, int level) const
+//{
+//    QVariant data = item->data(Qt::DisplayRole, 1);
+//    qDebug().noquote().nospace() << QString(" ").repeated(level) << (data.isValid() ? data.toString() : "Root");
+//    for (int i = 0; i < item->countChild(); i++) {
+//        debugPrintItem(item->child(i), level + 1);
+//    }
+//}

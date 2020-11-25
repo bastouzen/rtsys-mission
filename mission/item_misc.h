@@ -155,9 +155,9 @@ inline MissionItem::Protobuf *insertSegmentProtobuf(const int row, MissionItem *
 
 // Adds a child item into the parent children and then set its data from the specified
 // protobuf message.
-inline MissionItem *addChild(MissionItem::Protobuf *protobuf, MissionItem *parent, bool insert_child = true)
+inline MissionItem *addChild(MissionItem::Protobuf *protobuf, MissionItem *parent)
 {
-    if (insert_child) parent->insertChild();              // add child at last position
+    parent->insertChild();                                // add child at last position
     auto *item = parent->child(parent->countChild() - 1); // retrieve the created item and set it
     item->setData(QVariant::fromValue(MissionItem::wrap(protobuf)), Qt::UserRoleWrapper);
     return item;
@@ -165,40 +165,40 @@ inline MissionItem *addChild(MissionItem::Protobuf *protobuf, MissionItem *paren
 
 // Expands the point protobuf message from its parent item.
 inline void expandPointProtobuf(pb::mission::Mission::Element::Point *point, MissionItem *parent,
-                                bool insert_child = true)
+                                bool is_nested = false)
 {
-    addChild(point, parent, insert_child);
+    if (is_nested) addChild(point, parent);
 };
 
 // Expands the rail protobuf message from its parent item.
-inline void expandRailProtobuf(pb::mission::Mission::Element::Rail *rail, MissionItem *parent, bool insert_child = true)
+inline void expandRailProtobuf(pb::mission::Mission::Element::Rail *rail, MissionItem *parent, bool is_nested = false)
 {
-    auto item = addChild(rail, parent, insert_child);
+    auto item = is_nested ? addChild(rail, parent) : parent;
     addChild(rail->mutable_p0(), item);
     addChild(rail->mutable_p1(), item);
 };
 
 // Expands the segment protobuf message from its parent item.
 inline void expandSegmentProtobuf(pb::mission::Mission::Element::Segment *segment, MissionItem *parent,
-                                  bool insert_child = true)
+                                  bool is_nested = false)
 {
-    auto item = addChild(segment, parent, insert_child);
+    auto item = is_nested ? addChild(segment, parent) : parent;
     addChild(segment->mutable_p0(), item);
     addChild(segment->mutable_p1(), item);
 };
 
 // Expands the element protobuf message from its parent item.
-inline void expandElementProtobuf(pb::mission::Mission::Element *element, MissionItem *parent, bool insert_child = true)
+inline void expandElementProtobuf(pb::mission::Mission::Element *element, MissionItem *parent, bool is_nested = false)
 {
     switch (element->element_case()) {
         case pb::mission::Mission::Element::kPoint:
-            expandPointProtobuf(element->mutable_point(), parent, insert_child);
+            expandPointProtobuf(element->mutable_point(), parent, is_nested);
             break;
         case pb::mission::Mission::Element::kRail:
-            expandRailProtobuf(element->mutable_rail(), parent, insert_child);
+            expandRailProtobuf(element->mutable_rail(), parent, is_nested);
             break;
         case pb::mission::Mission::Element::kSegment:
-            expandSegmentProtobuf(element->mutable_segment(), parent, insert_child);
+            expandSegmentProtobuf(element->mutable_segment(), parent, is_nested);
             break;
         default:
             break;
@@ -207,11 +207,11 @@ inline void expandElementProtobuf(pb::mission::Mission::Element *element, Missio
 
 // Expands the collection protobuf message from its parent item.
 inline void expandCollectionProtobuf(pb::mission::Mission::Collection *collection, MissionItem *parent,
-                                     bool make_parent = true)
+                                     bool is_nested = false)
 {
-    auto item = make_parent ? addChild(collection, parent) : parent;
+    auto item = is_nested ? addChild(collection, parent) : parent;
     for (auto &element : *collection->mutable_elements()) {
-        expandElementProtobuf(&element, item);
+        expandElementProtobuf(&element, item, true); // force nested flag
     }
 };
 
@@ -221,10 +221,10 @@ inline void expandMissionProtobuf(pb::mission::Mission *mission, MissionItem *pa
     for (auto &component : *mission->mutable_components()) {
         switch (component.component_case()) {
             case pb::mission::Mission::Component::kElement:
-                expandElementProtobuf(component.mutable_element(), parent);
+                expandElementProtobuf(component.mutable_element(), parent, true); // nested
                 break;
             case pb::mission::Mission::Component::kCollection:
-                expandCollectionProtobuf(component.mutable_collection(), parent);
+                expandCollectionProtobuf(component.mutable_collection(), parent, true); // nested
                 break;
             default:
                 break;

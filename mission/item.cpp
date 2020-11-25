@@ -141,6 +141,9 @@ void MissionItem::removeChild(int row)
                 return false;
             }
 
+        } else if (flag_id == kRail || flag_id == kSegment) {
+            // Do nothing !!
+
         } else {
             qCWarning(LC_RMI) << "fail removing child, missing flag [" << flag_id << "]";
             return false;
@@ -385,33 +388,47 @@ bool MissionItem::setDataFromProtobuf(const QByteArray &packed)
 {
     const auto &flag_id = flag(_protobuf);
 
+    // We remove the already created children of Rail and Segment. These children
+    // were created by calling "setDataFromFlag" but as we use the parse function
+    // from google protobuf, the nested field messages may be desallocated and
+    // reallocated by the parsing process. So in order to avoid dangling pointer
+    // we remove all the children.
+    if (flag_id == kRail || flag_id == kSegment) {
+        while (countChild()) removeChild(0);
+    }
+
     if (flag_id == kMission) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
             expandMissionProtobuf(static_cast<pb::mission::Mission *>(_protobuf), this);
             return true;
         }
 
-        //} else if (flag_id == kCollection) {
-        //    expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
-
-        //} else if (flag_id == kElement) {
-        //    expandElementProtobuf(static_cast<pb::mission::Mission::Element *>(_protobuf), this);
+    } else if (flag_id == kCollection) {
+        if (_protobuf->ParseFromString(packed.toStdString())) {
+            expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
+            return true;
+        }
 
     } else if (flag_id == kPoint) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
             return true;
         }
-    }
 
-    //} else if (flag_id == kRail) {
-    //    expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
-    //
-    //} else if (flag_id == kSegment) {
-    //    expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
-    //
-    //} else {
-    //    qCWarning(LC_RMI) << "fail setting data, missing flag [" << flag_id << "]";
-    //}
+    } else if (flag_id == kRail) {
+        if (_protobuf->ParseFromString(packed.toStdString())) {
+            expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
+            return true;
+        }
+
+    } else if (flag_id == kSegment) {
+        if (_protobuf->ParseFromString(packed.toStdString())) {
+            expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
+            return true;
+        }
+
+    } else {
+        qCWarning(LC_RMI) << "fail setting data, missing flag [" << flag_id << "]";
+    }
 
     return false;
 }
