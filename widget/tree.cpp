@@ -32,9 +32,10 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     //    ui->treeView->setDragDropMode(QAbstractItemView::InternalMove);
 
     // connect(ui->actionSelectAll, &QAction::triggered, ui->treeView, &QTreeView::selectAll);
-    connect(ui->treeView, &QTreeView::doubleClicked, this, [](const QModelIndex &index) {
-        // qDebug() << index;
-        // qDebug() << _manager._mission.DebugString().data();
+    connect(ui->treeView, &QTreeView::doubleClicked, this, [&](const QModelIndex &index) {
+        qDebug() << index;
+        auto *protobuf = index.data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
+        qDebug() << protobuf->DebugString().data();
     });
 }
 
@@ -81,15 +82,16 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
         if (mask_action) {
             QMenu menu(this);
             if (item->isFlagSupported(MissionItem::kDelete, mask_action)) menu.addAction(ui->actionDelete);
-            if (mask_action > 1) {
+            if (mask_action ^ (1 << MissionItem::kDelete)) {
                 QMenu *add = menu.addMenu(tr("Add"));
                 if (item->isFlagSupported(MissionItem::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
                 if (item->isFlagSupported(MissionItem::kRail, mask_action)) add->addAction(ui->actionAddRail);
                 if (item->isFlagSupported(MissionItem::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
-                if (item->isFlagSupported(MissionItem::kCollection, mask_action)) add->addAction(ui->actionAddCollection);
+                if (item->isFlagSupported(MissionItem::kCollection, mask_action))
+                    add->addAction(ui->actionAddCollection);
             }
 
-            if (MissionItem::flag(item->protobuf()) == MissionItem::kMission) {
+            if (item->data(Qt::UserRoleFlag) == MissionItem::kMission) {
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);
                 menu.addAction(ui->actionSaveMission);

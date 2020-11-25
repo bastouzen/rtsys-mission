@@ -107,7 +107,7 @@ MissionManager::MissionManager(QObject *parent)
     addIndexPoint(_model.index(0, 0, QModelIndex()));
     addIndexRail(_model.index(0, 0, QModelIndex()));
     addIndexSegment(_model.index(0, 0, QModelIndex()));
-    addIndexCollection(_model.index(0, 0, QModelIndex()));
+    // addIndexCollection(_model.index(0, 0, QModelIndex()));
 }
 
 MissionManager::~MissionManager() {}
@@ -135,7 +135,8 @@ void MissionManager::newMission()
     auto parent = QModelIndex();
     auto row = _model.rowCount(parent);
     _model.insertRow(row, parent);
-    _model.item(_model.index(row, 0, parent))->setProtobuf(&_mission);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::wrap(&_mission)),
+                   Qt::UserRoleWrapper);
     _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::kMission), Qt::UserRoleFlag);
 }
 

@@ -63,17 +63,10 @@ MissionItem::Flag MissionItem::flag(const Protobuf *protobuf)
     }
 }
 
+// Serializes the underlying protobuf message.
 QByteArray MissionItem::pack(const Protobuf &protobuf)
 {
     return QByteArray::fromStdString(protobuf.SerializeAsString());
-}
-
-QSharedPointer<MissionItem::Protobuf> MissionItem::unpack(const QByteArray &array)
-{
-    QSharedPointer<MissionItem::Protobuf> pprotobuf;
-    pprotobuf->ParseFromString(array.toStdString());
-    // const auto flag_id = MissionItem::flag(pprotobuf.data());
-    return pprotobuf;
 }
 
 // ===
@@ -110,7 +103,7 @@ unsigned int MissionItem::supportedFlags() const
         return (1 << kDelete);
 
     } else if (flag_id == kPoint) {
-        const auto &parent_flag_id = flag(_parent->protobuf());
+        const auto &parent_flag_id = flag(_parent->_protobuf);
         if (parent_flag_id != kRail && parent_flag_id != kSegment) {
             return (1 << kDelete);
         }
@@ -142,7 +135,7 @@ void MissionItem::removeChild(int row)
             // remove the row-protobuf message, we first retrieve the child item
             // specified by the row and then clear the underlying protobuf message.
             if (countChild() >= row) {
-                child(row)->protobuf()->Clear();
+                child(row)->_protobuf->Clear();
             } else {
                 qCWarning(LC_RMI) << "fail removing child, missing row [" << row << "]";
                 return false;
@@ -205,22 +198,26 @@ bool MissionItem::setData(const QVariant &value, int role)
     } else if (role == Qt::UserRolePack) {
         setDataFromProtobuf(value.toByteArray());
         return true;
+
+    } else if (role == Qt::UserRoleWrapper) {
+        _protobuf = value.value<MissionItem::Wrapper>().pointer;
+        return true;
     }
 
     return false;
 }
 
 // Returns the data specified by the role.
-QVariant MissionItem::data(const int role) const
+QVariant MissionItem::data(const int role, const int column) const
 {
-    if (role == Qt::DecorationRole) {
+    if (role == Qt::DecorationRole && column == 0) {
         return icon();
 
-    } else if (role == Qt::UserRoleFlag) {
+    } else if (role == Qt::DisplayRole && column == 0) {
         // Use reflection property of Qt for getting the name of the flag identifier.
         return QString(QMetaEnum::fromType<Flag>().valueToKey(flag(_protobuf))).mid(1, -1);
 
-    } else if (role == Qt::UserRoleName) {
+    } else if ((role == Qt::DisplayRole && column == 1) || role == Qt::UserRoleName) {
         // Here we use some king to inline template function thank to C++14
         // "lambda function with auto parameter"
         auto getUserName = [&](auto *message) -> QVariant {
@@ -241,10 +238,16 @@ QVariant MissionItem::data(const int role) const
         } else {
             qCWarning(LC_RMI) << "fail getting data, missing flag [" << flag_id << "]";
         }
-    }
 
-    else if (role == Qt::UserRolePack) {
-        // return QVariant::fromValue(MissionItem::wrap(_protobuf));
+    } else if (role == Qt::UserRoleFlag) {
+        // Use reflection property of Qt for getting the name of the flag identifier.
+        return flag(_protobuf);
+
+    } else if (role == Qt::UserRolePack) {
+        return MissionItem::pack(*_protobuf);
+
+    } else if (role == Qt::UserRoleWrapper) {
+        return QVariant::fromValue(MissionItem::wrap(_protobuf));
     }
 
     return QVariant();
@@ -271,7 +274,7 @@ QVariant MissionItem::icon() const
     } else if (flag_id == kSegment) {
         return QIcon(ResourceIconSegment);
     } else if (flag_id == kPoint) {
-        const auto &pareng_flag_id = flag(_parent->protobuf());
+        const auto &pareng_flag_id = flag(_parent->_protobuf);
         if (pareng_flag_id == kRail) {
             return QIcon(ResourceIconRailPoint);
         } else if (pareng_flag_id == kSegment) {
@@ -295,7 +298,7 @@ MissionItem::Flag MissionItem::collectionFlag() const
         auto is_route = true;
         auto is_family = true;
         for (auto *child_item : _childs) {
-            const auto &flag_id = flag(child_item->protobuf());
+            const auto &flag_id = flag(child_item->_protobuf);
             is_route &= flag_id == kPoint;
             is_family &= flag_id == kRail;
         }
@@ -317,7 +320,6 @@ void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
         return;
     }
 
-    const auto &parent_flag_id = flag(_parent->protobuf());
     const auto &parent_count_child = _parent->countChild() - 1;
 
     if (new_flag == kMission) {
@@ -329,7 +331,7 @@ void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
         }
 
     } else if (new_flag == kCollection) {
-        auto *protobuf = static_cast<pb::mission::Mission *>(addCollectionProtobuf(parent_flag_id, _parent->_protobuf));
+        auto *protobuf = static_cast<pb::mission::Mission *>(insertCollectionProtobuf(row(), _parent));
         if (protobuf) {
             protobuf->set_name(QObject::tr("Collection %1").arg(parent_count_child).toStdString());
             _protobuf = protobuf;
@@ -338,8 +340,7 @@ void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
         }
 
     } else if (new_flag == kPoint) {
-        auto *protobuf =
-            static_cast<pb::mission::Mission::Element::Point *>(addPointProtobuf(parent_flag_id, _parent->_protobuf));
+        auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(insertPointProtobuf(row(), _parent));
         if (protobuf) {
             protobuf->set_name(QObject::tr("Point %1").arg(parent_count_child).toStdString());
             _protobuf = protobuf;
@@ -348,8 +349,7 @@ void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
         }
 
     } else if (new_flag == kRail) {
-        auto *protobuf =
-            static_cast<pb::mission::Mission::Element::Rail *>(addRailProtobuf(parent_flag_id, _parent->_protobuf));
+        auto *protobuf = static_cast<pb::mission::Mission::Element::Rail *>(insertRailProtobuf(row(), _parent));
         if (protobuf) {
             protobuf->set_name(QObject::tr("Rail %1").arg(parent_count_child).toStdString());
             protobuf->mutable_p0()->set_name("JA");
@@ -362,8 +362,7 @@ void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
         }
 
     } else if (new_flag == kSegment) {
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Segment *>(
-            addSegmentProtobuf(parent_flag_id, _parent->_protobuf));
+        auto *protobuf = static_cast<pb::mission::Mission::Element::Segment *>(insertSegmentProtobuf(row(), _parent));
         if (protobuf) {
             protobuf->set_name(QObject::tr("Segment %1").arg(parent_count_child).toStdString());
             protobuf->mutable_p0()->set_name("SA");
@@ -376,84 +375,43 @@ void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
         }
 
     } else {
-        qCWarning(LC_RMI) << "fail setting data, mission flag [" << new_flag << "]";
+        qCWarning(LC_RMI) << "fail setting data, missing flag [" << new_flag << "]";
     }
 }
 
 // Sets the data from the specified protobuf message this also expands the protobuf
 // message in order to create all children.
-bool MissionItem::setDataFromProtobuf(Protobuf *protobuf)
+bool MissionItem::setDataFromProtobuf(const QByteArray &packed)
 {
-    if (!protobuf) {
-        qCWarning(LC_RMI) << "fail setting data, null protobuf pointer";
-        return false;
-    }
-
-    setProtobuf(protobuf);
-
     const auto &flag_id = flag(_protobuf);
 
     if (flag_id == kMission) {
-        expandMissionProtobuf(static_cast<pb::mission::Mission *>(_protobuf), this);
+        if (_protobuf->ParseFromString(packed.toStdString())) {
+            expandMissionProtobuf(static_cast<pb::mission::Mission *>(_protobuf), this);
+            return true;
+        }
 
-    } else if (flag_id == kCollection) {
-        expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
+        //} else if (flag_id == kCollection) {
+        //    expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
 
-    } else if (flag_id == kElement) {
-        expandElementProtobuf(static_cast<pb::mission::Mission::Element *>(_protobuf), this);
+        //} else if (flag_id == kElement) {
+        //    expandElementProtobuf(static_cast<pb::mission::Mission::Element *>(_protobuf), this);
 
     } else if (flag_id == kPoint) {
-        expandPointProtobuf(static_cast<pb::mission::Mission::Element::Point *>(_protobuf), this);
-
-    } else if (flag_id == kRail) {
-        expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
-
-    } else if (flag_id == kSegment) {
-        expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
-
-    } else {
-        qCWarning(LC_RMI) << "fail setting data, mission flag [" << flag_id << "]";
-        return false;
+        if (_protobuf->ParseFromString(packed.toStdString())) {
+            return true;
+        }
     }
 
-    return true;
-}
+    //} else if (flag_id == kRail) {
+    //    expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
+    //
+    //} else if (flag_id == kSegment) {
+    //    expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
+    //
+    //} else {
+    //    qCWarning(LC_RMI) << "fail setting data, missing flag [" << flag_id << "]";
+    //}
 
-// Sets the data from the specified protobuf message this also expands the protobuf
-// message in order to create all children.
-bool MissionItem::setDataFromProtobuf(const QByteArray stream)
-{
-    //    if (!protobuf) {
-    //        qWarning() << CLASSNAME << "[Warning] setting protobuf and expanding, null protobuf pointer";
-    //        return false;
-    //    }
-
-    //    setProtobuf(protobuf);
-
-    //    const auto &flag_id = flag(_protobuf);
-
-    //    if (flag_id == kMission) {
-    //        expandMissionProtobuf(static_cast<pb::mission::Mission *>(_protobuf), this);
-
-    //    } else if (flag_id == kCollection) {
-    //        expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
-
-    //    } else if (flag_id == kElement) {
-    //        expandElementProtobuf(static_cast<pb::mission::Mission::Element *>(_protobuf), this);
-
-    //    } else if (flag_id == kPoint) {
-    //        expandPointProtobuf(static_cast<pb::mission::Mission::Element::Point *>(_protobuf), this);
-
-    //    } else if (flag_id == kRail) {
-    //        expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
-
-    //    } else if (flag_id == kSegment) {
-    //        expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
-
-    //    } else {
-    //        qWarning() << CLASSNAME << "[Warning] fail setting protobuf and expanding, missing flag" << flag_id;
-    //        return false;
-    //    }
-
-    //    return true;
+    return false;
 }

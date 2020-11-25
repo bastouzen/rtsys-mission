@@ -8,14 +8,14 @@
 #include "protobuf/mission.pb.h"
 
 #include <QDataStream>
-#include <QDebug>
+#include <QLoggingCategory>
 #include <QMimeData>
 
 // ===
 // === Define
 // ============================================================================ //
 
-#define CLASSNAME "MissionModel ::"
+Q_LOGGING_CATEGORY(LC_RMM, "rtsys.mission.model")
 
 #define _Item(index) static_cast<MissionItem *>(index.internalPointer())
 #define _ItemOrRoot(index) (index.isValid() ? _Item(index) : _root)
@@ -44,11 +44,7 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
 
-    if (role == Qt::DecorationRole && index.column() != 0) role = Qt::UserRole;
-    if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 0) role = Qt::UserRoleFlag;
-    if ((role == Qt::DisplayRole || role == Qt::EditRole) && index.column() == 1) role = Qt::UserRoleName;
-
-    return _Item(index)->data(role);
+    return _Item(index)->data(role, index.column());
 }
 
 // Returns the data for the given role and section in the header with the specified orientation.
@@ -127,7 +123,9 @@ bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int 
 // Removes the item specified by the given row and parent index.
 bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    Q_ASSERT_X(count == 1, CLASSNAME, "fail removing row");
+    qCDebug(LC_RMM) << "[removeRows] row" << row << "count" << count << "parent" << parent;
+
+    Q_ASSERT(count == 1);
 
     if (rowCount(parent) && rowCount(parent) >= row) {
         beginRemoveRows(parent, row, row + 1);
@@ -142,11 +140,15 @@ bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 // Insert an item specified by the given row and parent index.
 bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    Q_ASSERT_X(count == 1, CLASSNAME, "fail inserting row");
+    qCDebug(LC_RMM) << "[insertRows] row:" << row << "count:" << count << "parent:" << parent
+                    << data(parent, Qt::UserRoleName) << "rowCount:" << rowCount(parent);
+
+    Q_ASSERT(count == 1);
 
     beginInsertRows(parent, row, row + 1);
     _ItemOrRoot(parent)->insertChild(row);
     endInsertRows();
+
     return true;
 }
 
@@ -160,34 +162,16 @@ Qt::DropActions MissionModel::supportedDropActions() const
     return Qt::MoveAction;
 }
 
-QMimeData *MissionModel::mimeData(const QModelIndexList &indexes) const
-{
-    if (indexes.count() <= 0) return 0;
-    QStringList types = mimeTypes();
-    if (types.isEmpty()) return 0;
-    QMimeData *data = new QMimeData();
-    QString format = types.at(0);
-    QByteArray encoded;
-    QDataStream stream(&encoded, QIODevice::WriteOnly);
-    encodeData(indexes, stream);
-    data->setData(format, encoded);
-
-    qDebug() << "==============> CCCCCC";
-    qDebug() << data;
-
-    return data;
-}
-
 // Returns a map with values for all predefined roles in the model for the item
 // at the given index.
 QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
 {
-    auto roles = QAbstractItemModel::itemData(index);
-    roles.insert(Qt::UserRoleFlag, data(index, Qt::UserRoleFlag));
-
-    qDebug() << "==============================A";
-    qDebug() << roles;
-    qDebug() << "==============================B";
+    // auto roles = QAbstractItemModel::itemData(index);
+    QMap<int, QVariant> roles;
+    for (auto i : {Qt::UserRoleFlag, Qt::UserRolePack}) {
+        auto var = data(index, i);
+        if (var.isValid()) roles.insert(i, var);
+    }
     return roles;
 }
 
@@ -195,49 +179,26 @@ QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
 bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
                                    const QModelIndex &parent) const
 {
+    if (!parent.isValid()) return false;
     if (!QAbstractItemModel::canDropMimeData(data, action, row, column, parent)) return false;
 
-    qDebug() << "::canDropMimeData" << data << action << row << column << parent;
-    auto child_index = index(row, column, parent);
-    if (child_index.isValid()) {
-        qDebug() << "===>" << parent.data(Qt::UserRoleFlag) << "|" << child_index.data(Qt::UserRoleFlag);
-        return _Item(parent)->isFlagSupported(
-            static_cast<MissionItem::Flag>(child_index.data(Qt::UserRoleFlag).toInt()));
-    }
-    return false;
-}
+    // Retrieve the flags identifiers of the drags indexes holds into the mimeData container.
+    auto getDragMask = [&]() {
+        QByteArray encoded = data->data(mimeTypes().first());
+        QDataStream stream(&encoded, QIODevice::ReadOnly);
+        unsigned int mask = 0;
+        while (!stream.atEnd()) {
+            int row, column;
+            QMap<int, QVariant> roles;
+            stream >> row >> column >> roles;
+            mask |= (1 << roles[Qt::UserRoleFlag].value<MissionItem::Flag>());
+        }
+        return mask;
+    };
 
-bool MissionModel::setItemData(const QModelIndex &index, const QMap<int, QVariant> &roles)
-{
-    qDebug() << "::setItemData" << index << roles;
-    return QAbstractItemModel::setItemData(index, roles);
-}
+    auto drag_mask = getDragMask();
 
-// TODO
-bool MissionModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
-                                const QModelIndex &parent)
-{
-    qDebug() << "::dropMimeData" << data << action << row << column << parent;
-    return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
-
-    //    QByteArray input = data->data(mimeTypes().first());
-    //    QDataStream stream(&input, QIODevice::ReadOnly);
-    //    int component;
-    //    QByteArray buffer;
-    //    stream >> component;
-    //    stream >> buffer;
-
-    //    QScopedPointer<google::protobuf::Message> protobuf(
-    //        ModelBacken::factory(static_cast<ModelBacken::Component>(component), buffer));
-    //    qDebug() << protobuf->DebugString().data();
-
-    //    auto result = QAbstractItemModel::dropMimeData(data, action, row, column, parent);
-    //    qDebug() << "::dropMimeData" << row << column << parent << result << this->data(parent, Qt::DisplayRole);
-
-    //    //insertRow(row, parent, *protobuf);
-    //    // removeRow();
-
-    //    return result;
+    return (drag_mask & item(parent)->supportedFlags()) == drag_mask;
 }
 
 // ============================================================================ //
