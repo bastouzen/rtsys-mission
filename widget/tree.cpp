@@ -55,6 +55,7 @@ void MissionTreeWidget::setManager(MissionManager *manager)
     connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addIndexRail(_index); });
     connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addIndexSegment(_index); });
     connect(ui->actionSaveMission, &QAction::triggered, this, [&]() { _manager->saveMission(); });
+    connect(ui->actionSwap, &QAction::triggered, this, [&]() { _manager->swapIndex(_index); });
     connect(ui->actionSaveMissionAs, &QAction::triggered, this, [&]() {
         _manager->saveMissionAs(QFileDialog::getSaveFileName(
             this, tr("Save Mission File"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
@@ -78,24 +79,28 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
     auto *item = _manager->model()->item(_index);
 
     if (item) {
-        const auto &mask_action = item->supportedFlags();
-        if (mask_action) {
+        const auto &flags = item->supportedFlags();
+        if (flags) {
             QMenu menu(this);
-            if (item->isFlagSupported(MissionItem::kDelete, mask_action)) menu.addAction(ui->actionDelete);
-            if (mask_action ^ (1 << MissionItem::kDelete)) {
-                QMenu *add = menu.addMenu(tr("Add"));
-                if (item->isFlagSupported(MissionItem::kPoint, mask_action)) add->addAction(ui->actionAddPoint);
-                if (item->isFlagSupported(MissionItem::kRail, mask_action)) add->addAction(ui->actionAddRail);
-                if (item->isFlagSupported(MissionItem::kSegment, mask_action)) add->addAction(ui->actionAddSegment);
-                if (item->isFlagSupported(MissionItem::kCollection, mask_action))
-                    add->addAction(ui->actionAddCollection);
-            }
+
+            if (item->isFlagSupported(MissionItem::kDelete, flags)) menu.addAction(ui->actionDelete);
+            if (item->isFlagSupported(MissionItem::kEdit, flags)) menu.addAction(ui->actionEdit);
+            if (item->isFlagSupported(MissionItem::kSwap, flags)) menu.addAction(ui->actionSwap);
+
+            menu.addSection("Action");
+            if (item->isFlagSupported(MissionItem::kPoint, flags)) menu.addAction(ui->actionAddPoint);
+            if (item->isFlagSupported(MissionItem::kRail, flags)) menu.addAction(ui->actionAddRail);
+            if (item->isFlagSupported(MissionItem::kSegment, flags)) menu.addAction(ui->actionAddSegment);
+            if (item->isFlagSupported(MissionItem::kCollection, flags)) menu.addAction(ui->actionAddCollection);
 
             if (item->data(Qt::UserRoleFlag) == MissionItem::kMission) {
+                menu.addSection("Mission");
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);
-                menu.addAction(ui->actionSaveMission);
                 menu.addAction(ui->actionSaveMissionAs);
+                if (_manager->canSaveMission()) {
+                    menu.addAction(ui->actionSaveMission);
+                }
             }
             menu.exec(ui->treeView->viewport()->mapToGlobal(position));
         }
@@ -103,9 +108,9 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
         // Add new mission if the root item has no child.
         if (!_manager->model()->root()->countChild()) {
             QMenu menu(this);
-            QMenu *add = menu.addMenu(tr("Add"));
-            add->addAction(ui->actionNewMission);
-            add->addAction(ui->actionOpenMission);
+            menu.addSection("Mission");
+            menu.addAction(ui->actionNewMission);
+            menu.addAction(ui->actionOpenMission);
             menu.exec(ui->treeView->viewport()->mapToGlobal(position));
         }
     }

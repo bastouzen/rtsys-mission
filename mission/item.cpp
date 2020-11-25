@@ -94,19 +94,25 @@ unsigned int MissionItem::supportedFlags() const
         return (1 << kMission);
 
     } else if (flag_id == kMission) {
-        return (1 << kDelete) | (1 << kPoint) | (1 << kRail) | (1 << kSegment) | (1 << kCollection);
+        return (1 << kDelete) | (1 << kEdit) | (1 << kPoint) | (1 << kRail) | (1 << kSegment) | (1 << kCollection);
 
     } else if (flag_id == kCollection) {
-        return (1 << kDelete) | (1 << kPoint) | (1 << kRail) | (1 << kSegment);
+        const auto &collection_flag_id = collectionFlag();
+        if (collection_flag_id == kFamily || collection_flag_id == kRoute) {
+            return (1 << kDelete) | (1 << kEdit) | (1 << kSwap) | (1 << kPoint) | (1 << kRail) | (1 << kSegment);
+        } else {
+            return (1 << kDelete) | (1 << kEdit) | (1 << kPoint) | (1 << kRail) | (1 << kSegment);
+        }
 
     } else if (flag_id == kRail || flag_id == kSegment) {
-        return (1 << kDelete);
+        return (1 << kDelete) | (1 << kSwap) | (1 << kEdit);
 
     } else if (flag_id == kPoint) {
         const auto &parent_flag_id = flag(_parent->_protobuf);
         if (parent_flag_id != kRail && parent_flag_id != kSegment) {
-            return (1 << kDelete);
+            return (1 << kDelete) | (1 << kEdit);
         }
+        return (1 << kEdit);
 
     } else {
         qCWarning(LC_RMI) << "fail getting supported flag, missing flag [" << flag_id << "]";

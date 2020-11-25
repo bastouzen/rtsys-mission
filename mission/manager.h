@@ -32,9 +32,11 @@ class MissionManager : public QObject
     void saveMissionAs(const QString &filename);
     void openMission(const QString &filename);
     void saveMission();
+    bool canSaveMission() { return !_current_mission_filename.isEmpty(); }
 
     // Interface Tree view
     void removeIndex(const QModelIndex &index);
+    void swapIndex(const QModelIndex &index);
     void addIndexCollection(const QModelIndex &parent);
     void addIndexPoint(const QModelIndex &parent);
     void addIndexRail(const QModelIndex &parent);

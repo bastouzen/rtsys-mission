@@ -190,17 +190,23 @@ void MissionManager::openMission(const QString &filename)
 // This saves the mission into the current mission filename.
 void MissionManager::saveMission()
 {
-    if (_current_mission_filename.isEmpty()) {
-        qWarning() << CLASSNAME << "[Warning] fail saving mission, missing reference" << _current_mission_filename;
+    if (canSaveMission()) {
+        saveMissionAs(_current_mission_filename);
         return;
     }
-    saveMissionAs(_current_mission_filename);
+    qWarning() << CLASSNAME << "[Warning] fail saving mission, missing reference" << _current_mission_filename;
 }
 
 // Remove the specified model index from the internal model mission.
 void MissionManager::removeIndex(const QModelIndex &index)
 {
     if (index.isValid()) _model.removeRow(index.row(), index.parent());
+}
+
+// TODO
+void MissionManager::swapIndex(const QModelIndex &index)
+{
+    qDebug() << index;
 }
 
 // Adds a flag identifier under the specified parent index.

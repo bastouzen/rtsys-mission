@@ -28,3 +28,15 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
+
+/*
+ * TODO
+ *  Swap
+ *  Multiple Selection for drag&drop + remove
+ *  Edit (generate dialogue windows depending on the flag identifier)
+ *  Add contact
+ *      Allow cast point->contact and contact ->point
+ *  Add Device
+ *      Allow cast collection->device and device ->collection
+ */

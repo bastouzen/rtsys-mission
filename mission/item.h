@@ -57,6 +57,8 @@ class MissionItem
 
     enum Flag {
         kUndefined,
+
+        // Flag for mission component
         kMission,
         kComponent,
         kCollection,
@@ -64,7 +66,13 @@ class MissionItem
         kPoint,
         kRail,
         kSegment,
+
+        // Flag for mission component action
         kDelete,
+        kEdit,
+        kSwap,
+
+        // Flag for mission interpreted component
         kScenario,
         kRoute,
         kFamily

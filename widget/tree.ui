@@ -90,6 +90,22 @@
     <string>Save Mission</string>
    </property>
   </action>
+  <action name="actionEdit">
+   <property name="text">
+    <string>Edit</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit</string>
+   </property>
+  </action>
+  <action name="actionSwap">
+   <property name="text">
+    <string>Swap</string>
+   </property>
+   <property name="toolTip">
+    <string>Swap</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
