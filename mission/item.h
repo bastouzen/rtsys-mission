@@ -32,11 +32,13 @@ class MissionItem;
 
 namespace Qt {
 enum MyRoles {
-    UserRoleFlag = UserRole + 1,
+    UserRoleComponent = UserRole + 1,
     UserRolePack,
     UserRoleWrapper,
 };
 } // namespace Qt
+
+#define Bit(feature) (1 << feature)
 
 // ===
 // === Class
@@ -55,10 +57,10 @@ class MissionItem
         Protobuf *pointer;
     };
 
-    enum Flag {
+    enum Feature {
         kUndefined,
 
-        // Flag for mission component
+        // Feature for component
         kMission,
         kComponent,
         kCollection,
@@ -67,20 +69,20 @@ class MissionItem
         kRail,
         kSegment,
 
-        // Flag for mission component action
+        // Feature for interpreted component
+        kScenario,
+        kRoute,
+        kFamily,
+
+        // Feature for action
         kDelete,
         kEdit,
         kSwap,
-
-        // Flag for mission interpreted component
-        kScenario,
-        kRoute,
-        kFamily
     };
-    Q_ENUM(Flag);
+    Q_ENUM(Feature);
 
-    static Flag flag(const Protobuf *protobuf);
-    static Flag flag(const Protobuf &protobuf) { return flag(&protobuf); }
+    static Feature component(const Protobuf *protobuf);
+    static Feature component(const Protobuf &protobuf) { return component(&protobuf); }
     static Wrapper wrap(Protobuf *protobuf)
     {
         MissionItem::Wrapper wrapper;
@@ -95,9 +97,10 @@ class MissionItem
     void removeChild(const int row);
     void insertChild(const int row = -1);
 
-    unsigned int supportedFlags() const;
-    bool isFlagSupported(const Flag flag, const unsigned int mask) const { return (mask >> flag) & 1; }
-    bool isFlagSupported(const Flag flag) const { return isFlagSupported(flag, supportedFlags()); }
+    unsigned int supportedFeatures() const;
+    bool isFeatureSupported(const Feature feature, const unsigned int mask) const { return (mask >> feature) & 1; }
+    bool isFeatureSupported(const Feature feature) const { return isFeatureSupported(feature, supportedFeatures()); }
+    Qt::ItemFlags supportedFlags() const;
 
     // Getters and Setters
     MissionItem *parent() { return _parent; }
@@ -111,9 +114,9 @@ class MissionItem
 
   private:
     QVariant icon() const;
-    Flag parentFlag() const;
-    Flag collectionFlag() const;
-    void setDataFromFlag(const Flag new_flag);
+    Feature parentFlag() const;
+    Feature collection() const;
+    void setDataFromComponent(const Feature component);
     bool setDataFromProtobuf(const QByteArray &packed);
     MissionItem *_parent;
     Protobuf *_protobuf;

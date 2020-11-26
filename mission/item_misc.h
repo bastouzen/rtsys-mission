@@ -47,14 +47,14 @@ void RepeatedFieldMoveUpLastAt(const int row, google::protobuf::RepeatedPtrField
     }
 }
 
-// Insert a collection protobuf message depending on the parent flag identifier
-// to the specified protobuf message and row.
+// Insert a collection protobuf message depending on the parent component to
+// the specified protobuf message and row.
 inline MissionItem::Protobuf *insertCollectionProtobuf(const int row, MissionItem *parent)
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
-    const auto &parent_flag_id = parent->data(Qt::UserRoleFlag);
-    if (parent_flag_id == MissionItem::kMission) {
+    const auto &component = parent->data(Qt::UserRoleComponent);
+    if (component == MissionItem::kMission) {
         auto *mission = static_cast<pb::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *collection = component->mutable_collection();
@@ -66,14 +66,14 @@ inline MissionItem::Protobuf *insertCollectionProtobuf(const int row, MissionIte
     return nullptr;
 };
 
-// Insert a point protobuf message depending on the parent flag identifier
-// to the specified protobuf message and row.
+// Insert a point protobuf message depending on the parent component to the
+// specified protobuf message and row.
 inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *parent)
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
-    const auto &parent_flag_id = parent->data(Qt::UserRoleFlag);
-    if (parent_flag_id == MissionItem::kMission) {
+    const auto &component = parent->data(Qt::UserRoleComponent);
+    if (component == MissionItem::kMission) {
         auto *mission = static_cast<pb::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *point = component->mutable_element()->mutable_point();
@@ -82,7 +82,7 @@ inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *pa
         }
         return point;
 
-    } else if (parent_flag_id == MissionItem::kCollection) {
+    } else if (component == MissionItem::kCollection) {
         auto *component = static_cast<pb::mission::Mission::Collection *>(protobuf);
         auto *element = component->add_elements();
         auto *point = element->mutable_point();
@@ -95,14 +95,14 @@ inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *pa
     return nullptr;
 };
 
-// Insert a rail protobuf message depending on the parent flag identifier
-// to the specified protobuf message and row.
+// Insert a rail protobuf message depending on the parent component to the
+// specified protobuf message and row.
 inline MissionItem::Protobuf *insertRailProtobuf(const int row, MissionItem *parent)
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
-    const auto &parent_flag_id = parent->data(Qt::UserRoleFlag);
-    if (parent_flag_id == MissionItem::kMission) {
+    const auto &component = parent->data(Qt::UserRoleComponent);
+    if (component == MissionItem::kMission) {
         auto *mission = static_cast<pb::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *rail = component->mutable_element()->mutable_rail();
@@ -111,7 +111,7 @@ inline MissionItem::Protobuf *insertRailProtobuf(const int row, MissionItem *par
         }
         return rail;
 
-    } else if (parent_flag_id == MissionItem::kCollection) {
+    } else if (component == MissionItem::kCollection) {
         auto *component = static_cast<pb::mission::Mission::Collection *>(protobuf);
         auto *element = component->add_elements();
         auto *rail = element->mutable_rail();
@@ -124,14 +124,14 @@ inline MissionItem::Protobuf *insertRailProtobuf(const int row, MissionItem *par
     return nullptr;
 };
 
-// Insert a segment protobuf message depending on the parent flag identifier
-// to the specified protobuf message and row.
+// Insert a segment protobuf message depending on the parent component to the
+// specified protobuf message and row.
 inline MissionItem::Protobuf *insertSegmentProtobuf(const int row, MissionItem *parent)
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
-    const auto &parent_flag_id = parent->data(Qt::UserRoleFlag);
-    if (parent_flag_id == MissionItem::kMission) {
+    const auto &component = parent->data(Qt::UserRoleComponent);
+    if (component == MissionItem::kMission) {
         auto *mission = static_cast<pb::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *segment = component->mutable_element()->mutable_segment();
@@ -140,7 +140,7 @@ inline MissionItem::Protobuf *insertSegmentProtobuf(const int row, MissionItem *
         }
         return segment;
 
-    } else if (parent_flag_id == MissionItem::kCollection) {
+    } else if (component == MissionItem::kCollection) {
         auto *component = static_cast<pb::mission::Mission::Collection *>(protobuf);
         auto *element = component->add_elements();
         auto *segment = element->mutable_segment();

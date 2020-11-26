@@ -36,7 +36,7 @@ class MissionManager : public QObject
 
     // Interface Tree view
     void removeIndex(const QModelIndex &index);
-    void swapIndex(const QModelIndex &index);
+    void swapIndex(const QModelIndex &parent);
     void addIndexCollection(const QModelIndex &parent);
     void addIndexPoint(const QModelIndex &parent);
     void addIndexRail(const QModelIndex &parent);

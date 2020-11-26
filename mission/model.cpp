@@ -99,12 +99,13 @@ QModelIndex MissionModel::parent(const QModelIndex &child) const
 // Returns the item flags for the given index.
 Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
 {
+    // Qt::ItemIsSelectable|Qt::ItemIsEnabled;
     if (!index.isValid()) return Qt::NoItemFlags;
 
     if (index.column() > 0)
-        return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+        return Qt::ItemIsEnabled | Qt::ItemIsEditable;
     else
-        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | QAbstractItemModel::flags(index);
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | _Item(index)->supportedFlags();
 }
 
 // Sets the data for the specified value and role. Returns true if successful
@@ -147,6 +148,15 @@ bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
+// TODO
+bool MissionModel::swapRow(const QModelIndex &parent)
+{
+    //    beginMoveRows(source_parent, source_row, source_row, destination_parent, source_row + 2);
+    //    //_ItemOrRoot(source_parent)->moveChild(source_row, destination_child);
+    //    endMoveRows();
+    return true;
+}
+
 // =============================
 // Drag & Drop
 // =============================
@@ -163,7 +173,7 @@ QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
 {
     // auto roles = QAbstractItemModel::itemData(index);
     QMap<int, QVariant> roles;
-    for (auto i : {Qt::UserRoleFlag, Qt::UserRolePack}) {
+    for (auto i : {Qt::UserRoleComponent, Qt::UserRolePack}) {
         auto var = data(index, i);
         if (var.isValid()) roles.insert(i, var);
     }
@@ -186,14 +196,14 @@ bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
             int row, column;
             QMap<int, QVariant> roles;
             stream >> row >> column >> roles;
-            mask |= (1 << roles[Qt::UserRoleFlag].value<MissionItem::Flag>());
+            mask |= (1 << roles[Qt::UserRoleComponent].value<MissionItem::Feature>());
         }
         return mask;
     };
 
     auto drag_mask = getDragMask();
 
-    return (drag_mask & item(parent)->supportedFlags()) == drag_mask;
+    return (drag_mask & item(parent)->supportedFeatures()) == drag_mask;
 }
 
 // ============================================================================ //

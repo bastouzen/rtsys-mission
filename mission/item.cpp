@@ -24,42 +24,42 @@ const auto ResourceIconSegment = QStringLiteral(":/resource/segment.svg");
 const auto ResourceIconPoint = QStringLiteral(":/resource/point.png");
 const auto ResourceIconRailPoint = QStringLiteral(":/resource/rail.png");
 
-const auto FlagMission = pb::mission::Mission::descriptor() -> name();
-const auto FlagComponant = pb::mission::Mission::Component::descriptor() -> name();
-const auto FlagCollection = pb::mission::Mission::Collection::descriptor() -> name();
-const auto FlagElement = pb::mission::Mission::Element::descriptor() -> name();
-const auto FlagPoint = pb::mission::Mission::Element::Point::descriptor() -> name();
-const auto FlagRail = pb::mission::Mission::Element::Rail::descriptor() -> name();
-const auto FlagSegment = pb::mission::Mission::Element::Segment::descriptor() -> name();
+const auto ProtobufMission = pb::mission::Mission::descriptor() -> name();
+const auto ProtobufComponant = pb::mission::Mission::Component::descriptor() -> name();
+const auto ProtobufCollection = pb::mission::Mission::Collection::descriptor() -> name();
+const auto ProtobufElement = pb::mission::Mission::Element::descriptor() -> name();
+const auto ProtobufPoint = pb::mission::Mission::Element::Point::descriptor() -> name();
+const auto ProtobufRail = pb::mission::Mission::Element::Rail::descriptor() -> name();
+const auto ProtobufSegment = pb::mission::Mission::Element::Segment::descriptor() -> name();
 
 // ===
 // === Function
 // ============================================================================ //
 
-// Returns the flag identifier specified by the underlying protobuf message.
-MissionItem::Flag MissionItem::flag(const Protobuf *protobuf)
+// Returns the component specified by the underlying protobuf message.
+MissionItem::Feature MissionItem::component(const Protobuf *protobuf)
 {
-    if (!protobuf) return Flag::kUndefined;
+    if (!protobuf) return Feature::kUndefined;
 
     const auto &name = protobuf->GetDescriptor()->name();
 
-    if (name == FlagMission) {
-        return Flag::kMission;
-    } else if (name == FlagComponant) {
-        return Flag::kComponent;
-    } else if (name == FlagCollection) {
-        return Flag::kCollection;
-    } else if (name == FlagElement) {
-        return Flag::kElement;
-    } else if (name == FlagPoint) {
-        return Flag::kPoint;
-    } else if (name == FlagRail) {
-        return Flag::kRail;
-    } else if (name == FlagSegment) {
-        return Flag::kSegment;
+    if (name == ProtobufMission) {
+        return Feature::kMission;
+    } else if (name == ProtobufComponant) {
+        return Feature::kComponent;
+    } else if (name == ProtobufCollection) {
+        return Feature::kCollection;
+    } else if (name == ProtobufElement) {
+        return Feature::kElement;
+    } else if (name == ProtobufPoint) {
+        return Feature::kPoint;
+    } else if (name == ProtobufRail) {
+        return Feature::kRail;
+    } else if (name == ProtobufSegment) {
+        return Feature::kSegment;
     } else {
-        qCWarning(LC_RMI) << "fail getting flag identifier, missing message [" << name.data() << "]";
-        return Flag::kUndefined;
+        qCWarning(LC_RMI) << "fail getting component, missing message [" << name.data() << "]";
+        return Feature::kUndefined;
     }
 }
 
@@ -84,41 +84,68 @@ MissionItem::~MissionItem()
     qDeleteAll(_childs);
 }
 
-// Returns the supported flag of item. This depends on the item flag and parent
-// item flag.
-unsigned int MissionItem::supportedFlags() const
+// Returns the supported feature. This depends on the item component and parent
+// item component.
+unsigned int MissionItem::supportedFeatures() const
 {
-    const auto &flag_id = flag(_protobuf);
+    const auto &component_ = component(_protobuf);
 
-    if (flag_id == kUndefined) {
-        return (1 << kMission);
+    if (component_ == kUndefined) {
+        return Bit(kMission);
 
-    } else if (flag_id == kMission) {
-        return (1 << kDelete) | (1 << kEdit) | (1 << kPoint) | (1 << kRail) | (1 << kSegment) | (1 << kCollection);
+    } else if (component_ == kMission) {
+        return Bit(kDelete) | Bit(kEdit) | Bit(kPoint) | Bit(kRail) | Bit(kSegment) | Bit(kCollection);
 
-    } else if (flag_id == kCollection) {
-        const auto &collection_flag_id = collectionFlag();
-        if (collection_flag_id == kFamily || collection_flag_id == kRoute) {
-            return (1 << kDelete) | (1 << kEdit) | (1 << kSwap) | (1 << kPoint) | (1 << kRail) | (1 << kSegment);
+    } else if (component_ == kCollection) {
+        const auto &collection_ = collection();
+        if (collection_ == kFamily || collection_ == kRoute) {
+            return Bit(kDelete) | Bit(kEdit) | Bit(kSwap) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
         } else {
-            return (1 << kDelete) | (1 << kEdit) | (1 << kPoint) | (1 << kRail) | (1 << kSegment);
+            return Bit(kDelete) | Bit(kEdit) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
         }
 
-    } else if (flag_id == kRail || flag_id == kSegment) {
-        return (1 << kDelete) | (1 << kSwap) | (1 << kEdit);
+    } else if (component_ == kRail || component_ == kSegment) {
+        return Bit(kDelete) | Bit(kEdit) | Bit(kSwap);
 
-    } else if (flag_id == kPoint) {
-        const auto &parent_flag_id = flag(_parent->_protobuf);
-        if (parent_flag_id != kRail && parent_flag_id != kSegment) {
-            return (1 << kDelete) | (1 << kEdit);
+    } else if (component_ == kPoint) {
+        const auto &component_parent = component(_parent->_protobuf);
+        if (component_parent == kRail || component_parent == kSegment) {
+            return Bit(kEdit);
         }
-        return (1 << kEdit);
+        return Bit(kDelete) | Bit(kEdit);
 
     } else {
-        qCWarning(LC_RMI) << "fail getting supported flag, missing flag [" << flag_id << "]";
+        qCWarning(LC_RMI) << "fail getting supported features, missing component [" << component_ << "]";
     }
 
     return 0;
+}
+
+// Returns the supported flag. This depends on the item component and parent
+// item component.
+Qt::ItemFlags MissionItem::supportedFlags() const
+{
+    const auto &component_ = component(_protobuf);
+
+    if (component_ == kMission) {
+        return Qt::NoItemFlags;
+
+    } else if (component_ == kCollection) {
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+
+    } else if (component_ == kRail || component_ == kSegment) {
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+
+    } else if (component_ == kPoint) {
+        const auto &component_parent = component(_parent->_protobuf);
+        if (component_parent == kRail || component_parent == kSegment) {
+            return Qt::NoItemFlags;
+        }
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+
+    } else {
+        return Qt::NoItemFlags;
+    }
 }
 
 // Removes the child item specified by the given row.
@@ -128,14 +155,14 @@ void MissionItem::removeChild(int row)
 
     auto removeProtobuf = [&]() {
         // Remove the child protobuf message.
-        const auto &flag_id = flag(_protobuf);
-        if (flag_id == kMission) {
+        const auto &component_ = component(_protobuf);
+        if (component_ == kMission) {
             RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
 
-        } else if (flag_id == kCollection) {
+        } else if (component_ == kCollection) {
             RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
 
-        } else if (flag_id == kUndefined) {
+        } else if (component_ == kUndefined) {
             // In this case we want to remove a top-level row-protobuf message, it
             // means this backend is the one linked to the root item. In order to
             // remove the row-protobuf message, we first retrieve the child item
@@ -147,11 +174,11 @@ void MissionItem::removeChild(int row)
                 return false;
             }
 
-        } else if (flag_id == kRail || flag_id == kSegment) {
+        } else if (component_ == kRail || component_ == kSegment) {
             // Do nothing !!
 
         } else {
-            qCWarning(LC_RMI) << "fail removing child, missing flag [" << flag_id << "]";
+            qCWarning(LC_RMI) << "fail removing child, missing component [" << component_ << "]";
             return false;
         }
         return true;
@@ -183,25 +210,25 @@ bool MissionItem::setData(const QVariant &value, int role)
         // "lambda function with auto parameter"
         auto setUserRoleName = [&](auto *protobuf) { protobuf->set_name(value.toString().toStdString()); };
 
-        const auto &flag_id = flag(_protobuf);
-        if (flag_id == kMission) {
+        const auto &component_ = component(_protobuf);
+        if (component_ == kMission) {
             setUserRoleName(static_cast<pb::mission::Mission *>(_protobuf));
-        } else if (flag_id == kCollection) {
+        } else if (component_ == kCollection) {
             setUserRoleName(static_cast<pb::mission::Mission::Collection *>(_protobuf));
-        } else if (flag_id == kPoint) {
+        } else if (component_ == kPoint) {
             setUserRoleName(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
-        } else if (flag_id == kRail) {
+        } else if (component_ == kRail) {
             setUserRoleName(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
-        } else if (flag_id == kSegment) {
+        } else if (component_ == kSegment) {
             setUserRoleName(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
         } else {
-            qCWarning(LC_RMI) << "fail setting data, missing flag [" << flag_id << "]";
+            qCWarning(LC_RMI) << "fail setting data, missing component [" << component_ << "]";
             return false;
         }
         return true;
 
-    } else if (role == Qt::UserRoleFlag) {
-        setDataFromFlag(value.value<MissionItem::Flag>());
+    } else if (role == Qt::UserRoleComponent) {
+        setDataFromComponent(value.value<MissionItem::Feature>());
         return true;
 
     } else if (role == Qt::UserRolePack) {
@@ -223,8 +250,8 @@ QVariant MissionItem::data(const int role, const int column) const
         return icon();
 
     } else if (role == Qt::DisplayRole && column == 0) {
-        // Use reflection property of Qt for getting the name of the flag identifier.
-        return QString(QMetaEnum::fromType<Flag>().valueToKey(flag(_protobuf))).mid(1, -1);
+        // Use reflection property of Qt for getting the name of the component.
+        return QString(QMetaEnum::fromType<Feature>().valueToKey(component(_protobuf))).mid(1, -1);
 
     } else if ((role == Qt::DisplayRole && column == 1) || role == Qt::EditRole) {
         // Here we use some king to inline template function thank to C++14
@@ -233,24 +260,23 @@ QVariant MissionItem::data(const int role, const int column) const
             if (!message) return QVariant();
             return QString::fromStdString(message->name());
         };
-        const auto &flag_id = flag(_protobuf);
-        if (flag_id == kMission) {
+        const auto &component_ = component(_protobuf);
+        if (component_ == kMission) {
             return getUserName(static_cast<pb::mission::Mission *>(_protobuf));
-        } else if (flag_id == kCollection) {
+        } else if (component_ == kCollection) {
             return getUserName(static_cast<pb::mission::Mission::Collection *>(_protobuf));
-        } else if (flag_id == kPoint) {
+        } else if (component_ == kPoint) {
             return getUserName(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
-        } else if (flag_id == kRail) {
+        } else if (component_ == kRail) {
             return getUserName(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
-        } else if (flag_id == kSegment) {
+        } else if (component_ == kSegment) {
             return getUserName(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
         } else {
-            qCWarning(LC_RMI) << "fail getting data, missing flag [" << flag_id << "]";
+            qCWarning(LC_RMI) << "fail getting data, missing component [" << component_ << "]";
         }
 
-    } else if (role == Qt::UserRoleFlag) {
-        // Use reflection property of Qt for getting the name of the flag identifier.
-        return flag(_protobuf);
+    } else if (role == Qt::UserRoleComponent) {
+        return component(_protobuf);
 
     } else if (role == Qt::UserRolePack) {
         return MissionItem::pack(*_protobuf);
@@ -263,53 +289,53 @@ QVariant MissionItem::data(const int role, const int column) const
 }
 
 // Returns the displayed icon of the item. The icon is figured out by looking at
-// the flag and flag collection identifier.
+// the component and component collection.
 QVariant MissionItem::icon() const
 {
-    const auto &flag_id = flag(_protobuf);
-    if (flag_id == kMission) {
+    const auto &component_ = component(_protobuf);
+    if (component_ == kMission) {
         return QIcon(ResourceIconMission);
-    } else if (flag_id == kCollection) {
-        const auto &collection_flag_id = collectionFlag();
-        if (collection_flag_id == kRoute) {
+    } else if (component_ == kCollection) {
+        const auto &collection_ = collection();
+        if (collection_ == kRoute) {
             return QIcon(ResourceIconRoute);
-        } else if (collection_flag_id == kFamily) {
+        } else if (collection_ == kFamily) {
             return QIcon(ResourceIconFamily);
         } else {
             return QIcon(ResourceIconCollection);
         }
-    } else if (flag_id == kRail) {
+    } else if (component_ == kRail) {
         return QIcon(ResourceIconRail);
-    } else if (flag_id == kSegment) {
+    } else if (component_ == kSegment) {
         return QIcon(ResourceIconSegment);
-    } else if (flag_id == kPoint) {
-        const auto &pareng_flag_id = flag(_parent->_protobuf);
-        if (pareng_flag_id == kRail) {
+    } else if (component_ == kPoint) {
+        const auto &component_parnent = component(_parent->_protobuf);
+        if (component_parnent == kRail) {
             return QIcon(ResourceIconRailPoint);
-        } else if (pareng_flag_id == kSegment) {
+        } else if (component_parnent == kSegment) {
             return QIcon(ResourceIconRailPoint);
         } else {
             return QIcon(ResourceIconPoint);
         }
     } else {
-        qCWarning(LC_RMI) << "fail getting icon, missing flag [" << flag_id << "]";
+        qCWarning(LC_RMI) << "fail getting icon, missing component [" << component_ << "]";
         return QVariant();
     }
 }
 
-// Returns the flag collection identifier of the item. The flag collection
-// identifier is figured out by looking at the item children flag identifier
+// Returns the component collection of the item. The component collection
+// is figured out by looking at the item children component
 //  - A Route is a collection of Point.
 //  - A Family is a collection of Rail.
-MissionItem::Flag MissionItem::collectionFlag() const
+MissionItem::Feature MissionItem::collection() const
 {
     if (countChild()) {
         auto is_route = true;
         auto is_family = true;
         for (auto *child_item : _childs) {
-            const auto &flag_id = flag(child_item->_protobuf);
-            is_route &= flag_id == kPoint;
-            is_family &= flag_id == kRail;
+            const auto &component_ = component(child_item->_protobuf);
+            is_route &= component_ == kPoint;
+            is_family &= component_ == kRail;
         }
         if (is_route) {
             return kRoute;
@@ -320,71 +346,50 @@ MissionItem::Flag MissionItem::collectionFlag() const
     return kScenario;
 }
 
-// Sets the data from the specified flag identifier this also create all dependant
+// Sets the data from the specified component this also create all dependant
 // children.
-void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
+void MissionItem::setDataFromComponent(const MissionItem::Feature component)
 {
-    if (!_parent->isFlagSupported(new_flag)) {
-        qCWarning(LC_RMI) << "fail setting data, flag not supported [" << new_flag << "]";
+    if (!_parent->isFeatureSupported(component)) {
+        qCWarning(LC_RMI) << "fail setting data, component not supported [" << component << "]";
         return;
     }
 
-    const auto &parent_count_child = _parent->countChild() - 1;
-
-    if (new_flag == kMission) {
+    const auto &enumerate = _parent->countChild() - 1;
+    if (component == kMission) {
         auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf);
-        if (protobuf) {
-            protobuf->set_name(QObject::tr("My Amazing Mission").toStdString());
-        } else {
-            qCWarning(LC_RMI) << "fail setting data, null protobuf pointer";
-        }
+        protobuf->set_name(QObject::tr("My Amazing Mission").toStdString());
 
-    } else if (new_flag == kCollection) {
+    } else if (component == kCollection) {
         auto *protobuf = static_cast<pb::mission::Mission *>(insertCollectionProtobuf(row(), _parent));
-        if (protobuf) {
-            protobuf->set_name(QObject::tr("Collection %1").arg(parent_count_child).toStdString());
-            _protobuf = protobuf;
-        } else {
-            qCWarning(LC_RMI) << "fail setting data, action not allowed for [" << new_flag << "]";
-        }
+        protobuf->set_name(QObject::tr("Collection %1").arg(enumerate).toStdString());
+        _protobuf = protobuf;
 
-    } else if (new_flag == kPoint) {
+    } else if (component == kPoint) {
         auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(insertPointProtobuf(row(), _parent));
-        if (protobuf) {
-            protobuf->set_name(QObject::tr("Point %1").arg(parent_count_child).toStdString());
-            _protobuf = protobuf;
-        } else {
-            qCWarning(LC_RMI) << "fail setting data, action not allowed for [" << new_flag << "]";
-        }
+        protobuf->set_name(QObject::tr("Point %1").arg(enumerate).toStdString());
+        _protobuf = protobuf;
 
-    } else if (new_flag == kRail) {
+    } else if (component == kRail) {
         auto *protobuf = static_cast<pb::mission::Mission::Element::Rail *>(insertRailProtobuf(row(), _parent));
-        if (protobuf) {
-            protobuf->set_name(QObject::tr("Rail %1").arg(parent_count_child).toStdString());
-            protobuf->mutable_p0()->set_name("JA");
-            protobuf->mutable_p1()->set_name("JB");
-            _protobuf = protobuf;
-            addChild(protobuf->mutable_p0(), this);
-            addChild(protobuf->mutable_p1(), this);
-        } else {
-            qCWarning(LC_RMI) << "fail setting data, action not allowed for [" << new_flag << "]";
-        }
+        protobuf->set_name(QObject::tr("Rail %1").arg(enumerate).toStdString());
+        protobuf->mutable_p0()->set_name("JA");
+        protobuf->mutable_p1()->set_name("JB");
+        _protobuf = protobuf;
+        addChild(protobuf->mutable_p0(), this);
+        addChild(protobuf->mutable_p1(), this);
 
-    } else if (new_flag == kSegment) {
+    } else if (component == kSegment) {
         auto *protobuf = static_cast<pb::mission::Mission::Element::Segment *>(insertSegmentProtobuf(row(), _parent));
-        if (protobuf) {
-            protobuf->set_name(QObject::tr("Segment %1").arg(parent_count_child).toStdString());
-            protobuf->mutable_p0()->set_name("SA");
-            protobuf->mutable_p1()->set_name("SB");
-            _protobuf = protobuf;
-            addChild(protobuf->mutable_p0(), this);
-            addChild(protobuf->mutable_p1(), this);
-        } else {
-            qCWarning(LC_RMI) << "fail setting data, action not allowed for [" << new_flag << "]";
-        }
+        protobuf->set_name(QObject::tr("Segment %1").arg(enumerate).toStdString());
+        protobuf->mutable_p0()->set_name("SA");
+        protobuf->mutable_p1()->set_name("SB");
+        _protobuf = protobuf;
+        addChild(protobuf->mutable_p0(), this);
+        addChild(protobuf->mutable_p1(), this);
 
     } else {
-        qCWarning(LC_RMI) << "fail setting data, missing flag [" << new_flag << "]";
+        qCWarning(LC_RMI) << "fail setting data, missing component [" << component << "]";
     }
 }
 
@@ -392,48 +397,48 @@ void MissionItem::setDataFromFlag(const MissionItem::Flag new_flag)
 // message in order to create all children.
 bool MissionItem::setDataFromProtobuf(const QByteArray &packed)
 {
-    const auto &flag_id = flag(_protobuf);
+    const auto &component_ = component(_protobuf);
 
     // We remove the already created children of Rail and Segment. These children
-    // were created by calling "setDataFromFlag" but as we use the parse function
-    // from google protobuf, the nested field messages may be desallocated and
-    // reallocated by the parsing process. So in order to avoid dangling pointer
-    // we remove all the children.
-    if (flag_id == kRail || flag_id == kSegment) {
+    // were created by calling "setDataFromComponent" but as we use the parse
+    // function from google protobuf, the nested field messages may be
+    // desallocated and reallocated by the parsing process. So in order to avoid
+    //  dangling pointer we remove all the children.
+    if (component_ == kRail || component_ == kSegment) {
         while (countChild()) removeChild(0);
     }
 
-    if (flag_id == kMission) {
+    if (component_ == kMission) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
             expandMissionProtobuf(static_cast<pb::mission::Mission *>(_protobuf), this);
             return true;
         }
 
-    } else if (flag_id == kCollection) {
+    } else if (component_ == kCollection) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
             expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
             return true;
         }
 
-    } else if (flag_id == kPoint) {
+    } else if (component_ == kPoint) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
             return true;
         }
 
-    } else if (flag_id == kRail) {
+    } else if (component_ == kRail) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
             expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
             return true;
         }
 
-    } else if (flag_id == kSegment) {
+    } else if (component_ == kSegment) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
             expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
             return true;
         }
 
     } else {
-        qCWarning(LC_RMI) << "fail setting data, missing flag [" << flag_id << "]";
+        qCWarning(LC_RMI) << "fail setting data, missing component [" << component_ << "]";
     }
 
     return false;

@@ -137,7 +137,7 @@ void MissionManager::newMission()
     _model.insertRow(row, parent);
     _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::wrap(&_mission)),
                    Qt::UserRoleWrapper);
-    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::kMission), Qt::UserRoleFlag);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::kMission), Qt::UserRoleComponent);
 }
 
 // This loads a mission.
@@ -204,9 +204,9 @@ void MissionManager::removeIndex(const QModelIndex &index)
 }
 
 // TODO
-void MissionManager::swapIndex(const QModelIndex &index)
+void MissionManager::swapIndex(const QModelIndex &parent)
 {
-    qDebug() << index;
+    _model.swapRow(parent);
 }
 
 // Adds a flag identifier under the specified parent index.
@@ -216,5 +216,5 @@ void MissionManager::addIndexFromFlag(const QModelIndex &parent, int flag)
 
     auto row = _model.rowCount(parent);
     _model.insertRow(row, parent);
-    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleFlag);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleComponent);
 }

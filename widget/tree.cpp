@@ -79,21 +79,21 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
     auto *item = _manager->model()->item(_index);
 
     if (item) {
-        const auto &flags = item->supportedFlags();
+        const auto &flags = item->supportedFeatures();
         if (flags) {
             QMenu menu(this);
 
-            if (item->isFlagSupported(MissionItem::kDelete, flags)) menu.addAction(ui->actionDelete);
-            if (item->isFlagSupported(MissionItem::kEdit, flags)) menu.addAction(ui->actionEdit);
-            if (item->isFlagSupported(MissionItem::kSwap, flags)) menu.addAction(ui->actionSwap);
+            if (item->isFeatureSupported(MissionItem::kDelete, flags)) menu.addAction(ui->actionDelete);
+            if (item->isFeatureSupported(MissionItem::kEdit, flags)) menu.addAction(ui->actionEdit);
+            if (item->isFeatureSupported(MissionItem::kSwap, flags)) menu.addAction(ui->actionSwap);
 
             menu.addSection("Action");
-            if (item->isFlagSupported(MissionItem::kPoint, flags)) menu.addAction(ui->actionAddPoint);
-            if (item->isFlagSupported(MissionItem::kRail, flags)) menu.addAction(ui->actionAddRail);
-            if (item->isFlagSupported(MissionItem::kSegment, flags)) menu.addAction(ui->actionAddSegment);
-            if (item->isFlagSupported(MissionItem::kCollection, flags)) menu.addAction(ui->actionAddCollection);
+            if (item->isFeatureSupported(MissionItem::kPoint, flags)) menu.addAction(ui->actionAddPoint);
+            if (item->isFeatureSupported(MissionItem::kRail, flags)) menu.addAction(ui->actionAddRail);
+            if (item->isFeatureSupported(MissionItem::kSegment, flags)) menu.addAction(ui->actionAddSegment);
+            if (item->isFeatureSupported(MissionItem::kCollection, flags)) menu.addAction(ui->actionAddCollection);
 
-            if (item->data(Qt::UserRoleFlag) == MissionItem::kMission) {
+            if (item->data(Qt::UserRoleComponent) == MissionItem::kMission) {
                 menu.addSection("Mission");
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);
