@@ -1,45 +1,81 @@
 syntax = "proto3";
 
-package pb.mission;
+package rtsys.mission;
 
-
-// ===
-// === Mission message
-// ============================================================================ //
-message Mission {
-    message Element {
-        message Point {
-            string name = 1;
-        }
-        message Rail {
-            string name = 1;
-            Point p0 = 2;
-            Point p1 = 3;
-        }
-        message Segment {
-            string name = 1;
-            Point p0 = 2;
-            Point p1 = 3;
-        }
-        oneof element {
-            Point point = 1;
-            Rail rail = 2;
-            Segment segment = 3;
-        }
-    }
-
-    message Collection {
-        string name = 1;
-        repeated Element elements = 2;
-    }
-
-   message Component {
-    oneof component{
-        Element element = 1;
-        Collection collection = 2;
-    }
-   }
-
+/* A block is a based part of the mission, it can be a point or a line. For
+ * each block there may be none or several configured payload.
+ */
+message Block {
+  message Point {
     string name = 1;
-    repeated Component components = 2;
+  }
+  message Line {
+    enum Type {
+      LINE_RAIL = 0;
+      LINE_SEGMENT = 1;
+    }
+    string name = 1;
+    Type type = 2;
+    repeated Point points = 3;
+  }
+  oneof block {
+    Point point = 1;
+    Line line = 2;
+  }
+  repeated Payload payloads = 4;
 }
+
+/* A payload configures the behavior of a based part of the mission (block).
+ */
+message Payload {
+  message Navigation {
+    float velocity = 1;
+    float heading = 2;
+    float depth = 3;
+  } 
+  Navigation navigation = 1;
+}
+
+/* A collection is a set of blocks. Depending on the type of blocks the
+ * collection can be a scenario, family or route.
+ */
+message Collection {
+  string name = 1;
+  repeated Block blocks = 2;
+}
+
+/* A device is a set of sub-component that can be either a block or a
+ * collection.
+ */
+message Device {
+  enum Type {
+    DEVICE_DEFAULT = 0;
+    DEVICE_SURFACE = 1;
+  }
+  message Component {
+    oneof component{
+      Block block = 1;
+      Collection collection = 3;
+    }
+  }
+  string name = 1;
+  Type type = 2;
+  repeated Component components = 3;
+}
+
+/* A mission is a set of sub-component that can be either a block or a
+ * collection or a device.
+ */
+message Mission {
+  message Component {
+    oneof component{
+      Block block = 1;
+      Device device = 2;
+      Collection collection = 3;
+    }
+  }
+  string name = 1;
+  string brief = 2;
+  repeated Component components = 3;
+}
+

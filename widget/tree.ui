@@ -106,6 +106,14 @@
     <string>Swap</string>
    </property>
   </action>
+  <action name="actionDevice">
+   <property name="text">
+    <string>Add Device</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Device</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

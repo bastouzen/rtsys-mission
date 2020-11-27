@@ -29,6 +29,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 #define PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto 
@@ -38,72 +39,126 @@ namespace protobuf_mission_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[7];
+  static const ::google::protobuf::internal::ParseTable schema[10];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
 };
 void AddDescriptors();
 }  // namespace protobuf_mission_2eproto
-namespace pb {
+namespace rtsys {
 namespace mission {
+class Block;
+class BlockDefaultTypeInternal;
+extern BlockDefaultTypeInternal _Block_default_instance_;
+class Block_Line;
+class Block_LineDefaultTypeInternal;
+extern Block_LineDefaultTypeInternal _Block_Line_default_instance_;
+class Block_Point;
+class Block_PointDefaultTypeInternal;
+extern Block_PointDefaultTypeInternal _Block_Point_default_instance_;
+class Collection;
+class CollectionDefaultTypeInternal;
+extern CollectionDefaultTypeInternal _Collection_default_instance_;
+class Device;
+class DeviceDefaultTypeInternal;
+extern DeviceDefaultTypeInternal _Device_default_instance_;
+class Device_Component;
+class Device_ComponentDefaultTypeInternal;
+extern Device_ComponentDefaultTypeInternal _Device_Component_default_instance_;
 class Mission;
 class MissionDefaultTypeInternal;
 extern MissionDefaultTypeInternal _Mission_default_instance_;
-class Mission_Collection;
-class Mission_CollectionDefaultTypeInternal;
-extern Mission_CollectionDefaultTypeInternal _Mission_Collection_default_instance_;
 class Mission_Component;
 class Mission_ComponentDefaultTypeInternal;
 extern Mission_ComponentDefaultTypeInternal _Mission_Component_default_instance_;
-class Mission_Element;
-class Mission_ElementDefaultTypeInternal;
-extern Mission_ElementDefaultTypeInternal _Mission_Element_default_instance_;
-class Mission_Element_Point;
-class Mission_Element_PointDefaultTypeInternal;
-extern Mission_Element_PointDefaultTypeInternal _Mission_Element_Point_default_instance_;
-class Mission_Element_Rail;
-class Mission_Element_RailDefaultTypeInternal;
-extern Mission_Element_RailDefaultTypeInternal _Mission_Element_Rail_default_instance_;
-class Mission_Element_Segment;
-class Mission_Element_SegmentDefaultTypeInternal;
-extern Mission_Element_SegmentDefaultTypeInternal _Mission_Element_Segment_default_instance_;
+class Payload;
+class PayloadDefaultTypeInternal;
+extern PayloadDefaultTypeInternal _Payload_default_instance_;
+class Payload_Navigation;
+class Payload_NavigationDefaultTypeInternal;
+extern Payload_NavigationDefaultTypeInternal _Payload_Navigation_default_instance_;
 }  // namespace mission
-}  // namespace pb
+}  // namespace rtsys
 namespace google {
 namespace protobuf {
-template<> ::pb::mission::Mission* Arena::CreateMaybeMessage<::pb::mission::Mission>(Arena*);
-template<> ::pb::mission::Mission_Collection* Arena::CreateMaybeMessage<::pb::mission::Mission_Collection>(Arena*);
-template<> ::pb::mission::Mission_Component* Arena::CreateMaybeMessage<::pb::mission::Mission_Component>(Arena*);
-template<> ::pb::mission::Mission_Element* Arena::CreateMaybeMessage<::pb::mission::Mission_Element>(Arena*);
-template<> ::pb::mission::Mission_Element_Point* Arena::CreateMaybeMessage<::pb::mission::Mission_Element_Point>(Arena*);
-template<> ::pb::mission::Mission_Element_Rail* Arena::CreateMaybeMessage<::pb::mission::Mission_Element_Rail>(Arena*);
-template<> ::pb::mission::Mission_Element_Segment* Arena::CreateMaybeMessage<::pb::mission::Mission_Element_Segment>(Arena*);
+template<> ::rtsys::mission::Block* Arena::CreateMaybeMessage<::rtsys::mission::Block>(Arena*);
+template<> ::rtsys::mission::Block_Line* Arena::CreateMaybeMessage<::rtsys::mission::Block_Line>(Arena*);
+template<> ::rtsys::mission::Block_Point* Arena::CreateMaybeMessage<::rtsys::mission::Block_Point>(Arena*);
+template<> ::rtsys::mission::Collection* Arena::CreateMaybeMessage<::rtsys::mission::Collection>(Arena*);
+template<> ::rtsys::mission::Device* Arena::CreateMaybeMessage<::rtsys::mission::Device>(Arena*);
+template<> ::rtsys::mission::Device_Component* Arena::CreateMaybeMessage<::rtsys::mission::Device_Component>(Arena*);
+template<> ::rtsys::mission::Mission* Arena::CreateMaybeMessage<::rtsys::mission::Mission>(Arena*);
+template<> ::rtsys::mission::Mission_Component* Arena::CreateMaybeMessage<::rtsys::mission::Mission_Component>(Arena*);
+template<> ::rtsys::mission::Payload* Arena::CreateMaybeMessage<::rtsys::mission::Payload>(Arena*);
+template<> ::rtsys::mission::Payload_Navigation* Arena::CreateMaybeMessage<::rtsys::mission::Payload_Navigation>(Arena*);
 }  // namespace protobuf
 }  // namespace google
-namespace pb {
+namespace rtsys {
 namespace mission {
 
+enum Block_Line_Type {
+  Block_Line_Type_LINE_RAIL = 0,
+  Block_Line_Type_LINE_SEGMENT = 1,
+  Block_Line_Type_Block_Line_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  Block_Line_Type_Block_Line_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool Block_Line_Type_IsValid(int value);
+const Block_Line_Type Block_Line_Type_Type_MIN = Block_Line_Type_LINE_RAIL;
+const Block_Line_Type Block_Line_Type_Type_MAX = Block_Line_Type_LINE_SEGMENT;
+const int Block_Line_Type_Type_ARRAYSIZE = Block_Line_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Block_Line_Type_descriptor();
+inline const ::std::string& Block_Line_Type_Name(Block_Line_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Block_Line_Type_descriptor(), value);
+}
+inline bool Block_Line_Type_Parse(
+    const ::std::string& name, Block_Line_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Block_Line_Type>(
+    Block_Line_Type_descriptor(), name, value);
+}
+enum Device_Type {
+  Device_Type_DEVICE_DEFAULT = 0,
+  Device_Type_DEVICE_SURFACE = 1,
+  Device_Type_Device_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  Device_Type_Device_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool Device_Type_IsValid(int value);
+const Device_Type Device_Type_Type_MIN = Device_Type_DEVICE_DEFAULT;
+const Device_Type Device_Type_Type_MAX = Device_Type_DEVICE_SURFACE;
+const int Device_Type_Type_ARRAYSIZE = Device_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Device_Type_descriptor();
+inline const ::std::string& Device_Type_Name(Device_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Device_Type_descriptor(), value);
+}
+inline bool Device_Type_Parse(
+    const ::std::string& name, Device_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Device_Type>(
+    Device_Type_descriptor(), name, value);
+}
 // ===================================================================
 
-class Mission_Element_Point : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.mission.Mission.Element.Point) */ {
+class Block_Point : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Block.Point) */ {
  public:
-  Mission_Element_Point();
-  virtual ~Mission_Element_Point();
+  Block_Point();
+  virtual ~Block_Point();
 
-  Mission_Element_Point(const Mission_Element_Point& from);
+  Block_Point(const Block_Point& from);
 
-  inline Mission_Element_Point& operator=(const Mission_Element_Point& from) {
+  inline Block_Point& operator=(const Block_Point& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  Mission_Element_Point(Mission_Element_Point&& from) noexcept
-    : Mission_Element_Point() {
+  Block_Point(Block_Point&& from) noexcept
+    : Block_Point() {
     *this = ::std::move(from);
   }
 
-  inline Mission_Element_Point& operator=(Mission_Element_Point&& from) noexcept {
+  inline Block_Point& operator=(Block_Point&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -113,34 +168,34 @@ class Mission_Element_Point : public ::google::protobuf::Message /* @@protoc_ins
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Mission_Element_Point& default_instance();
+  static const Block_Point& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Mission_Element_Point* internal_default_instance() {
-    return reinterpret_cast<const Mission_Element_Point*>(
-               &_Mission_Element_Point_default_instance_);
+  static inline const Block_Point* internal_default_instance() {
+    return reinterpret_cast<const Block_Point*>(
+               &_Block_Point_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  void Swap(Mission_Element_Point* other);
-  friend void swap(Mission_Element_Point& a, Mission_Element_Point& b) {
+  void Swap(Block_Point* other);
+  friend void swap(Block_Point& a, Block_Point& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Mission_Element_Point* New() const final {
-    return CreateMaybeMessage<Mission_Element_Point>(NULL);
+  inline Block_Point* New() const final {
+    return CreateMaybeMessage<Block_Point>(NULL);
   }
 
-  Mission_Element_Point* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<Mission_Element_Point>(arena);
+  Block_Point* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Block_Point>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const Mission_Element_Point& from);
-  void MergeFrom(const Mission_Element_Point& from);
+  void CopyFrom(const Block_Point& from);
+  void MergeFrom(const Block_Point& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -157,7 +212,7 @@ class Mission_Element_Point : public ::google::protobuf::Message /* @@protoc_ins
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Mission_Element_Point* other);
+  void InternalSwap(Block_Point* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -187,7 +242,7 @@ class Mission_Element_Point : public ::google::protobuf::Message /* @@protoc_ins
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
-  // @@protoc_insertion_point(class_scope:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Block.Point)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -197,24 +252,24 @@ class Mission_Element_Point : public ::google::protobuf::Message /* @@protoc_ins
 };
 // -------------------------------------------------------------------
 
-class Mission_Element_Rail : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.mission.Mission.Element.Rail) */ {
+class Block_Line : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Block.Line) */ {
  public:
-  Mission_Element_Rail();
-  virtual ~Mission_Element_Rail();
+  Block_Line();
+  virtual ~Block_Line();
 
-  Mission_Element_Rail(const Mission_Element_Rail& from);
+  Block_Line(const Block_Line& from);
 
-  inline Mission_Element_Rail& operator=(const Mission_Element_Rail& from) {
+  inline Block_Line& operator=(const Block_Line& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  Mission_Element_Rail(Mission_Element_Rail&& from) noexcept
-    : Mission_Element_Rail() {
+  Block_Line(Block_Line&& from) noexcept
+    : Block_Line() {
     *this = ::std::move(from);
   }
 
-  inline Mission_Element_Rail& operator=(Mission_Element_Rail&& from) noexcept {
+  inline Block_Line& operator=(Block_Line&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -224,34 +279,34 @@ class Mission_Element_Rail : public ::google::protobuf::Message /* @@protoc_inse
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Mission_Element_Rail& default_instance();
+  static const Block_Line& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Mission_Element_Rail* internal_default_instance() {
-    return reinterpret_cast<const Mission_Element_Rail*>(
-               &_Mission_Element_Rail_default_instance_);
+  static inline const Block_Line* internal_default_instance() {
+    return reinterpret_cast<const Block_Line*>(
+               &_Block_Line_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     1;
 
-  void Swap(Mission_Element_Rail* other);
-  friend void swap(Mission_Element_Rail& a, Mission_Element_Rail& b) {
+  void Swap(Block_Line* other);
+  friend void swap(Block_Line& a, Block_Line& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Mission_Element_Rail* New() const final {
-    return CreateMaybeMessage<Mission_Element_Rail>(NULL);
+  inline Block_Line* New() const final {
+    return CreateMaybeMessage<Block_Line>(NULL);
   }
 
-  Mission_Element_Rail* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<Mission_Element_Rail>(arena);
+  Block_Line* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Block_Line>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const Mission_Element_Rail& from);
-  void MergeFrom(const Mission_Element_Rail& from);
+  void CopyFrom(const Block_Line& from);
+  void MergeFrom(const Block_Line& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -268,7 +323,7 @@ class Mission_Element_Rail : public ::google::protobuf::Message /* @@protoc_inse
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Mission_Element_Rail* other);
+  void InternalSwap(Block_Line* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -282,7 +337,45 @@ class Mission_Element_Rail : public ::google::protobuf::Message /* @@protoc_inse
 
   // nested types ----------------------------------------------------
 
+  typedef Block_Line_Type Type;
+  static const Type LINE_RAIL =
+    Block_Line_Type_LINE_RAIL;
+  static const Type LINE_SEGMENT =
+    Block_Line_Type_LINE_SEGMENT;
+  static inline bool Type_IsValid(int value) {
+    return Block_Line_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    Block_Line_Type_Type_MIN;
+  static const Type Type_MAX =
+    Block_Line_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    Block_Line_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return Block_Line_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return Block_Line_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return Block_Line_Type_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
+
+  // repeated .rtsys.mission.Block.Point points = 3;
+  int points_size() const;
+  void clear_points();
+  static const int kPointsFieldNumber = 3;
+  ::rtsys::mission::Block_Point* mutable_points(int index);
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block_Point >*
+      mutable_points();
+  const ::rtsys::mission::Block_Point& points(int index) const;
+  ::rtsys::mission::Block_Point* add_points();
+  const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block_Point >&
+      points() const;
 
   // string name = 1;
   void clear_name();
@@ -298,60 +391,42 @@ class Mission_Element_Rail : public ::google::protobuf::Message /* @@protoc_inse
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  bool has_p0() const;
-  void clear_p0();
-  static const int kP0FieldNumber = 2;
-  private:
-  const ::pb::mission::Mission_Element_Point& _internal_p0() const;
-  public:
-  const ::pb::mission::Mission_Element_Point& p0() const;
-  ::pb::mission::Mission_Element_Point* release_p0();
-  ::pb::mission::Mission_Element_Point* mutable_p0();
-  void set_allocated_p0(::pb::mission::Mission_Element_Point* p0);
+  // .rtsys.mission.Block.Line.Type type = 2;
+  void clear_type();
+  static const int kTypeFieldNumber = 2;
+  ::rtsys::mission::Block_Line_Type type() const;
+  void set_type(::rtsys::mission::Block_Line_Type value);
 
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  bool has_p1() const;
-  void clear_p1();
-  static const int kP1FieldNumber = 3;
-  private:
-  const ::pb::mission::Mission_Element_Point& _internal_p1() const;
-  public:
-  const ::pb::mission::Mission_Element_Point& p1() const;
-  ::pb::mission::Mission_Element_Point* release_p1();
-  ::pb::mission::Mission_Element_Point* mutable_p1();
-  void set_allocated_p1(::pb::mission::Mission_Element_Point* p1);
-
-  // @@protoc_insertion_point(class_scope:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Block.Line)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block_Point > points_;
   ::google::protobuf::internal::ArenaStringPtr name_;
-  ::pb::mission::Mission_Element_Point* p0_;
-  ::pb::mission::Mission_Element_Point* p1_;
+  int type_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_mission_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class Mission_Element_Segment : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.mission.Mission.Element.Segment) */ {
+class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Block) */ {
  public:
-  Mission_Element_Segment();
-  virtual ~Mission_Element_Segment();
+  Block();
+  virtual ~Block();
 
-  Mission_Element_Segment(const Mission_Element_Segment& from);
+  Block(const Block& from);
 
-  inline Mission_Element_Segment& operator=(const Mission_Element_Segment& from) {
+  inline Block& operator=(const Block& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  Mission_Element_Segment(Mission_Element_Segment&& from) noexcept
-    : Mission_Element_Segment() {
+  Block(Block&& from) noexcept
+    : Block() {
     *this = ::std::move(from);
   }
 
-  inline Mission_Element_Segment& operator=(Mission_Element_Segment&& from) noexcept {
+  inline Block& operator=(Block&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -361,34 +436,40 @@ class Mission_Element_Segment : public ::google::protobuf::Message /* @@protoc_i
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Mission_Element_Segment& default_instance();
+  static const Block& default_instance();
+
+  enum BlockCase {
+    kPoint = 1,
+    kLine = 2,
+    BLOCK_NOT_SET = 0,
+  };
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Mission_Element_Segment* internal_default_instance() {
-    return reinterpret_cast<const Mission_Element_Segment*>(
-               &_Mission_Element_Segment_default_instance_);
+  static inline const Block* internal_default_instance() {
+    return reinterpret_cast<const Block*>(
+               &_Block_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     2;
 
-  void Swap(Mission_Element_Segment* other);
-  friend void swap(Mission_Element_Segment& a, Mission_Element_Segment& b) {
+  void Swap(Block* other);
+  friend void swap(Block& a, Block& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Mission_Element_Segment* New() const final {
-    return CreateMaybeMessage<Mission_Element_Segment>(NULL);
+  inline Block* New() const final {
+    return CreateMaybeMessage<Block>(NULL);
   }
 
-  Mission_Element_Segment* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<Mission_Element_Segment>(arena);
+  Block* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Block>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const Mission_Element_Segment& from);
-  void MergeFrom(const Mission_Element_Segment& from);
+  void CopyFrom(const Block& from);
+  void MergeFrom(const Block& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -405,7 +486,7 @@ class Mission_Element_Segment : public ::google::protobuf::Message /* @@protoc_i
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Mission_Element_Segment* other);
+  void InternalSwap(Block* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -419,210 +500,64 @@ class Mission_Element_Segment : public ::google::protobuf::Message /* @@protoc_i
 
   // nested types ----------------------------------------------------
 
-  // accessors -------------------------------------------------------
-
-  // string name = 1;
-  void clear_name();
-  static const int kNameFieldNumber = 1;
-  const ::std::string& name() const;
-  void set_name(const ::std::string& value);
-  #if LANG_CXX11
-  void set_name(::std::string&& value);
-  #endif
-  void set_name(const char* value);
-  void set_name(const char* value, size_t size);
-  ::std::string* mutable_name();
-  ::std::string* release_name();
-  void set_allocated_name(::std::string* name);
-
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  bool has_p0() const;
-  void clear_p0();
-  static const int kP0FieldNumber = 2;
-  private:
-  const ::pb::mission::Mission_Element_Point& _internal_p0() const;
-  public:
-  const ::pb::mission::Mission_Element_Point& p0() const;
-  ::pb::mission::Mission_Element_Point* release_p0();
-  ::pb::mission::Mission_Element_Point* mutable_p0();
-  void set_allocated_p0(::pb::mission::Mission_Element_Point* p0);
-
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  bool has_p1() const;
-  void clear_p1();
-  static const int kP1FieldNumber = 3;
-  private:
-  const ::pb::mission::Mission_Element_Point& _internal_p1() const;
-  public:
-  const ::pb::mission::Mission_Element_Point& p1() const;
-  ::pb::mission::Mission_Element_Point* release_p1();
-  ::pb::mission::Mission_Element_Point* mutable_p1();
-  void set_allocated_p1(::pb::mission::Mission_Element_Point* p1);
-
-  // @@protoc_insertion_point(class_scope:pb.mission.Mission.Element.Segment)
- private:
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::ArenaStringPtr name_;
-  ::pb::mission::Mission_Element_Point* p0_;
-  ::pb::mission::Mission_Element_Point* p1_;
-  mutable ::google::protobuf::internal::CachedSize _cached_size_;
-  friend struct ::protobuf_mission_2eproto::TableStruct;
-};
-// -------------------------------------------------------------------
-
-class Mission_Element : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.mission.Mission.Element) */ {
- public:
-  Mission_Element();
-  virtual ~Mission_Element();
-
-  Mission_Element(const Mission_Element& from);
-
-  inline Mission_Element& operator=(const Mission_Element& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  #if LANG_CXX11
-  Mission_Element(Mission_Element&& from) noexcept
-    : Mission_Element() {
-    *this = ::std::move(from);
-  }
-
-  inline Mission_Element& operator=(Mission_Element&& from) noexcept {
-    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-  #endif
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Mission_Element& default_instance();
-
-  enum ElementCase {
-    kPoint = 1,
-    kRail = 2,
-    kSegment = 3,
-    ELEMENT_NOT_SET = 0,
-  };
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Mission_Element* internal_default_instance() {
-    return reinterpret_cast<const Mission_Element*>(
-               &_Mission_Element_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    3;
-
-  void Swap(Mission_Element* other);
-  friend void swap(Mission_Element& a, Mission_Element& b) {
-    a.Swap(&b);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline Mission_Element* New() const final {
-    return CreateMaybeMessage<Mission_Element>(NULL);
-  }
-
-  Mission_Element* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<Mission_Element>(arena);
-  }
-  void CopyFrom(const ::google::protobuf::Message& from) final;
-  void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const Mission_Element& from);
-  void MergeFrom(const Mission_Element& from);
-  void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input) final;
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const final;
-  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
-      bool deterministic, ::google::protobuf::uint8* target) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(Mission_Element* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return NULL;
-  }
-  inline void* MaybeArenaPtr() const {
-    return NULL;
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  typedef Mission_Element_Point Point;
-  typedef Mission_Element_Rail Rail;
-  typedef Mission_Element_Segment Segment;
+  typedef Block_Point Point;
+  typedef Block_Line Line;
 
   // accessors -------------------------------------------------------
 
-  // .pb.mission.Mission.Element.Point point = 1;
+  // repeated .rtsys.mission.Payload payloads = 4;
+  int payloads_size() const;
+  void clear_payloads();
+  static const int kPayloadsFieldNumber = 4;
+  ::rtsys::mission::Payload* mutable_payloads(int index);
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Payload >*
+      mutable_payloads();
+  const ::rtsys::mission::Payload& payloads(int index) const;
+  ::rtsys::mission::Payload* add_payloads();
+  const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Payload >&
+      payloads() const;
+
+  // .rtsys.mission.Block.Point point = 1;
   bool has_point() const;
   void clear_point();
   static const int kPointFieldNumber = 1;
   private:
-  const ::pb::mission::Mission_Element_Point& _internal_point() const;
+  const ::rtsys::mission::Block_Point& _internal_point() const;
   public:
-  const ::pb::mission::Mission_Element_Point& point() const;
-  ::pb::mission::Mission_Element_Point* release_point();
-  ::pb::mission::Mission_Element_Point* mutable_point();
-  void set_allocated_point(::pb::mission::Mission_Element_Point* point);
+  const ::rtsys::mission::Block_Point& point() const;
+  ::rtsys::mission::Block_Point* release_point();
+  ::rtsys::mission::Block_Point* mutable_point();
+  void set_allocated_point(::rtsys::mission::Block_Point* point);
 
-  // .pb.mission.Mission.Element.Rail rail = 2;
-  bool has_rail() const;
-  void clear_rail();
-  static const int kRailFieldNumber = 2;
+  // .rtsys.mission.Block.Line line = 2;
+  bool has_line() const;
+  void clear_line();
+  static const int kLineFieldNumber = 2;
   private:
-  const ::pb::mission::Mission_Element_Rail& _internal_rail() const;
+  const ::rtsys::mission::Block_Line& _internal_line() const;
   public:
-  const ::pb::mission::Mission_Element_Rail& rail() const;
-  ::pb::mission::Mission_Element_Rail* release_rail();
-  ::pb::mission::Mission_Element_Rail* mutable_rail();
-  void set_allocated_rail(::pb::mission::Mission_Element_Rail* rail);
+  const ::rtsys::mission::Block_Line& line() const;
+  ::rtsys::mission::Block_Line* release_line();
+  ::rtsys::mission::Block_Line* mutable_line();
+  void set_allocated_line(::rtsys::mission::Block_Line* line);
 
-  // .pb.mission.Mission.Element.Segment segment = 3;
-  bool has_segment() const;
-  void clear_segment();
-  static const int kSegmentFieldNumber = 3;
-  private:
-  const ::pb::mission::Mission_Element_Segment& _internal_segment() const;
-  public:
-  const ::pb::mission::Mission_Element_Segment& segment() const;
-  ::pb::mission::Mission_Element_Segment* release_segment();
-  ::pb::mission::Mission_Element_Segment* mutable_segment();
-  void set_allocated_segment(::pb::mission::Mission_Element_Segment* segment);
-
-  void clear_element();
-  ElementCase element_case() const;
-  // @@protoc_insertion_point(class_scope:pb.mission.Mission.Element)
+  void clear_block();
+  BlockCase block_case() const;
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Block)
  private:
   void set_has_point();
-  void set_has_rail();
-  void set_has_segment();
+  void set_has_line();
 
-  inline bool has_element() const;
-  inline void clear_has_element();
+  inline bool has_block() const;
+  inline void clear_has_block();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  union ElementUnion {
-    ElementUnion() {}
-    ::pb::mission::Mission_Element_Point* point_;
-    ::pb::mission::Mission_Element_Rail* rail_;
-    ::pb::mission::Mission_Element_Segment* segment_;
-  } element_;
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Payload > payloads_;
+  union BlockUnion {
+    BlockUnion() {}
+    ::rtsys::mission::Block_Point* point_;
+    ::rtsys::mission::Block_Line* line_;
+  } block_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -630,24 +565,24 @@ class Mission_Element : public ::google::protobuf::Message /* @@protoc_insertion
 };
 // -------------------------------------------------------------------
 
-class Mission_Collection : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.mission.Mission.Collection) */ {
+class Payload_Navigation : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Payload.Navigation) */ {
  public:
-  Mission_Collection();
-  virtual ~Mission_Collection();
+  Payload_Navigation();
+  virtual ~Payload_Navigation();
 
-  Mission_Collection(const Mission_Collection& from);
+  Payload_Navigation(const Payload_Navigation& from);
 
-  inline Mission_Collection& operator=(const Mission_Collection& from) {
+  inline Payload_Navigation& operator=(const Payload_Navigation& from) {
     CopyFrom(from);
     return *this;
   }
   #if LANG_CXX11
-  Mission_Collection(Mission_Collection&& from) noexcept
-    : Mission_Collection() {
+  Payload_Navigation(Payload_Navigation&& from) noexcept
+    : Payload_Navigation() {
     *this = ::std::move(from);
   }
 
-  inline Mission_Collection& operator=(Mission_Collection&& from) noexcept {
+  inline Payload_Navigation& operator=(Payload_Navigation&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -657,34 +592,34 @@ class Mission_Collection : public ::google::protobuf::Message /* @@protoc_insert
   }
   #endif
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Mission_Collection& default_instance();
+  static const Payload_Navigation& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Mission_Collection* internal_default_instance() {
-    return reinterpret_cast<const Mission_Collection*>(
-               &_Mission_Collection_default_instance_);
+  static inline const Payload_Navigation* internal_default_instance() {
+    return reinterpret_cast<const Payload_Navigation*>(
+               &_Payload_Navigation_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    3;
 
-  void Swap(Mission_Collection* other);
-  friend void swap(Mission_Collection& a, Mission_Collection& b) {
+  void Swap(Payload_Navigation* other);
+  friend void swap(Payload_Navigation& a, Payload_Navigation& b) {
     a.Swap(&b);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Mission_Collection* New() const final {
-    return CreateMaybeMessage<Mission_Collection>(NULL);
+  inline Payload_Navigation* New() const final {
+    return CreateMaybeMessage<Payload_Navigation>(NULL);
   }
 
-  Mission_Collection* New(::google::protobuf::Arena* arena) const final {
-    return CreateMaybeMessage<Mission_Collection>(arena);
+  Payload_Navigation* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Payload_Navigation>(arena);
   }
   void CopyFrom(const ::google::protobuf::Message& from) final;
   void MergeFrom(const ::google::protobuf::Message& from) final;
-  void CopyFrom(const Mission_Collection& from);
-  void MergeFrom(const Mission_Collection& from);
+  void CopyFrom(const Payload_Navigation& from);
+  void MergeFrom(const Payload_Navigation& from);
   void Clear() final;
   bool IsInitialized() const final;
 
@@ -701,7 +636,7 @@ class Mission_Collection : public ::google::protobuf::Message /* @@protoc_insert
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Mission_Collection* other);
+  void InternalSwap(Payload_Navigation* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return NULL;
@@ -717,17 +652,245 @@ class Mission_Collection : public ::google::protobuf::Message /* @@protoc_insert
 
   // accessors -------------------------------------------------------
 
-  // repeated .pb.mission.Mission.Element elements = 2;
-  int elements_size() const;
-  void clear_elements();
-  static const int kElementsFieldNumber = 2;
-  ::pb::mission::Mission_Element* mutable_elements(int index);
-  ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Element >*
-      mutable_elements();
-  const ::pb::mission::Mission_Element& elements(int index) const;
-  ::pb::mission::Mission_Element* add_elements();
-  const ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Element >&
-      elements() const;
+  // float velocity = 1;
+  void clear_velocity();
+  static const int kVelocityFieldNumber = 1;
+  float velocity() const;
+  void set_velocity(float value);
+
+  // float heading = 2;
+  void clear_heading();
+  static const int kHeadingFieldNumber = 2;
+  float heading() const;
+  void set_heading(float value);
+
+  // float depth = 3;
+  void clear_depth();
+  static const int kDepthFieldNumber = 3;
+  float depth() const;
+  void set_depth(float value);
+
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Payload.Navigation)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  float velocity_;
+  float heading_;
+  float depth_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_mission_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Payload : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Payload) */ {
+ public:
+  Payload();
+  virtual ~Payload();
+
+  Payload(const Payload& from);
+
+  inline Payload& operator=(const Payload& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Payload(Payload&& from) noexcept
+    : Payload() {
+    *this = ::std::move(from);
+  }
+
+  inline Payload& operator=(Payload&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Payload& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Payload* internal_default_instance() {
+    return reinterpret_cast<const Payload*>(
+               &_Payload_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  void Swap(Payload* other);
+  friend void swap(Payload& a, Payload& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Payload* New() const final {
+    return CreateMaybeMessage<Payload>(NULL);
+  }
+
+  Payload* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Payload>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Payload& from);
+  void MergeFrom(const Payload& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Payload* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef Payload_Navigation Navigation;
+
+  // accessors -------------------------------------------------------
+
+  // .rtsys.mission.Payload.Navigation navigation = 1;
+  bool has_navigation() const;
+  void clear_navigation();
+  static const int kNavigationFieldNumber = 1;
+  private:
+  const ::rtsys::mission::Payload_Navigation& _internal_navigation() const;
+  public:
+  const ::rtsys::mission::Payload_Navigation& navigation() const;
+  ::rtsys::mission::Payload_Navigation* release_navigation();
+  ::rtsys::mission::Payload_Navigation* mutable_navigation();
+  void set_allocated_navigation(::rtsys::mission::Payload_Navigation* navigation);
+
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Payload)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::rtsys::mission::Payload_Navigation* navigation_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_mission_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Collection : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Collection) */ {
+ public:
+  Collection();
+  virtual ~Collection();
+
+  Collection(const Collection& from);
+
+  inline Collection& operator=(const Collection& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Collection(Collection&& from) noexcept
+    : Collection() {
+    *this = ::std::move(from);
+  }
+
+  inline Collection& operator=(Collection&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Collection& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Collection* internal_default_instance() {
+    return reinterpret_cast<const Collection*>(
+               &_Collection_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  void Swap(Collection* other);
+  friend void swap(Collection& a, Collection& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Collection* New() const final {
+    return CreateMaybeMessage<Collection>(NULL);
+  }
+
+  Collection* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Collection>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Collection& from);
+  void MergeFrom(const Collection& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Collection* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .rtsys.mission.Block blocks = 2;
+  int blocks_size() const;
+  void clear_blocks();
+  static const int kBlocksFieldNumber = 2;
+  ::rtsys::mission::Block* mutable_blocks(int index);
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block >*
+      mutable_blocks();
+  const ::rtsys::mission::Block& blocks(int index) const;
+  ::rtsys::mission::Block* add_blocks();
+  const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block >&
+      blocks() const;
 
   // string name = 1;
   void clear_name();
@@ -743,18 +906,317 @@ class Mission_Collection : public ::google::protobuf::Message /* @@protoc_insert
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
-  // @@protoc_insertion_point(class_scope:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Collection)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Element > elements_;
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block > blocks_;
   ::google::protobuf::internal::ArenaStringPtr name_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_mission_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
 
-class Mission_Component : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.mission.Mission.Component) */ {
+class Device_Component : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Device.Component) */ {
+ public:
+  Device_Component();
+  virtual ~Device_Component();
+
+  Device_Component(const Device_Component& from);
+
+  inline Device_Component& operator=(const Device_Component& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Device_Component(Device_Component&& from) noexcept
+    : Device_Component() {
+    *this = ::std::move(from);
+  }
+
+  inline Device_Component& operator=(Device_Component&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Device_Component& default_instance();
+
+  enum ComponentCase {
+    kBlock = 1,
+    kCollection = 3,
+    COMPONENT_NOT_SET = 0,
+  };
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Device_Component* internal_default_instance() {
+    return reinterpret_cast<const Device_Component*>(
+               &_Device_Component_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  void Swap(Device_Component* other);
+  friend void swap(Device_Component& a, Device_Component& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Device_Component* New() const final {
+    return CreateMaybeMessage<Device_Component>(NULL);
+  }
+
+  Device_Component* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Device_Component>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Device_Component& from);
+  void MergeFrom(const Device_Component& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Device_Component* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // .rtsys.mission.Block block = 1;
+  bool has_block() const;
+  void clear_block();
+  static const int kBlockFieldNumber = 1;
+  private:
+  const ::rtsys::mission::Block& _internal_block() const;
+  public:
+  const ::rtsys::mission::Block& block() const;
+  ::rtsys::mission::Block* release_block();
+  ::rtsys::mission::Block* mutable_block();
+  void set_allocated_block(::rtsys::mission::Block* block);
+
+  // .rtsys.mission.Collection collection = 3;
+  bool has_collection() const;
+  void clear_collection();
+  static const int kCollectionFieldNumber = 3;
+  private:
+  const ::rtsys::mission::Collection& _internal_collection() const;
+  public:
+  const ::rtsys::mission::Collection& collection() const;
+  ::rtsys::mission::Collection* release_collection();
+  ::rtsys::mission::Collection* mutable_collection();
+  void set_allocated_collection(::rtsys::mission::Collection* collection);
+
+  void clear_component();
+  ComponentCase component_case() const;
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Device.Component)
+ private:
+  void set_has_block();
+  void set_has_collection();
+
+  inline bool has_component() const;
+  inline void clear_has_component();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  union ComponentUnion {
+    ComponentUnion() {}
+    ::rtsys::mission::Block* block_;
+    ::rtsys::mission::Collection* collection_;
+  } component_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::uint32 _oneof_case_[1];
+
+  friend struct ::protobuf_mission_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Device : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Device) */ {
+ public:
+  Device();
+  virtual ~Device();
+
+  Device(const Device& from);
+
+  inline Device& operator=(const Device& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Device(Device&& from) noexcept
+    : Device() {
+    *this = ::std::move(from);
+  }
+
+  inline Device& operator=(Device&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Device& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Device* internal_default_instance() {
+    return reinterpret_cast<const Device*>(
+               &_Device_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  void Swap(Device* other);
+  friend void swap(Device& a, Device& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Device* New() const final {
+    return CreateMaybeMessage<Device>(NULL);
+  }
+
+  Device* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<Device>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const Device& from);
+  void MergeFrom(const Device& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Device* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef Device_Component Component;
+
+  typedef Device_Type Type;
+  static const Type DEVICE_DEFAULT =
+    Device_Type_DEVICE_DEFAULT;
+  static const Type DEVICE_SURFACE =
+    Device_Type_DEVICE_SURFACE;
+  static inline bool Type_IsValid(int value) {
+    return Device_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    Device_Type_Type_MIN;
+  static const Type Type_MAX =
+    Device_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    Device_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return Device_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return Device_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return Device_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // repeated .rtsys.mission.Device.Component components = 3;
+  int components_size() const;
+  void clear_components();
+  static const int kComponentsFieldNumber = 3;
+  ::rtsys::mission::Device_Component* mutable_components(int index);
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Device_Component >*
+      mutable_components();
+  const ::rtsys::mission::Device_Component& components(int index) const;
+  ::rtsys::mission::Device_Component* add_components();
+  const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Device_Component >&
+      components() const;
+
+  // string name = 1;
+  void clear_name();
+  static const int kNameFieldNumber = 1;
+  const ::std::string& name() const;
+  void set_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_name(::std::string&& value);
+  #endif
+  void set_name(const char* value);
+  void set_name(const char* value, size_t size);
+  ::std::string* mutable_name();
+  ::std::string* release_name();
+  void set_allocated_name(::std::string* name);
+
+  // .rtsys.mission.Device.Type type = 2;
+  void clear_type();
+  static const int kTypeFieldNumber = 2;
+  ::rtsys::mission::Device_Type type() const;
+  void set_type(::rtsys::mission::Device_Type value);
+
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Device)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Device_Component > components_;
+  ::google::protobuf::internal::ArenaStringPtr name_;
+  int type_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_mission_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Mission_Component : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Mission.Component) */ {
  public:
   Mission_Component();
   virtual ~Mission_Component();
@@ -784,8 +1246,9 @@ class Mission_Component : public ::google::protobuf::Message /* @@protoc_inserti
   static const Mission_Component& default_instance();
 
   enum ComponentCase {
-    kElement = 1,
-    kCollection = 2,
+    kBlock = 1,
+    kDevice = 2,
+    kCollection = 3,
     COMPONENT_NOT_SET = 0,
   };
 
@@ -795,7 +1258,7 @@ class Mission_Component : public ::google::protobuf::Message /* @@protoc_inserti
                &_Mission_Component_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    8;
 
   void Swap(Mission_Component* other);
   friend void swap(Mission_Component& a, Mission_Component& b) {
@@ -847,35 +1310,48 @@ class Mission_Component : public ::google::protobuf::Message /* @@protoc_inserti
 
   // accessors -------------------------------------------------------
 
-  // .pb.mission.Mission.Element element = 1;
-  bool has_element() const;
-  void clear_element();
-  static const int kElementFieldNumber = 1;
+  // .rtsys.mission.Block block = 1;
+  bool has_block() const;
+  void clear_block();
+  static const int kBlockFieldNumber = 1;
   private:
-  const ::pb::mission::Mission_Element& _internal_element() const;
+  const ::rtsys::mission::Block& _internal_block() const;
   public:
-  const ::pb::mission::Mission_Element& element() const;
-  ::pb::mission::Mission_Element* release_element();
-  ::pb::mission::Mission_Element* mutable_element();
-  void set_allocated_element(::pb::mission::Mission_Element* element);
+  const ::rtsys::mission::Block& block() const;
+  ::rtsys::mission::Block* release_block();
+  ::rtsys::mission::Block* mutable_block();
+  void set_allocated_block(::rtsys::mission::Block* block);
 
-  // .pb.mission.Mission.Collection collection = 2;
+  // .rtsys.mission.Device device = 2;
+  bool has_device() const;
+  void clear_device();
+  static const int kDeviceFieldNumber = 2;
+  private:
+  const ::rtsys::mission::Device& _internal_device() const;
+  public:
+  const ::rtsys::mission::Device& device() const;
+  ::rtsys::mission::Device* release_device();
+  ::rtsys::mission::Device* mutable_device();
+  void set_allocated_device(::rtsys::mission::Device* device);
+
+  // .rtsys.mission.Collection collection = 3;
   bool has_collection() const;
   void clear_collection();
-  static const int kCollectionFieldNumber = 2;
+  static const int kCollectionFieldNumber = 3;
   private:
-  const ::pb::mission::Mission_Collection& _internal_collection() const;
+  const ::rtsys::mission::Collection& _internal_collection() const;
   public:
-  const ::pb::mission::Mission_Collection& collection() const;
-  ::pb::mission::Mission_Collection* release_collection();
-  ::pb::mission::Mission_Collection* mutable_collection();
-  void set_allocated_collection(::pb::mission::Mission_Collection* collection);
+  const ::rtsys::mission::Collection& collection() const;
+  ::rtsys::mission::Collection* release_collection();
+  ::rtsys::mission::Collection* mutable_collection();
+  void set_allocated_collection(::rtsys::mission::Collection* collection);
 
   void clear_component();
   ComponentCase component_case() const;
-  // @@protoc_insertion_point(class_scope:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Mission.Component)
  private:
-  void set_has_element();
+  void set_has_block();
+  void set_has_device();
   void set_has_collection();
 
   inline bool has_component() const;
@@ -884,8 +1360,9 @@ class Mission_Component : public ::google::protobuf::Message /* @@protoc_inserti
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   union ComponentUnion {
     ComponentUnion() {}
-    ::pb::mission::Mission_Element* element_;
-    ::pb::mission::Mission_Collection* collection_;
+    ::rtsys::mission::Block* block_;
+    ::rtsys::mission::Device* device_;
+    ::rtsys::mission::Collection* collection_;
   } component_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::uint32 _oneof_case_[1];
@@ -894,7 +1371,7 @@ class Mission_Component : public ::google::protobuf::Message /* @@protoc_inserti
 };
 // -------------------------------------------------------------------
 
-class Mission : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:pb.mission.Mission) */ {
+class Mission : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:rtsys.mission.Mission) */ {
  public:
   Mission();
   virtual ~Mission();
@@ -929,7 +1406,7 @@ class Mission : public ::google::protobuf::Message /* @@protoc_insertion_point(c
                &_Mission_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    9;
 
   void Swap(Mission* other);
   friend void swap(Mission& a, Mission& b) {
@@ -979,22 +1456,20 @@ class Mission : public ::google::protobuf::Message /* @@protoc_insertion_point(c
 
   // nested types ----------------------------------------------------
 
-  typedef Mission_Element Element;
-  typedef Mission_Collection Collection;
   typedef Mission_Component Component;
 
   // accessors -------------------------------------------------------
 
-  // repeated .pb.mission.Mission.Component components = 2;
+  // repeated .rtsys.mission.Mission.Component components = 3;
   int components_size() const;
   void clear_components();
-  static const int kComponentsFieldNumber = 2;
-  ::pb::mission::Mission_Component* mutable_components(int index);
-  ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Component >*
+  static const int kComponentsFieldNumber = 3;
+  ::rtsys::mission::Mission_Component* mutable_components(int index);
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Mission_Component >*
       mutable_components();
-  const ::pb::mission::Mission_Component& components(int index) const;
-  ::pb::mission::Mission_Component* add_components();
-  const ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Component >&
+  const ::rtsys::mission::Mission_Component& components(int index) const;
+  ::rtsys::mission::Mission_Component* add_components();
+  const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Mission_Component >&
       components() const;
 
   // string name = 1;
@@ -1011,12 +1486,27 @@ class Mission : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
-  // @@protoc_insertion_point(class_scope:pb.mission.Mission)
+  // string brief = 2;
+  void clear_brief();
+  static const int kBriefFieldNumber = 2;
+  const ::std::string& brief() const;
+  void set_brief(const ::std::string& value);
+  #if LANG_CXX11
+  void set_brief(::std::string&& value);
+  #endif
+  void set_brief(const char* value);
+  void set_brief(const char* value, size_t size);
+  ::std::string* mutable_brief();
+  ::std::string* release_brief();
+  void set_allocated_brief(::std::string* brief);
+
+  // @@protoc_insertion_point(class_scope:rtsys.mission.Mission)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Component > components_;
+  ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Mission_Component > components_;
   ::google::protobuf::internal::ArenaStringPtr name_;
+  ::google::protobuf::internal::ArenaStringPtr brief_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_mission_2eproto::TableStruct;
 };
@@ -1029,672 +1519,779 @@ class Mission : public ::google::protobuf::Message /* @@protoc_insertion_point(c
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// Mission_Element_Point
+// Block_Point
 
 // string name = 1;
-inline void Mission_Element_Point::clear_name() {
+inline void Block_Point::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& Mission_Element_Point::name() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.Point.name)
+inline const ::std::string& Block_Point::name() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Block.Point.name)
   return name_.GetNoArena();
 }
-inline void Mission_Element_Point::set_name(const ::std::string& value) {
+inline void Block_Point::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:pb.mission.Mission.Element.Point.name)
+  // @@protoc_insertion_point(field_set:rtsys.mission.Block.Point.name)
 }
 #if LANG_CXX11
-inline void Mission_Element_Point::set_name(::std::string&& value) {
+inline void Block_Point::set_name(::std::string&& value) {
   
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:pb.mission.Mission.Element.Point.name)
+  // @@protoc_insertion_point(field_set_rvalue:rtsys.mission.Block.Point.name)
 }
 #endif
-inline void Mission_Element_Point::set_name(const char* value) {
+inline void Block_Point::set_name(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:pb.mission.Mission.Element.Point.name)
+  // @@protoc_insertion_point(field_set_char:rtsys.mission.Block.Point.name)
 }
-inline void Mission_Element_Point::set_name(const char* value, size_t size) {
+inline void Block_Point::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:pb.mission.Mission.Element.Point.name)
+  // @@protoc_insertion_point(field_set_pointer:rtsys.mission.Block.Point.name)
 }
-inline ::std::string* Mission_Element_Point::mutable_name() {
+inline ::std::string* Block_Point::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.Point.name)
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Block.Point.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* Mission_Element_Point::release_name() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.Point.name)
+inline ::std::string* Block_Point::release_name() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Block.Point.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Mission_Element_Point::set_allocated_name(::std::string* name) {
+inline void Block_Point::set_allocated_name(::std::string* name) {
   if (name != NULL) {
     
   } else {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.Point.name)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Block.Point.name)
 }
 
 // -------------------------------------------------------------------
 
-// Mission_Element_Rail
+// Block_Line
 
 // string name = 1;
-inline void Mission_Element_Rail::clear_name() {
+inline void Block_Line::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& Mission_Element_Rail::name() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.Rail.name)
+inline const ::std::string& Block_Line::name() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Block.Line.name)
   return name_.GetNoArena();
 }
-inline void Mission_Element_Rail::set_name(const ::std::string& value) {
+inline void Block_Line::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:pb.mission.Mission.Element.Rail.name)
+  // @@protoc_insertion_point(field_set:rtsys.mission.Block.Line.name)
 }
 #if LANG_CXX11
-inline void Mission_Element_Rail::set_name(::std::string&& value) {
+inline void Block_Line::set_name(::std::string&& value) {
   
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:pb.mission.Mission.Element.Rail.name)
+  // @@protoc_insertion_point(field_set_rvalue:rtsys.mission.Block.Line.name)
 }
 #endif
-inline void Mission_Element_Rail::set_name(const char* value) {
+inline void Block_Line::set_name(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:pb.mission.Mission.Element.Rail.name)
+  // @@protoc_insertion_point(field_set_char:rtsys.mission.Block.Line.name)
 }
-inline void Mission_Element_Rail::set_name(const char* value, size_t size) {
+inline void Block_Line::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:pb.mission.Mission.Element.Rail.name)
+  // @@protoc_insertion_point(field_set_pointer:rtsys.mission.Block.Line.name)
 }
-inline ::std::string* Mission_Element_Rail::mutable_name() {
+inline ::std::string* Block_Line::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.Rail.name)
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Block.Line.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* Mission_Element_Rail::release_name() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.Rail.name)
+inline ::std::string* Block_Line::release_name() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Block.Line.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Mission_Element_Rail::set_allocated_name(::std::string* name) {
+inline void Block_Line::set_allocated_name(::std::string* name) {
   if (name != NULL) {
     
   } else {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.Rail.name)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Block.Line.name)
 }
 
-// .pb.mission.Mission.Element.Point p0 = 2;
-inline bool Mission_Element_Rail::has_p0() const {
-  return this != internal_default_instance() && p0_ != NULL;
+// .rtsys.mission.Block.Line.Type type = 2;
+inline void Block_Line::clear_type() {
+  type_ = 0;
 }
-inline void Mission_Element_Rail::clear_p0() {
-  if (GetArenaNoVirtual() == NULL && p0_ != NULL) {
-    delete p0_;
-  }
-  p0_ = NULL;
+inline ::rtsys::mission::Block_Line_Type Block_Line::type() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Block.Line.type)
+  return static_cast< ::rtsys::mission::Block_Line_Type >(type_);
 }
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Rail::_internal_p0() const {
-  return *p0_;
-}
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Rail::p0() const {
-  const ::pb::mission::Mission_Element_Point* p = p0_;
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.Rail.p0)
-  return p != NULL ? *p : *reinterpret_cast<const ::pb::mission::Mission_Element_Point*>(
-      &::pb::mission::_Mission_Element_Point_default_instance_);
-}
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Rail::release_p0() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.Rail.p0)
+inline void Block_Line::set_type(::rtsys::mission::Block_Line_Type value) {
   
-  ::pb::mission::Mission_Element_Point* temp = p0_;
-  p0_ = NULL;
-  return temp;
-}
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Rail::mutable_p0() {
-  
-  if (p0_ == NULL) {
-    auto* p = CreateMaybeMessage<::pb::mission::Mission_Element_Point>(GetArenaNoVirtual());
-    p0_ = p;
-  }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.Rail.p0)
-  return p0_;
-}
-inline void Mission_Element_Rail::set_allocated_p0(::pb::mission::Mission_Element_Point* p0) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  if (message_arena == NULL) {
-    delete p0_;
-  }
-  if (p0) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
-    if (message_arena != submessage_arena) {
-      p0 = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, p0, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  p0_ = p0;
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.Rail.p0)
+  type_ = value;
+  // @@protoc_insertion_point(field_set:rtsys.mission.Block.Line.type)
 }
 
-// .pb.mission.Mission.Element.Point p1 = 3;
-inline bool Mission_Element_Rail::has_p1() const {
-  return this != internal_default_instance() && p1_ != NULL;
+// repeated .rtsys.mission.Block.Point points = 3;
+inline int Block_Line::points_size() const {
+  return points_.size();
 }
-inline void Mission_Element_Rail::clear_p1() {
-  if (GetArenaNoVirtual() == NULL && p1_ != NULL) {
-    delete p1_;
-  }
-  p1_ = NULL;
+inline void Block_Line::clear_points() {
+  points_.Clear();
 }
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Rail::_internal_p1() const {
-  return *p1_;
+inline ::rtsys::mission::Block_Point* Block_Line::mutable_points(int index) {
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Block.Line.points)
+  return points_.Mutable(index);
 }
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Rail::p1() const {
-  const ::pb::mission::Mission_Element_Point* p = p1_;
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.Rail.p1)
-  return p != NULL ? *p : *reinterpret_cast<const ::pb::mission::Mission_Element_Point*>(
-      &::pb::mission::_Mission_Element_Point_default_instance_);
+inline ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block_Point >*
+Block_Line::mutable_points() {
+  // @@protoc_insertion_point(field_mutable_list:rtsys.mission.Block.Line.points)
+  return &points_;
 }
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Rail::release_p1() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.Rail.p1)
-  
-  ::pb::mission::Mission_Element_Point* temp = p1_;
-  p1_ = NULL;
-  return temp;
+inline const ::rtsys::mission::Block_Point& Block_Line::points(int index) const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Block.Line.points)
+  return points_.Get(index);
 }
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Rail::mutable_p1() {
-  
-  if (p1_ == NULL) {
-    auto* p = CreateMaybeMessage<::pb::mission::Mission_Element_Point>(GetArenaNoVirtual());
-    p1_ = p;
-  }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.Rail.p1)
-  return p1_;
+inline ::rtsys::mission::Block_Point* Block_Line::add_points() {
+  // @@protoc_insertion_point(field_add:rtsys.mission.Block.Line.points)
+  return points_.Add();
 }
-inline void Mission_Element_Rail::set_allocated_p1(::pb::mission::Mission_Element_Point* p1) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  if (message_arena == NULL) {
-    delete p1_;
-  }
-  if (p1) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
-    if (message_arena != submessage_arena) {
-      p1 = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, p1, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  p1_ = p1;
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.Rail.p1)
+inline const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block_Point >&
+Block_Line::points() const {
+  // @@protoc_insertion_point(field_list:rtsys.mission.Block.Line.points)
+  return points_;
 }
 
 // -------------------------------------------------------------------
 
-// Mission_Element_Segment
+// Block
 
-// string name = 1;
-inline void Mission_Element_Segment::clear_name() {
-  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// .rtsys.mission.Block.Point point = 1;
+inline bool Block::has_point() const {
+  return block_case() == kPoint;
 }
-inline const ::std::string& Mission_Element_Segment::name() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.Segment.name)
-  return name_.GetNoArena();
-}
-inline void Mission_Element_Segment::set_name(const ::std::string& value) {
-  
-  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:pb.mission.Mission.Element.Segment.name)
-}
-#if LANG_CXX11
-inline void Mission_Element_Segment::set_name(::std::string&& value) {
-  
-  name_.SetNoArena(
-    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:pb.mission.Mission.Element.Segment.name)
-}
-#endif
-inline void Mission_Element_Segment::set_name(const char* value) {
-  GOOGLE_DCHECK(value != NULL);
-  
-  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:pb.mission.Mission.Element.Segment.name)
-}
-inline void Mission_Element_Segment::set_name(const char* value, size_t size) {
-  
-  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:pb.mission.Mission.Element.Segment.name)
-}
-inline ::std::string* Mission_Element_Segment::mutable_name() {
-  
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.Segment.name)
-  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* Mission_Element_Segment::release_name() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.Segment.name)
-  
-  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void Mission_Element_Segment::set_allocated_name(::std::string* name) {
-  if (name != NULL) {
-    
-  } else {
-    
-  }
-  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.Segment.name)
-}
-
-// .pb.mission.Mission.Element.Point p0 = 2;
-inline bool Mission_Element_Segment::has_p0() const {
-  return this != internal_default_instance() && p0_ != NULL;
-}
-inline void Mission_Element_Segment::clear_p0() {
-  if (GetArenaNoVirtual() == NULL && p0_ != NULL) {
-    delete p0_;
-  }
-  p0_ = NULL;
-}
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Segment::_internal_p0() const {
-  return *p0_;
-}
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Segment::p0() const {
-  const ::pb::mission::Mission_Element_Point* p = p0_;
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.Segment.p0)
-  return p != NULL ? *p : *reinterpret_cast<const ::pb::mission::Mission_Element_Point*>(
-      &::pb::mission::_Mission_Element_Point_default_instance_);
-}
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Segment::release_p0() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.Segment.p0)
-  
-  ::pb::mission::Mission_Element_Point* temp = p0_;
-  p0_ = NULL;
-  return temp;
-}
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Segment::mutable_p0() {
-  
-  if (p0_ == NULL) {
-    auto* p = CreateMaybeMessage<::pb::mission::Mission_Element_Point>(GetArenaNoVirtual());
-    p0_ = p;
-  }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.Segment.p0)
-  return p0_;
-}
-inline void Mission_Element_Segment::set_allocated_p0(::pb::mission::Mission_Element_Point* p0) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  if (message_arena == NULL) {
-    delete p0_;
-  }
-  if (p0) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
-    if (message_arena != submessage_arena) {
-      p0 = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, p0, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  p0_ = p0;
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.Segment.p0)
-}
-
-// .pb.mission.Mission.Element.Point p1 = 3;
-inline bool Mission_Element_Segment::has_p1() const {
-  return this != internal_default_instance() && p1_ != NULL;
-}
-inline void Mission_Element_Segment::clear_p1() {
-  if (GetArenaNoVirtual() == NULL && p1_ != NULL) {
-    delete p1_;
-  }
-  p1_ = NULL;
-}
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Segment::_internal_p1() const {
-  return *p1_;
-}
-inline const ::pb::mission::Mission_Element_Point& Mission_Element_Segment::p1() const {
-  const ::pb::mission::Mission_Element_Point* p = p1_;
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.Segment.p1)
-  return p != NULL ? *p : *reinterpret_cast<const ::pb::mission::Mission_Element_Point*>(
-      &::pb::mission::_Mission_Element_Point_default_instance_);
-}
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Segment::release_p1() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.Segment.p1)
-  
-  ::pb::mission::Mission_Element_Point* temp = p1_;
-  p1_ = NULL;
-  return temp;
-}
-inline ::pb::mission::Mission_Element_Point* Mission_Element_Segment::mutable_p1() {
-  
-  if (p1_ == NULL) {
-    auto* p = CreateMaybeMessage<::pb::mission::Mission_Element_Point>(GetArenaNoVirtual());
-    p1_ = p;
-  }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.Segment.p1)
-  return p1_;
-}
-inline void Mission_Element_Segment::set_allocated_p1(::pb::mission::Mission_Element_Point* p1) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  if (message_arena == NULL) {
-    delete p1_;
-  }
-  if (p1) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
-    if (message_arena != submessage_arena) {
-      p1 = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, p1, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  p1_ = p1;
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.Segment.p1)
-}
-
-// -------------------------------------------------------------------
-
-// Mission_Element
-
-// .pb.mission.Mission.Element.Point point = 1;
-inline bool Mission_Element::has_point() const {
-  return element_case() == kPoint;
-}
-inline void Mission_Element::set_has_point() {
+inline void Block::set_has_point() {
   _oneof_case_[0] = kPoint;
 }
-inline void Mission_Element::clear_point() {
+inline void Block::clear_point() {
   if (has_point()) {
-    delete element_.point_;
-    clear_has_element();
+    delete block_.point_;
+    clear_has_block();
   }
 }
-inline const ::pb::mission::Mission_Element_Point& Mission_Element::_internal_point() const {
-  return *element_.point_;
+inline const ::rtsys::mission::Block_Point& Block::_internal_point() const {
+  return *block_.point_;
 }
-inline ::pb::mission::Mission_Element_Point* Mission_Element::release_point() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.point)
+inline ::rtsys::mission::Block_Point* Block::release_point() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Block.point)
   if (has_point()) {
-    clear_has_element();
-      ::pb::mission::Mission_Element_Point* temp = element_.point_;
-    element_.point_ = NULL;
+    clear_has_block();
+      ::rtsys::mission::Block_Point* temp = block_.point_;
+    block_.point_ = NULL;
     return temp;
   } else {
     return NULL;
   }
 }
-inline const ::pb::mission::Mission_Element_Point& Mission_Element::point() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.point)
+inline const ::rtsys::mission::Block_Point& Block::point() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Block.point)
   return has_point()
-      ? *element_.point_
-      : *reinterpret_cast< ::pb::mission::Mission_Element_Point*>(&::pb::mission::_Mission_Element_Point_default_instance_);
+      ? *block_.point_
+      : *reinterpret_cast< ::rtsys::mission::Block_Point*>(&::rtsys::mission::_Block_Point_default_instance_);
 }
-inline ::pb::mission::Mission_Element_Point* Mission_Element::mutable_point() {
+inline ::rtsys::mission::Block_Point* Block::mutable_point() {
   if (!has_point()) {
-    clear_element();
+    clear_block();
     set_has_point();
-    element_.point_ = CreateMaybeMessage< ::pb::mission::Mission_Element_Point >(
+    block_.point_ = CreateMaybeMessage< ::rtsys::mission::Block_Point >(
         GetArenaNoVirtual());
   }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.point)
-  return element_.point_;
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Block.point)
+  return block_.point_;
 }
 
-// .pb.mission.Mission.Element.Rail rail = 2;
-inline bool Mission_Element::has_rail() const {
-  return element_case() == kRail;
+// .rtsys.mission.Block.Line line = 2;
+inline bool Block::has_line() const {
+  return block_case() == kLine;
 }
-inline void Mission_Element::set_has_rail() {
-  _oneof_case_[0] = kRail;
+inline void Block::set_has_line() {
+  _oneof_case_[0] = kLine;
 }
-inline void Mission_Element::clear_rail() {
-  if (has_rail()) {
-    delete element_.rail_;
-    clear_has_element();
+inline void Block::clear_line() {
+  if (has_line()) {
+    delete block_.line_;
+    clear_has_block();
   }
 }
-inline const ::pb::mission::Mission_Element_Rail& Mission_Element::_internal_rail() const {
-  return *element_.rail_;
+inline const ::rtsys::mission::Block_Line& Block::_internal_line() const {
+  return *block_.line_;
 }
-inline ::pb::mission::Mission_Element_Rail* Mission_Element::release_rail() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.rail)
-  if (has_rail()) {
-    clear_has_element();
-      ::pb::mission::Mission_Element_Rail* temp = element_.rail_;
-    element_.rail_ = NULL;
+inline ::rtsys::mission::Block_Line* Block::release_line() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Block.line)
+  if (has_line()) {
+    clear_has_block();
+      ::rtsys::mission::Block_Line* temp = block_.line_;
+    block_.line_ = NULL;
     return temp;
   } else {
     return NULL;
   }
 }
-inline const ::pb::mission::Mission_Element_Rail& Mission_Element::rail() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.rail)
-  return has_rail()
-      ? *element_.rail_
-      : *reinterpret_cast< ::pb::mission::Mission_Element_Rail*>(&::pb::mission::_Mission_Element_Rail_default_instance_);
+inline const ::rtsys::mission::Block_Line& Block::line() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Block.line)
+  return has_line()
+      ? *block_.line_
+      : *reinterpret_cast< ::rtsys::mission::Block_Line*>(&::rtsys::mission::_Block_Line_default_instance_);
 }
-inline ::pb::mission::Mission_Element_Rail* Mission_Element::mutable_rail() {
-  if (!has_rail()) {
-    clear_element();
-    set_has_rail();
-    element_.rail_ = CreateMaybeMessage< ::pb::mission::Mission_Element_Rail >(
+inline ::rtsys::mission::Block_Line* Block::mutable_line() {
+  if (!has_line()) {
+    clear_block();
+    set_has_line();
+    block_.line_ = CreateMaybeMessage< ::rtsys::mission::Block_Line >(
         GetArenaNoVirtual());
   }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.rail)
-  return element_.rail_;
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Block.line)
+  return block_.line_;
 }
 
-// .pb.mission.Mission.Element.Segment segment = 3;
-inline bool Mission_Element::has_segment() const {
-  return element_case() == kSegment;
+// repeated .rtsys.mission.Payload payloads = 4;
+inline int Block::payloads_size() const {
+  return payloads_.size();
 }
-inline void Mission_Element::set_has_segment() {
-  _oneof_case_[0] = kSegment;
+inline void Block::clear_payloads() {
+  payloads_.Clear();
 }
-inline void Mission_Element::clear_segment() {
-  if (has_segment()) {
-    delete element_.segment_;
-    clear_has_element();
-  }
+inline ::rtsys::mission::Payload* Block::mutable_payloads(int index) {
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Block.payloads)
+  return payloads_.Mutable(index);
 }
-inline const ::pb::mission::Mission_Element_Segment& Mission_Element::_internal_segment() const {
-  return *element_.segment_;
+inline ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Payload >*
+Block::mutable_payloads() {
+  // @@protoc_insertion_point(field_mutable_list:rtsys.mission.Block.payloads)
+  return &payloads_;
 }
-inline ::pb::mission::Mission_Element_Segment* Mission_Element::release_segment() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Element.segment)
-  if (has_segment()) {
-    clear_has_element();
-      ::pb::mission::Mission_Element_Segment* temp = element_.segment_;
-    element_.segment_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
+inline const ::rtsys::mission::Payload& Block::payloads(int index) const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Block.payloads)
+  return payloads_.Get(index);
 }
-inline const ::pb::mission::Mission_Element_Segment& Mission_Element::segment() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Element.segment)
-  return has_segment()
-      ? *element_.segment_
-      : *reinterpret_cast< ::pb::mission::Mission_Element_Segment*>(&::pb::mission::_Mission_Element_Segment_default_instance_);
+inline ::rtsys::mission::Payload* Block::add_payloads() {
+  // @@protoc_insertion_point(field_add:rtsys.mission.Block.payloads)
+  return payloads_.Add();
 }
-inline ::pb::mission::Mission_Element_Segment* Mission_Element::mutable_segment() {
-  if (!has_segment()) {
-    clear_element();
-    set_has_segment();
-    element_.segment_ = CreateMaybeMessage< ::pb::mission::Mission_Element_Segment >(
-        GetArenaNoVirtual());
-  }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Element.segment)
-  return element_.segment_;
+inline const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Payload >&
+Block::payloads() const {
+  // @@protoc_insertion_point(field_list:rtsys.mission.Block.payloads)
+  return payloads_;
 }
 
-inline bool Mission_Element::has_element() const {
-  return element_case() != ELEMENT_NOT_SET;
+inline bool Block::has_block() const {
+  return block_case() != BLOCK_NOT_SET;
 }
-inline void Mission_Element::clear_has_element() {
-  _oneof_case_[0] = ELEMENT_NOT_SET;
+inline void Block::clear_has_block() {
+  _oneof_case_[0] = BLOCK_NOT_SET;
 }
-inline Mission_Element::ElementCase Mission_Element::element_case() const {
-  return Mission_Element::ElementCase(_oneof_case_[0]);
+inline Block::BlockCase Block::block_case() const {
+  return Block::BlockCase(_oneof_case_[0]);
 }
 // -------------------------------------------------------------------
 
-// Mission_Collection
+// Payload_Navigation
+
+// float velocity = 1;
+inline void Payload_Navigation::clear_velocity() {
+  velocity_ = 0;
+}
+inline float Payload_Navigation::velocity() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Payload.Navigation.velocity)
+  return velocity_;
+}
+inline void Payload_Navigation::set_velocity(float value) {
+  
+  velocity_ = value;
+  // @@protoc_insertion_point(field_set:rtsys.mission.Payload.Navigation.velocity)
+}
+
+// float heading = 2;
+inline void Payload_Navigation::clear_heading() {
+  heading_ = 0;
+}
+inline float Payload_Navigation::heading() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Payload.Navigation.heading)
+  return heading_;
+}
+inline void Payload_Navigation::set_heading(float value) {
+  
+  heading_ = value;
+  // @@protoc_insertion_point(field_set:rtsys.mission.Payload.Navigation.heading)
+}
+
+// float depth = 3;
+inline void Payload_Navigation::clear_depth() {
+  depth_ = 0;
+}
+inline float Payload_Navigation::depth() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Payload.Navigation.depth)
+  return depth_;
+}
+inline void Payload_Navigation::set_depth(float value) {
+  
+  depth_ = value;
+  // @@protoc_insertion_point(field_set:rtsys.mission.Payload.Navigation.depth)
+}
+
+// -------------------------------------------------------------------
+
+// Payload
+
+// .rtsys.mission.Payload.Navigation navigation = 1;
+inline bool Payload::has_navigation() const {
+  return this != internal_default_instance() && navigation_ != NULL;
+}
+inline void Payload::clear_navigation() {
+  if (GetArenaNoVirtual() == NULL && navigation_ != NULL) {
+    delete navigation_;
+  }
+  navigation_ = NULL;
+}
+inline const ::rtsys::mission::Payload_Navigation& Payload::_internal_navigation() const {
+  return *navigation_;
+}
+inline const ::rtsys::mission::Payload_Navigation& Payload::navigation() const {
+  const ::rtsys::mission::Payload_Navigation* p = navigation_;
+  // @@protoc_insertion_point(field_get:rtsys.mission.Payload.navigation)
+  return p != NULL ? *p : *reinterpret_cast<const ::rtsys::mission::Payload_Navigation*>(
+      &::rtsys::mission::_Payload_Navigation_default_instance_);
+}
+inline ::rtsys::mission::Payload_Navigation* Payload::release_navigation() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Payload.navigation)
+  
+  ::rtsys::mission::Payload_Navigation* temp = navigation_;
+  navigation_ = NULL;
+  return temp;
+}
+inline ::rtsys::mission::Payload_Navigation* Payload::mutable_navigation() {
+  
+  if (navigation_ == NULL) {
+    auto* p = CreateMaybeMessage<::rtsys::mission::Payload_Navigation>(GetArenaNoVirtual());
+    navigation_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Payload.navigation)
+  return navigation_;
+}
+inline void Payload::set_allocated_navigation(::rtsys::mission::Payload_Navigation* navigation) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == NULL) {
+    delete navigation_;
+  }
+  if (navigation) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      navigation = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, navigation, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  navigation_ = navigation;
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Payload.navigation)
+}
+
+// -------------------------------------------------------------------
+
+// Collection
 
 // string name = 1;
-inline void Mission_Collection::clear_name() {
+inline void Collection::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& Mission_Collection::name() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Collection.name)
+inline const ::std::string& Collection::name() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Collection.name)
   return name_.GetNoArena();
 }
-inline void Mission_Collection::set_name(const ::std::string& value) {
+inline void Collection::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:pb.mission.Mission.Collection.name)
+  // @@protoc_insertion_point(field_set:rtsys.mission.Collection.name)
 }
 #if LANG_CXX11
-inline void Mission_Collection::set_name(::std::string&& value) {
+inline void Collection::set_name(::std::string&& value) {
   
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:pb.mission.Mission.Collection.name)
+  // @@protoc_insertion_point(field_set_rvalue:rtsys.mission.Collection.name)
 }
 #endif
-inline void Mission_Collection::set_name(const char* value) {
+inline void Collection::set_name(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:pb.mission.Mission.Collection.name)
+  // @@protoc_insertion_point(field_set_char:rtsys.mission.Collection.name)
 }
-inline void Mission_Collection::set_name(const char* value, size_t size) {
+inline void Collection::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:pb.mission.Mission.Collection.name)
+  // @@protoc_insertion_point(field_set_pointer:rtsys.mission.Collection.name)
 }
-inline ::std::string* Mission_Collection::mutable_name() {
+inline ::std::string* Collection::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Collection.name)
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Collection.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* Mission_Collection::release_name() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Collection.name)
+inline ::std::string* Collection::release_name() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Collection.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void Mission_Collection::set_allocated_name(::std::string* name) {
+inline void Collection::set_allocated_name(::std::string* name) {
   if (name != NULL) {
     
   } else {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Collection.name)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Collection.name)
 }
 
-// repeated .pb.mission.Mission.Element elements = 2;
-inline int Mission_Collection::elements_size() const {
-  return elements_.size();
+// repeated .rtsys.mission.Block blocks = 2;
+inline int Collection::blocks_size() const {
+  return blocks_.size();
 }
-inline void Mission_Collection::clear_elements() {
-  elements_.Clear();
+inline void Collection::clear_blocks() {
+  blocks_.Clear();
 }
-inline ::pb::mission::Mission_Element* Mission_Collection::mutable_elements(int index) {
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Collection.elements)
-  return elements_.Mutable(index);
+inline ::rtsys::mission::Block* Collection::mutable_blocks(int index) {
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Collection.blocks)
+  return blocks_.Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Element >*
-Mission_Collection::mutable_elements() {
-  // @@protoc_insertion_point(field_mutable_list:pb.mission.Mission.Collection.elements)
-  return &elements_;
+inline ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block >*
+Collection::mutable_blocks() {
+  // @@protoc_insertion_point(field_mutable_list:rtsys.mission.Collection.blocks)
+  return &blocks_;
 }
-inline const ::pb::mission::Mission_Element& Mission_Collection::elements(int index) const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Collection.elements)
-  return elements_.Get(index);
+inline const ::rtsys::mission::Block& Collection::blocks(int index) const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Collection.blocks)
+  return blocks_.Get(index);
 }
-inline ::pb::mission::Mission_Element* Mission_Collection::add_elements() {
-  // @@protoc_insertion_point(field_add:pb.mission.Mission.Collection.elements)
-  return elements_.Add();
+inline ::rtsys::mission::Block* Collection::add_blocks() {
+  // @@protoc_insertion_point(field_add:rtsys.mission.Collection.blocks)
+  return blocks_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Element >&
-Mission_Collection::elements() const {
-  // @@protoc_insertion_point(field_list:pb.mission.Mission.Collection.elements)
-  return elements_;
+inline const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Block >&
+Collection::blocks() const {
+  // @@protoc_insertion_point(field_list:rtsys.mission.Collection.blocks)
+  return blocks_;
+}
+
+// -------------------------------------------------------------------
+
+// Device_Component
+
+// .rtsys.mission.Block block = 1;
+inline bool Device_Component::has_block() const {
+  return component_case() == kBlock;
+}
+inline void Device_Component::set_has_block() {
+  _oneof_case_[0] = kBlock;
+}
+inline void Device_Component::clear_block() {
+  if (has_block()) {
+    delete component_.block_;
+    clear_has_component();
+  }
+}
+inline const ::rtsys::mission::Block& Device_Component::_internal_block() const {
+  return *component_.block_;
+}
+inline ::rtsys::mission::Block* Device_Component::release_block() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Device.Component.block)
+  if (has_block()) {
+    clear_has_component();
+      ::rtsys::mission::Block* temp = component_.block_;
+    component_.block_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline const ::rtsys::mission::Block& Device_Component::block() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Device.Component.block)
+  return has_block()
+      ? *component_.block_
+      : *reinterpret_cast< ::rtsys::mission::Block*>(&::rtsys::mission::_Block_default_instance_);
+}
+inline ::rtsys::mission::Block* Device_Component::mutable_block() {
+  if (!has_block()) {
+    clear_component();
+    set_has_block();
+    component_.block_ = CreateMaybeMessage< ::rtsys::mission::Block >(
+        GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Device.Component.block)
+  return component_.block_;
+}
+
+// .rtsys.mission.Collection collection = 3;
+inline bool Device_Component::has_collection() const {
+  return component_case() == kCollection;
+}
+inline void Device_Component::set_has_collection() {
+  _oneof_case_[0] = kCollection;
+}
+inline void Device_Component::clear_collection() {
+  if (has_collection()) {
+    delete component_.collection_;
+    clear_has_component();
+  }
+}
+inline const ::rtsys::mission::Collection& Device_Component::_internal_collection() const {
+  return *component_.collection_;
+}
+inline ::rtsys::mission::Collection* Device_Component::release_collection() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Device.Component.collection)
+  if (has_collection()) {
+    clear_has_component();
+      ::rtsys::mission::Collection* temp = component_.collection_;
+    component_.collection_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline const ::rtsys::mission::Collection& Device_Component::collection() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Device.Component.collection)
+  return has_collection()
+      ? *component_.collection_
+      : *reinterpret_cast< ::rtsys::mission::Collection*>(&::rtsys::mission::_Collection_default_instance_);
+}
+inline ::rtsys::mission::Collection* Device_Component::mutable_collection() {
+  if (!has_collection()) {
+    clear_component();
+    set_has_collection();
+    component_.collection_ = CreateMaybeMessage< ::rtsys::mission::Collection >(
+        GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Device.Component.collection)
+  return component_.collection_;
+}
+
+inline bool Device_Component::has_component() const {
+  return component_case() != COMPONENT_NOT_SET;
+}
+inline void Device_Component::clear_has_component() {
+  _oneof_case_[0] = COMPONENT_NOT_SET;
+}
+inline Device_Component::ComponentCase Device_Component::component_case() const {
+  return Device_Component::ComponentCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// Device
+
+// string name = 1;
+inline void Device::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Device::name() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Device.name)
+  return name_.GetNoArena();
+}
+inline void Device::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:rtsys.mission.Device.name)
+}
+#if LANG_CXX11
+inline void Device::set_name(::std::string&& value) {
+  
+  name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:rtsys.mission.Device.name)
+}
+#endif
+inline void Device::set_name(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:rtsys.mission.Device.name)
+}
+inline void Device::set_name(const char* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:rtsys.mission.Device.name)
+}
+inline ::std::string* Device::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Device.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Device::release_name() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Device.name)
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Device::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Device.name)
+}
+
+// .rtsys.mission.Device.Type type = 2;
+inline void Device::clear_type() {
+  type_ = 0;
+}
+inline ::rtsys::mission::Device_Type Device::type() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Device.type)
+  return static_cast< ::rtsys::mission::Device_Type >(type_);
+}
+inline void Device::set_type(::rtsys::mission::Device_Type value) {
+  
+  type_ = value;
+  // @@protoc_insertion_point(field_set:rtsys.mission.Device.type)
+}
+
+// repeated .rtsys.mission.Device.Component components = 3;
+inline int Device::components_size() const {
+  return components_.size();
+}
+inline void Device::clear_components() {
+  components_.Clear();
+}
+inline ::rtsys::mission::Device_Component* Device::mutable_components(int index) {
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Device.components)
+  return components_.Mutable(index);
+}
+inline ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Device_Component >*
+Device::mutable_components() {
+  // @@protoc_insertion_point(field_mutable_list:rtsys.mission.Device.components)
+  return &components_;
+}
+inline const ::rtsys::mission::Device_Component& Device::components(int index) const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Device.components)
+  return components_.Get(index);
+}
+inline ::rtsys::mission::Device_Component* Device::add_components() {
+  // @@protoc_insertion_point(field_add:rtsys.mission.Device.components)
+  return components_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Device_Component >&
+Device::components() const {
+  // @@protoc_insertion_point(field_list:rtsys.mission.Device.components)
+  return components_;
 }
 
 // -------------------------------------------------------------------
 
 // Mission_Component
 
-// .pb.mission.Mission.Element element = 1;
-inline bool Mission_Component::has_element() const {
-  return component_case() == kElement;
+// .rtsys.mission.Block block = 1;
+inline bool Mission_Component::has_block() const {
+  return component_case() == kBlock;
 }
-inline void Mission_Component::set_has_element() {
-  _oneof_case_[0] = kElement;
+inline void Mission_Component::set_has_block() {
+  _oneof_case_[0] = kBlock;
 }
-inline void Mission_Component::clear_element() {
-  if (has_element()) {
-    delete component_.element_;
+inline void Mission_Component::clear_block() {
+  if (has_block()) {
+    delete component_.block_;
     clear_has_component();
   }
 }
-inline const ::pb::mission::Mission_Element& Mission_Component::_internal_element() const {
-  return *component_.element_;
+inline const ::rtsys::mission::Block& Mission_Component::_internal_block() const {
+  return *component_.block_;
 }
-inline ::pb::mission::Mission_Element* Mission_Component::release_element() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Component.element)
-  if (has_element()) {
+inline ::rtsys::mission::Block* Mission_Component::release_block() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Mission.Component.block)
+  if (has_block()) {
     clear_has_component();
-      ::pb::mission::Mission_Element* temp = component_.element_;
-    component_.element_ = NULL;
+      ::rtsys::mission::Block* temp = component_.block_;
+    component_.block_ = NULL;
     return temp;
   } else {
     return NULL;
   }
 }
-inline const ::pb::mission::Mission_Element& Mission_Component::element() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Component.element)
-  return has_element()
-      ? *component_.element_
-      : *reinterpret_cast< ::pb::mission::Mission_Element*>(&::pb::mission::_Mission_Element_default_instance_);
+inline const ::rtsys::mission::Block& Mission_Component::block() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Mission.Component.block)
+  return has_block()
+      ? *component_.block_
+      : *reinterpret_cast< ::rtsys::mission::Block*>(&::rtsys::mission::_Block_default_instance_);
 }
-inline ::pb::mission::Mission_Element* Mission_Component::mutable_element() {
-  if (!has_element()) {
+inline ::rtsys::mission::Block* Mission_Component::mutable_block() {
+  if (!has_block()) {
     clear_component();
-    set_has_element();
-    component_.element_ = CreateMaybeMessage< ::pb::mission::Mission_Element >(
+    set_has_block();
+    component_.block_ = CreateMaybeMessage< ::rtsys::mission::Block >(
         GetArenaNoVirtual());
   }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Component.element)
-  return component_.element_;
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Mission.Component.block)
+  return component_.block_;
 }
 
-// .pb.mission.Mission.Collection collection = 2;
+// .rtsys.mission.Device device = 2;
+inline bool Mission_Component::has_device() const {
+  return component_case() == kDevice;
+}
+inline void Mission_Component::set_has_device() {
+  _oneof_case_[0] = kDevice;
+}
+inline void Mission_Component::clear_device() {
+  if (has_device()) {
+    delete component_.device_;
+    clear_has_component();
+  }
+}
+inline const ::rtsys::mission::Device& Mission_Component::_internal_device() const {
+  return *component_.device_;
+}
+inline ::rtsys::mission::Device* Mission_Component::release_device() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Mission.Component.device)
+  if (has_device()) {
+    clear_has_component();
+      ::rtsys::mission::Device* temp = component_.device_;
+    component_.device_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline const ::rtsys::mission::Device& Mission_Component::device() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Mission.Component.device)
+  return has_device()
+      ? *component_.device_
+      : *reinterpret_cast< ::rtsys::mission::Device*>(&::rtsys::mission::_Device_default_instance_);
+}
+inline ::rtsys::mission::Device* Mission_Component::mutable_device() {
+  if (!has_device()) {
+    clear_component();
+    set_has_device();
+    component_.device_ = CreateMaybeMessage< ::rtsys::mission::Device >(
+        GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Mission.Component.device)
+  return component_.device_;
+}
+
+// .rtsys.mission.Collection collection = 3;
 inline bool Mission_Component::has_collection() const {
   return component_case() == kCollection;
 }
@@ -1707,34 +2304,34 @@ inline void Mission_Component::clear_collection() {
     clear_has_component();
   }
 }
-inline const ::pb::mission::Mission_Collection& Mission_Component::_internal_collection() const {
+inline const ::rtsys::mission::Collection& Mission_Component::_internal_collection() const {
   return *component_.collection_;
 }
-inline ::pb::mission::Mission_Collection* Mission_Component::release_collection() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.Component.collection)
+inline ::rtsys::mission::Collection* Mission_Component::release_collection() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Mission.Component.collection)
   if (has_collection()) {
     clear_has_component();
-      ::pb::mission::Mission_Collection* temp = component_.collection_;
+      ::rtsys::mission::Collection* temp = component_.collection_;
     component_.collection_ = NULL;
     return temp;
   } else {
     return NULL;
   }
 }
-inline const ::pb::mission::Mission_Collection& Mission_Component::collection() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.Component.collection)
+inline const ::rtsys::mission::Collection& Mission_Component::collection() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Mission.Component.collection)
   return has_collection()
       ? *component_.collection_
-      : *reinterpret_cast< ::pb::mission::Mission_Collection*>(&::pb::mission::_Mission_Collection_default_instance_);
+      : *reinterpret_cast< ::rtsys::mission::Collection*>(&::rtsys::mission::_Collection_default_instance_);
 }
-inline ::pb::mission::Mission_Collection* Mission_Component::mutable_collection() {
+inline ::rtsys::mission::Collection* Mission_Component::mutable_collection() {
   if (!has_collection()) {
     clear_component();
     set_has_collection();
-    component_.collection_ = CreateMaybeMessage< ::pb::mission::Mission_Collection >(
+    component_.collection_ = CreateMaybeMessage< ::rtsys::mission::Collection >(
         GetArenaNoVirtual());
   }
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.Component.collection)
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Mission.Component.collection)
   return component_.collection_;
 }
 
@@ -1756,41 +2353,41 @@ inline void Mission::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Mission::name() const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_get:rtsys.mission.Mission.name)
   return name_.GetNoArena();
 }
 inline void Mission::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_set:rtsys.mission.Mission.name)
 }
 #if LANG_CXX11
 inline void Mission::set_name(::std::string&& value) {
   
   name_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_set_rvalue:rtsys.mission.Mission.name)
 }
 #endif
 inline void Mission::set_name(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_set_char:rtsys.mission.Mission.name)
 }
 inline void Mission::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_set_pointer:rtsys.mission.Mission.name)
 }
 inline ::std::string* Mission::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Mission.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Mission::release_name() {
-  // @@protoc_insertion_point(field_release:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_release:rtsys.mission.Mission.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1801,36 +2398,89 @@ inline void Mission::set_allocated_name(::std::string* name) {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.name)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Mission.name)
 }
 
-// repeated .pb.mission.Mission.Component components = 2;
+// string brief = 2;
+inline void Mission::clear_brief() {
+  brief_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Mission::brief() const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Mission.brief)
+  return brief_.GetNoArena();
+}
+inline void Mission::set_brief(const ::std::string& value) {
+  
+  brief_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:rtsys.mission.Mission.brief)
+}
+#if LANG_CXX11
+inline void Mission::set_brief(::std::string&& value) {
+  
+  brief_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:rtsys.mission.Mission.brief)
+}
+#endif
+inline void Mission::set_brief(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  brief_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:rtsys.mission.Mission.brief)
+}
+inline void Mission::set_brief(const char* value, size_t size) {
+  
+  brief_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:rtsys.mission.Mission.brief)
+}
+inline ::std::string* Mission::mutable_brief() {
+  
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Mission.brief)
+  return brief_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Mission::release_brief() {
+  // @@protoc_insertion_point(field_release:rtsys.mission.Mission.brief)
+  
+  return brief_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Mission::set_allocated_brief(::std::string* brief) {
+  if (brief != NULL) {
+    
+  } else {
+    
+  }
+  brief_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), brief);
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Mission.brief)
+}
+
+// repeated .rtsys.mission.Mission.Component components = 3;
 inline int Mission::components_size() const {
   return components_.size();
 }
 inline void Mission::clear_components() {
   components_.Clear();
 }
-inline ::pb::mission::Mission_Component* Mission::mutable_components(int index) {
-  // @@protoc_insertion_point(field_mutable:pb.mission.Mission.components)
+inline ::rtsys::mission::Mission_Component* Mission::mutable_components(int index) {
+  // @@protoc_insertion_point(field_mutable:rtsys.mission.Mission.components)
   return components_.Mutable(index);
 }
-inline ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Component >*
+inline ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Mission_Component >*
 Mission::mutable_components() {
-  // @@protoc_insertion_point(field_mutable_list:pb.mission.Mission.components)
+  // @@protoc_insertion_point(field_mutable_list:rtsys.mission.Mission.components)
   return &components_;
 }
-inline const ::pb::mission::Mission_Component& Mission::components(int index) const {
-  // @@protoc_insertion_point(field_get:pb.mission.Mission.components)
+inline const ::rtsys::mission::Mission_Component& Mission::components(int index) const {
+  // @@protoc_insertion_point(field_get:rtsys.mission.Mission.components)
   return components_.Get(index);
 }
-inline ::pb::mission::Mission_Component* Mission::add_components() {
-  // @@protoc_insertion_point(field_add:pb.mission.Mission.components)
+inline ::rtsys::mission::Mission_Component* Mission::add_components() {
+  // @@protoc_insertion_point(field_add:rtsys.mission.Mission.components)
   return components_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::pb::mission::Mission_Component >&
+inline const ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Mission_Component >&
 Mission::components() const {
-  // @@protoc_insertion_point(field_list:pb.mission.Mission.components)
+  // @@protoc_insertion_point(field_list:rtsys.mission.Mission.components)
   return components_;
 }
 
@@ -1849,11 +2499,34 @@ Mission::components() const {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace mission
-}  // namespace pb
+}  // namespace rtsys
+
+namespace google {
+namespace protobuf {
+
+template <> struct is_proto_enum< ::rtsys::mission::Block_Line_Type> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::rtsys::mission::Block_Line_Type>() {
+  return ::rtsys::mission::Block_Line_Type_descriptor();
+}
+template <> struct is_proto_enum< ::rtsys::mission::Device_Type> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::rtsys::mission::Device_Type>() {
+  return ::rtsys::mission::Device_Type_descriptor();
+}
+
+}  // namespace protobuf
+}  // namespace google
 
 // @@protoc_insertion_point(global_scope)
 

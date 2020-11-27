@@ -18,7 +18,7 @@ class MissionManager : public QObject
     Q_OBJECT
 
   public:
-    static pb::mission::Mission getMissionTemplate();
+    static rtsys::mission::Mission getMissionTemplate();
 
     explicit MissionManager(QObject *parent = nullptr);
     ~MissionManager();
@@ -28,7 +28,7 @@ class MissionManager : public QObject
     // Standard interface
     void removeMission();
     void newMission();
-    void loadMission(const pb::mission::Mission &mission);
+    void loadMission(const rtsys::mission::Mission &mission);
     void saveMissionAs(const QString &filename);
     void openMission(const QString &filename);
     void saveMission();
@@ -36,7 +36,8 @@ class MissionManager : public QObject
 
     // Interface Tree view
     void removeIndex(const QModelIndex &index);
-    void swapIndex(const QModelIndex &parent);
+    void swapIndex(const QModelIndex &index);
+    void addIndexDevice(const QModelIndex &parent);
     void addIndexCollection(const QModelIndex &parent);
     void addIndexPoint(const QModelIndex &parent);
     void addIndexRail(const QModelIndex &parent);
@@ -47,7 +48,7 @@ class MissionManager : public QObject
 
   private:
     void addIndexFromFlag(const QModelIndex &parent, int flag);
-    pb::mission::Mission _mission;
+    rtsys::mission::Mission _mission;
     MissionModel _model;
     QString _current_mission_filename;
 };
@@ -55,6 +56,7 @@ class MissionManager : public QObject
 #define AddIndexFlag(n)                                                                                                \
     inline void MissionManager::addIndex##n(const QModelIndex &parent) { addIndexFromFlag(parent, MissionItem::k##n); }
 
+AddIndexFlag(Device);     // Adds a device under the specified parent index.
 AddIndexFlag(Collection); // Adds a collection under the specified parent index.
 AddIndexFlag(Point);      // Adds a point under the specified parent index.
 AddIndexFlag(Rail);       // Adds a rail under the specified parent index.

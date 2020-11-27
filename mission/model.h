@@ -64,7 +64,7 @@ class MissionModel : public QAbstractItemModel
     MissionItem *root() { return _root; }
     MissionItem *item(const QModelIndex &index) const;
     QModelIndex index(MissionItem *item, int column = 0) const;
-    bool swapRow(const QModelIndex &parent);
+    bool swapRows(int row, const QModelIndex &parent);
 
   private:
     MissionItem *_root;

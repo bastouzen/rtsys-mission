@@ -20,49 +20,69 @@
 // @@protoc_insertion_point(includes)
 
 namespace protobuf_mission_2eproto {
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Mission_Element_Point;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Mission_Collection;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Mission_Element_Rail;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Mission_Element_Segment;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<2> scc_info_Mission_Component;
-extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<3> scc_info_Mission_Element;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Block_Point;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Payload_Navigation;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Block_Line;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Collection;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Device;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Payload;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<2> scc_info_Device_Component;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<3> scc_info_Block;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_mission_2eproto ::google::protobuf::internal::SCCInfo<3> scc_info_Mission_Component;
 }  // namespace protobuf_mission_2eproto
-namespace pb {
+namespace rtsys {
 namespace mission {
-class Mission_Element_PointDefaultTypeInternal {
+class Block_PointDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<Mission_Element_Point>
+  ::google::protobuf::internal::ExplicitlyConstructed<Block_Point>
       _instance;
-} _Mission_Element_Point_default_instance_;
-class Mission_Element_RailDefaultTypeInternal {
+} _Block_Point_default_instance_;
+class Block_LineDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<Mission_Element_Rail>
+  ::google::protobuf::internal::ExplicitlyConstructed<Block_Line>
       _instance;
-} _Mission_Element_Rail_default_instance_;
-class Mission_Element_SegmentDefaultTypeInternal {
+} _Block_Line_default_instance_;
+class BlockDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<Mission_Element_Segment>
+  ::google::protobuf::internal::ExplicitlyConstructed<Block>
       _instance;
-} _Mission_Element_Segment_default_instance_;
-class Mission_ElementDefaultTypeInternal {
+  const ::rtsys::mission::Block_Point* point_;
+  const ::rtsys::mission::Block_Line* line_;
+} _Block_default_instance_;
+class Payload_NavigationDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<Mission_Element>
+  ::google::protobuf::internal::ExplicitlyConstructed<Payload_Navigation>
       _instance;
-  const ::pb::mission::Mission_Element_Point* point_;
-  const ::pb::mission::Mission_Element_Rail* rail_;
-  const ::pb::mission::Mission_Element_Segment* segment_;
-} _Mission_Element_default_instance_;
-class Mission_CollectionDefaultTypeInternal {
+} _Payload_Navigation_default_instance_;
+class PayloadDefaultTypeInternal {
  public:
-  ::google::protobuf::internal::ExplicitlyConstructed<Mission_Collection>
+  ::google::protobuf::internal::ExplicitlyConstructed<Payload>
       _instance;
-} _Mission_Collection_default_instance_;
+} _Payload_default_instance_;
+class CollectionDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Collection>
+      _instance;
+} _Collection_default_instance_;
+class Device_ComponentDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Device_Component>
+      _instance;
+  const ::rtsys::mission::Block* block_;
+  const ::rtsys::mission::Collection* collection_;
+} _Device_Component_default_instance_;
+class DeviceDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Device>
+      _instance;
+} _Device_default_instance_;
 class Mission_ComponentDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<Mission_Component>
       _instance;
-  const ::pb::mission::Mission_Element* element_;
-  const ::pb::mission::Mission_Collection* collection_;
+  const ::rtsys::mission::Block* block_;
+  const ::rtsys::mission::Device* device_;
+  const ::rtsys::mission::Collection* collection_;
 } _Mission_Component_default_instance_;
 class MissionDefaultTypeInternal {
  public:
@@ -70,109 +90,155 @@ class MissionDefaultTypeInternal {
       _instance;
 } _Mission_default_instance_;
 }  // namespace mission
-}  // namespace pb
+}  // namespace rtsys
 namespace protobuf_mission_2eproto {
-static void InitDefaultsMission_Element_Point() {
+static void InitDefaultsBlock_Point() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::pb::mission::_Mission_Element_Point_default_instance_;
-    new (ptr) ::pb::mission::Mission_Element_Point();
+    void* ptr = &::rtsys::mission::_Block_Point_default_instance_;
+    new (ptr) ::rtsys::mission::Block_Point();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::pb::mission::Mission_Element_Point::InitAsDefaultInstance();
+  ::rtsys::mission::Block_Point::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_Mission_Element_Point =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsMission_Element_Point}, {}};
+::google::protobuf::internal::SCCInfo<0> scc_info_Block_Point =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsBlock_Point}, {}};
 
-static void InitDefaultsMission_Element_Rail() {
+static void InitDefaultsBlock_Line() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::pb::mission::_Mission_Element_Rail_default_instance_;
-    new (ptr) ::pb::mission::Mission_Element_Rail();
+    void* ptr = &::rtsys::mission::_Block_Line_default_instance_;
+    new (ptr) ::rtsys::mission::Block_Line();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::pb::mission::Mission_Element_Rail::InitAsDefaultInstance();
+  ::rtsys::mission::Block_Line::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<1> scc_info_Mission_Element_Rail =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsMission_Element_Rail}, {
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Point.base,}};
+::google::protobuf::internal::SCCInfo<1> scc_info_Block_Line =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsBlock_Line}, {
+      &protobuf_mission_2eproto::scc_info_Block_Point.base,}};
 
-static void InitDefaultsMission_Element_Segment() {
+static void InitDefaultsBlock() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::pb::mission::_Mission_Element_Segment_default_instance_;
-    new (ptr) ::pb::mission::Mission_Element_Segment();
+    void* ptr = &::rtsys::mission::_Block_default_instance_;
+    new (ptr) ::rtsys::mission::Block();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::pb::mission::Mission_Element_Segment::InitAsDefaultInstance();
+  ::rtsys::mission::Block::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<1> scc_info_Mission_Element_Segment =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsMission_Element_Segment}, {
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Point.base,}};
+::google::protobuf::internal::SCCInfo<3> scc_info_Block =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 3, InitDefaultsBlock}, {
+      &protobuf_mission_2eproto::scc_info_Block_Point.base,
+      &protobuf_mission_2eproto::scc_info_Block_Line.base,
+      &protobuf_mission_2eproto::scc_info_Payload.base,}};
 
-static void InitDefaultsMission_Element() {
+static void InitDefaultsPayload_Navigation() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::pb::mission::_Mission_Element_default_instance_;
-    new (ptr) ::pb::mission::Mission_Element();
+    void* ptr = &::rtsys::mission::_Payload_Navigation_default_instance_;
+    new (ptr) ::rtsys::mission::Payload_Navigation();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::pb::mission::Mission_Element::InitAsDefaultInstance();
+  ::rtsys::mission::Payload_Navigation::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<3> scc_info_Mission_Element =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 3, InitDefaultsMission_Element}, {
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Point.base,
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Rail.base,
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Segment.base,}};
+::google::protobuf::internal::SCCInfo<0> scc_info_Payload_Navigation =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPayload_Navigation}, {}};
 
-static void InitDefaultsMission_Collection() {
+static void InitDefaultsPayload() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::pb::mission::_Mission_Collection_default_instance_;
-    new (ptr) ::pb::mission::Mission_Collection();
+    void* ptr = &::rtsys::mission::_Payload_default_instance_;
+    new (ptr) ::rtsys::mission::Payload();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::pb::mission::Mission_Collection::InitAsDefaultInstance();
+  ::rtsys::mission::Payload::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<1> scc_info_Mission_Collection =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsMission_Collection}, {
-      &protobuf_mission_2eproto::scc_info_Mission_Element.base,}};
+::google::protobuf::internal::SCCInfo<1> scc_info_Payload =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsPayload}, {
+      &protobuf_mission_2eproto::scc_info_Payload_Navigation.base,}};
+
+static void InitDefaultsCollection() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::rtsys::mission::_Collection_default_instance_;
+    new (ptr) ::rtsys::mission::Collection();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::rtsys::mission::Collection::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<1> scc_info_Collection =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsCollection}, {
+      &protobuf_mission_2eproto::scc_info_Block.base,}};
+
+static void InitDefaultsDevice_Component() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::rtsys::mission::_Device_Component_default_instance_;
+    new (ptr) ::rtsys::mission::Device_Component();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::rtsys::mission::Device_Component::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<2> scc_info_Device_Component =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 2, InitDefaultsDevice_Component}, {
+      &protobuf_mission_2eproto::scc_info_Block.base,
+      &protobuf_mission_2eproto::scc_info_Collection.base,}};
+
+static void InitDefaultsDevice() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::rtsys::mission::_Device_default_instance_;
+    new (ptr) ::rtsys::mission::Device();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::rtsys::mission::Device::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<1> scc_info_Device =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsDevice}, {
+      &protobuf_mission_2eproto::scc_info_Device_Component.base,}};
 
 static void InitDefaultsMission_Component() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::pb::mission::_Mission_Component_default_instance_;
-    new (ptr) ::pb::mission::Mission_Component();
+    void* ptr = &::rtsys::mission::_Mission_Component_default_instance_;
+    new (ptr) ::rtsys::mission::Mission_Component();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::pb::mission::Mission_Component::InitAsDefaultInstance();
+  ::rtsys::mission::Mission_Component::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<2> scc_info_Mission_Component =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 2, InitDefaultsMission_Component}, {
-      &protobuf_mission_2eproto::scc_info_Mission_Element.base,
-      &protobuf_mission_2eproto::scc_info_Mission_Collection.base,}};
+::google::protobuf::internal::SCCInfo<3> scc_info_Mission_Component =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 3, InitDefaultsMission_Component}, {
+      &protobuf_mission_2eproto::scc_info_Block.base,
+      &protobuf_mission_2eproto::scc_info_Device.base,
+      &protobuf_mission_2eproto::scc_info_Collection.base,}};
 
 static void InitDefaultsMission() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   {
-    void* ptr = &::pb::mission::_Mission_default_instance_;
-    new (ptr) ::pb::mission::Mission();
+    void* ptr = &::rtsys::mission::_Mission_default_instance_;
+    new (ptr) ::rtsys::mission::Mission();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::pb::mission::Mission::InitAsDefaultInstance();
+  ::rtsys::mission::Mission::InitAsDefaultInstance();
 }
 
 ::google::protobuf::internal::SCCInfo<1> scc_info_Mission =
@@ -180,97 +246,131 @@ static void InitDefaultsMission() {
       &protobuf_mission_2eproto::scc_info_Mission_Component.base,}};
 
 void InitDefaults() {
-  ::google::protobuf::internal::InitSCC(&scc_info_Mission_Element_Point.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_Mission_Element_Rail.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_Mission_Element_Segment.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_Mission_Element.base);
-  ::google::protobuf::internal::InitSCC(&scc_info_Mission_Collection.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Block_Point.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Block_Line.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Block.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Payload_Navigation.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Payload.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Collection.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Device_Component.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Device.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Mission_Component.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Mission.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[7];
+::google::protobuf::Metadata file_level_metadata[10];
+const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[2];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Point, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block_Point, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Point, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block_Point, name_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Rail, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block_Line, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Rail, name_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Rail, p0_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Rail, p1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block_Line, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block_Line, type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block_Line, points_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Segment, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block, _internal_metadata_),
+  ~0u,  // no _extensions_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block, _oneof_case_[0]),
+  ~0u,  // no _weak_field_map_
+  offsetof(::rtsys::mission::BlockDefaultTypeInternal, point_),
+  offsetof(::rtsys::mission::BlockDefaultTypeInternal, line_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block, payloads_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Block, block_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Payload_Navigation, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Segment, name_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Segment, p0_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element_Segment, p1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Payload_Navigation, velocity_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Payload_Navigation, heading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Payload_Navigation, depth_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element, _internal_metadata_),
-  ~0u,  // no _extensions_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element, _oneof_case_[0]),
-  ~0u,  // no _weak_field_map_
-  offsetof(::pb::mission::Mission_ElementDefaultTypeInternal, point_),
-  offsetof(::pb::mission::Mission_ElementDefaultTypeInternal, rail_),
-  offsetof(::pb::mission::Mission_ElementDefaultTypeInternal, segment_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Element, element_),
-  ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Collection, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Payload, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Collection, name_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Collection, elements_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Payload, navigation_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Component, _internal_metadata_),
-  ~0u,  // no _extensions_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Component, _oneof_case_[0]),
-  ~0u,  // no _weak_field_map_
-  offsetof(::pb::mission::Mission_ComponentDefaultTypeInternal, element_),
-  offsetof(::pb::mission::Mission_ComponentDefaultTypeInternal, collection_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission_Component, component_),
-  ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Collection, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission, name_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::mission::Mission, components_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Collection, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Collection, blocks_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Device_Component, _internal_metadata_),
+  ~0u,  // no _extensions_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Device_Component, _oneof_case_[0]),
+  ~0u,  // no _weak_field_map_
+  offsetof(::rtsys::mission::Device_ComponentDefaultTypeInternal, block_),
+  offsetof(::rtsys::mission::Device_ComponentDefaultTypeInternal, collection_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Device_Component, component_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Device, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Device, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Device, type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Device, components_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Mission_Component, _internal_metadata_),
+  ~0u,  // no _extensions_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Mission_Component, _oneof_case_[0]),
+  ~0u,  // no _weak_field_map_
+  offsetof(::rtsys::mission::Mission_ComponentDefaultTypeInternal, block_),
+  offsetof(::rtsys::mission::Mission_ComponentDefaultTypeInternal, device_),
+  offsetof(::rtsys::mission::Mission_ComponentDefaultTypeInternal, collection_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Mission_Component, component_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Mission, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Mission, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Mission, brief_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::rtsys::mission::Mission, components_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::pb::mission::Mission_Element_Point)},
-  { 6, -1, sizeof(::pb::mission::Mission_Element_Rail)},
-  { 14, -1, sizeof(::pb::mission::Mission_Element_Segment)},
-  { 22, -1, sizeof(::pb::mission::Mission_Element)},
-  { 31, -1, sizeof(::pb::mission::Mission_Collection)},
-  { 38, -1, sizeof(::pb::mission::Mission_Component)},
-  { 46, -1, sizeof(::pb::mission::Mission)},
+  { 0, -1, sizeof(::rtsys::mission::Block_Point)},
+  { 6, -1, sizeof(::rtsys::mission::Block_Line)},
+  { 14, -1, sizeof(::rtsys::mission::Block)},
+  { 23, -1, sizeof(::rtsys::mission::Payload_Navigation)},
+  { 31, -1, sizeof(::rtsys::mission::Payload)},
+  { 37, -1, sizeof(::rtsys::mission::Collection)},
+  { 44, -1, sizeof(::rtsys::mission::Device_Component)},
+  { 52, -1, sizeof(::rtsys::mission::Device)},
+  { 60, -1, sizeof(::rtsys::mission::Mission_Component)},
+  { 69, -1, sizeof(::rtsys::mission::Mission)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::mission::_Mission_Element_Point_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::mission::_Mission_Element_Rail_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::mission::_Mission_Element_Segment_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::mission::_Mission_Element_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::mission::_Mission_Collection_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::mission::_Mission_Component_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::mission::_Mission_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Block_Point_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Block_Line_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Block_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Payload_Navigation_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Payload_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Collection_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Device_Component_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Device_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Mission_Component_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::rtsys::mission::_Mission_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
   AddDescriptors();
   AssignDescriptors(
       "mission.proto", schemas, file_default_instances, TableStruct::offsets,
-      file_level_metadata, NULL, NULL);
+      file_level_metadata, file_level_enum_descriptors, NULL);
 }
 
 void protobuf_AssignDescriptorsOnce() {
@@ -281,34 +381,43 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 7);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 10);
 }
 
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-      "\n\rmission.proto\022\npb.mission\"\314\005\n\007Mission\022"
-      "\014\n\004name\030\001 \001(\t\0221\n\ncomponents\030\002 \003(\0132\035.pb.m"
-      "ission.Mission.Component\032\264\003\n\007Element\0222\n\005"
-      "point\030\001 \001(\0132!.pb.mission.Mission.Element"
-      ".PointH\000\0220\n\004rail\030\002 \001(\0132 .pb.mission.Miss"
-      "ion.Element.RailH\000\0226\n\007segment\030\003 \001(\0132#.pb"
-      ".mission.Mission.Element.SegmentH\000\032\025\n\005Po"
-      "int\022\014\n\004name\030\001 \001(\t\032r\n\004Rail\022\014\n\004name\030\001 \001(\t\022"
-      "-\n\002p0\030\002 \001(\0132!.pb.mission.Mission.Element"
-      ".Point\022-\n\002p1\030\003 \001(\0132!.pb.mission.Mission."
-      "Element.Point\032u\n\007Segment\022\014\n\004name\030\001 \001(\t\022-"
-      "\n\002p0\030\002 \001(\0132!.pb.mission.Mission.Element."
-      "Point\022-\n\002p1\030\003 \001(\0132!.pb.mission.Mission.E"
-      "lement.PointB\t\n\007element\032I\n\nCollection\022\014\n"
-      "\004name\030\001 \001(\t\022-\n\010elements\030\002 \003(\0132\033.pb.missi"
-      "on.Mission.Element\032~\n\tComponent\022.\n\007eleme"
-      "nt\030\001 \001(\0132\033.pb.mission.Mission.ElementH\000\022"
-      "4\n\ncollection\030\002 \001(\0132\036.pb.mission.Mission"
-      ".CollectionH\000B\013\n\tcomponentb\006proto3"
+      "\n\rmission.proto\022\rrtsys.mission\"\303\002\n\005Block"
+      "\022+\n\005point\030\001 \001(\0132\032.rtsys.mission.Block.Po"
+      "intH\000\022)\n\004line\030\002 \001(\0132\031.rtsys.mission.Bloc"
+      "k.LineH\000\022(\n\010payloads\030\004 \003(\0132\026.rtsys.missi"
+      "on.Payload\032\025\n\005Point\022\014\n\004name\030\001 \001(\t\032\227\001\n\004Li"
+      "ne\022\014\n\004name\030\001 \001(\t\022,\n\004type\030\002 \001(\0162\036.rtsys.m"
+      "ission.Block.Line.Type\022*\n\006points\030\003 \003(\0132\032"
+      ".rtsys.mission.Block.Point\"\'\n\004Type\022\r\n\tLI"
+      "NE_RAIL\020\000\022\020\n\014LINE_SEGMENT\020\001B\007\n\005block\"\200\001\n"
+      "\007Payload\0225\n\nnavigation\030\001 \001(\0132!.rtsys.mis"
+      "sion.Payload.Navigation\032>\n\nNavigation\022\020\n"
+      "\010velocity\030\001 \001(\002\022\017\n\007heading\030\002 \001(\002\022\r\n\005dept"
+      "h\030\003 \001(\002\"@\n\nCollection\022\014\n\004name\030\001 \001(\t\022$\n\006b"
+      "locks\030\002 \003(\0132\024.rtsys.mission.Block\"\227\002\n\006De"
+      "vice\022\014\n\004name\030\001 \001(\t\022(\n\004type\030\002 \001(\0162\032.rtsys"
+      ".mission.Device.Type\0223\n\ncomponents\030\003 \003(\013"
+      "2\037.rtsys.mission.Device.Component\032p\n\tCom"
+      "ponent\022%\n\005block\030\001 \001(\0132\024.rtsys.mission.Bl"
+      "ockH\000\022/\n\ncollection\030\003 \001(\0132\031.rtsys.missio"
+      "n.CollectionH\000B\013\n\tcomponent\".\n\004Type\022\022\n\016D"
+      "EVICE_DEFAULT\020\000\022\022\n\016DEVICE_SURFACE\020\001\"\370\001\n\007"
+      "Mission\022\014\n\004name\030\001 \001(\t\022\r\n\005brief\030\002 \001(\t\0224\n\n"
+      "components\030\003 \003(\0132 .rtsys.mission.Mission"
+      ".Component\032\231\001\n\tComponent\022%\n\005block\030\001 \001(\0132"
+      "\024.rtsys.mission.BlockH\000\022\'\n\006device\030\002 \001(\0132"
+      "\025.rtsys.mission.DeviceH\000\022/\n\ncollection\030\003"
+      " \001(\0132\031.rtsys.mission.CollectionH\000B\013\n\tcom"
+      "ponentb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 754);
+      descriptor, 1094);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "mission.proto", &protobuf_RegisterTypes);
 }
@@ -324,25 +433,67 @@ struct StaticDescriptorInitializer {
   }
 } static_descriptor_initializer;
 }  // namespace protobuf_mission_2eproto
-namespace pb {
+namespace rtsys {
 namespace mission {
+const ::google::protobuf::EnumDescriptor* Block_Line_Type_descriptor() {
+  protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_mission_2eproto::file_level_enum_descriptors[0];
+}
+bool Block_Line_Type_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const Block_Line_Type Block_Line::LINE_RAIL;
+const Block_Line_Type Block_Line::LINE_SEGMENT;
+const Block_Line_Type Block_Line::Type_MIN;
+const Block_Line_Type Block_Line::Type_MAX;
+const int Block_Line::Type_ARRAYSIZE;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+const ::google::protobuf::EnumDescriptor* Device_Type_descriptor() {
+  protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return protobuf_mission_2eproto::file_level_enum_descriptors[1];
+}
+bool Device_Type_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const Device_Type Device::DEVICE_DEFAULT;
+const Device_Type Device::DEVICE_SURFACE;
+const Device_Type Device::Type_MIN;
+const Device_Type Device::Type_MAX;
+const int Device::Type_ARRAYSIZE;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 // ===================================================================
 
-void Mission_Element_Point::InitAsDefaultInstance() {
+void Block_Point::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Mission_Element_Point::kNameFieldNumber;
+const int Block_Point::kNameFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-Mission_Element_Point::Mission_Element_Point()
+Block_Point::Block_Point()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Point.base);
+      &protobuf_mission_2eproto::scc_info_Block_Point.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(constructor:rtsys.mission.Block.Point)
 }
-Mission_Element_Point::Mission_Element_Point(const Mission_Element_Point& from)
+Block_Point::Block_Point(const Block_Point& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -350,38 +501,38 @@ Mission_Element_Point::Mission_Element_Point(const Mission_Element_Point& from)
   if (from.name().size() > 0) {
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  // @@protoc_insertion_point(copy_constructor:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Block.Point)
 }
 
-void Mission_Element_Point::SharedCtor() {
+void Block_Point::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-Mission_Element_Point::~Mission_Element_Point() {
-  // @@protoc_insertion_point(destructor:pb.mission.Mission.Element.Point)
+Block_Point::~Block_Point() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Block.Point)
   SharedDtor();
 }
 
-void Mission_Element_Point::SharedDtor() {
+void Block_Point::SharedDtor() {
   name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void Mission_Element_Point::SetCachedSize(int size) const {
+void Block_Point::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* Mission_Element_Point::descriptor() {
+const ::google::protobuf::Descriptor* Block_Point::descriptor() {
   ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const Mission_Element_Point& Mission_Element_Point::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Mission_Element_Point.base);
+const Block_Point& Block_Point::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Block_Point.base);
   return *internal_default_instance();
 }
 
 
-void Mission_Element_Point::Clear() {
-// @@protoc_insertion_point(message_clear_start:pb.mission.Mission.Element.Point)
+void Block_Point::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Block.Point)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -390,11 +541,11 @@ void Mission_Element_Point::Clear() {
   _internal_metadata_.Clear();
 }
 
-bool Mission_Element_Point::MergePartialFromCodedStream(
+bool Block_Point::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Block.Point)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -409,7 +560,7 @@ bool Mission_Element_Point::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->name().data(), static_cast<int>(this->name().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "pb.mission.Mission.Element.Point.name"));
+            "rtsys.mission.Block.Point.name"));
         } else {
           goto handle_unusual;
         }
@@ -428,17 +579,17 @@ bool Mission_Element_Point::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Block.Point)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Block.Point)
   return false;
 #undef DO_
 }
 
-void Mission_Element_Point::SerializeWithCachedSizes(
+void Block_Point::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Block.Point)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -447,7 +598,7 @@ void Mission_Element_Point::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Element.Point.name");
+      "rtsys.mission.Block.Point.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
@@ -456,13 +607,13 @@ void Mission_Element_Point::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Block.Point)
 }
 
-::google::protobuf::uint8* Mission_Element_Point::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Block_Point::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Block.Point)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -471,7 +622,7 @@ void Mission_Element_Point::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Element.Point.name");
+      "rtsys.mission.Block.Point.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
@@ -481,12 +632,12 @@ void Mission_Element_Point::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Block.Point)
   return target;
 }
 
-size_t Mission_Element_Point::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:pb.mission.Mission.Element.Point)
+size_t Block_Point::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Block.Point)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -506,23 +657,23 @@ size_t Mission_Element_Point::ByteSizeLong() const {
   return total_size;
 }
 
-void Mission_Element_Point::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:pb.mission.Mission.Element.Point)
+void Block_Point::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Block.Point)
   GOOGLE_DCHECK_NE(&from, this);
-  const Mission_Element_Point* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const Mission_Element_Point>(
+  const Block_Point* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Block_Point>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Block.Point)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:pb.mission.Mission.Element.Point)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Block.Point)
     MergeFrom(*source);
   }
 }
 
-void Mission_Element_Point::MergeFrom(const Mission_Element_Point& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:pb.mission.Mission.Element.Point)
+void Block_Point::MergeFrom(const Block_Point& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Block.Point)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -534,36 +685,36 @@ void Mission_Element_Point::MergeFrom(const Mission_Element_Point& from) {
   }
 }
 
-void Mission_Element_Point::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:pb.mission.Mission.Element.Point)
+void Block_Point::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Block.Point)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Mission_Element_Point::CopyFrom(const Mission_Element_Point& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:pb.mission.Mission.Element.Point)
+void Block_Point::CopyFrom(const Block_Point& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Block.Point)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Mission_Element_Point::IsInitialized() const {
+bool Block_Point::IsInitialized() const {
   return true;
 }
 
-void Mission_Element_Point::Swap(Mission_Element_Point* other) {
+void Block_Point::Swap(Block_Point* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void Mission_Element_Point::InternalSwap(Mission_Element_Point* other) {
+void Block_Point::InternalSwap(Block_Point* other) {
   using std::swap;
   name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata Mission_Element_Point::GetMetadata() const {
+::google::protobuf::Metadata Block_Point::GetMetadata() const {
   protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -571,101 +722,79 @@ void Mission_Element_Point::InternalSwap(Mission_Element_Point* other) {
 
 // ===================================================================
 
-void Mission_Element_Rail::InitAsDefaultInstance() {
-  ::pb::mission::_Mission_Element_Rail_default_instance_._instance.get_mutable()->p0_ = const_cast< ::pb::mission::Mission_Element_Point*>(
-      ::pb::mission::Mission_Element_Point::internal_default_instance());
-  ::pb::mission::_Mission_Element_Rail_default_instance_._instance.get_mutable()->p1_ = const_cast< ::pb::mission::Mission_Element_Point*>(
-      ::pb::mission::Mission_Element_Point::internal_default_instance());
+void Block_Line::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Mission_Element_Rail::kNameFieldNumber;
-const int Mission_Element_Rail::kP0FieldNumber;
-const int Mission_Element_Rail::kP1FieldNumber;
+const int Block_Line::kNameFieldNumber;
+const int Block_Line::kTypeFieldNumber;
+const int Block_Line::kPointsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-Mission_Element_Rail::Mission_Element_Rail()
+Block_Line::Block_Line()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Rail.base);
+      &protobuf_mission_2eproto::scc_info_Block_Line.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(constructor:rtsys.mission.Block.Line)
 }
-Mission_Element_Rail::Mission_Element_Rail(const Mission_Element_Rail& from)
+Block_Line::Block_Line(const Block_Line& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
+      _internal_metadata_(NULL),
+      points_(from.points_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.name().size() > 0) {
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  if (from.has_p0()) {
-    p0_ = new ::pb::mission::Mission_Element_Point(*from.p0_);
-  } else {
-    p0_ = NULL;
-  }
-  if (from.has_p1()) {
-    p1_ = new ::pb::mission::Mission_Element_Point(*from.p1_);
-  } else {
-    p1_ = NULL;
-  }
-  // @@protoc_insertion_point(copy_constructor:pb.mission.Mission.Element.Rail)
+  type_ = from.type_;
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Block.Line)
 }
 
-void Mission_Element_Rail::SharedCtor() {
+void Block_Line::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&p0_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&p1_) -
-      reinterpret_cast<char*>(&p0_)) + sizeof(p1_));
+  type_ = 0;
 }
 
-Mission_Element_Rail::~Mission_Element_Rail() {
-  // @@protoc_insertion_point(destructor:pb.mission.Mission.Element.Rail)
+Block_Line::~Block_Line() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Block.Line)
   SharedDtor();
 }
 
-void Mission_Element_Rail::SharedDtor() {
+void Block_Line::SharedDtor() {
   name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (this != internal_default_instance()) delete p0_;
-  if (this != internal_default_instance()) delete p1_;
 }
 
-void Mission_Element_Rail::SetCachedSize(int size) const {
+void Block_Line::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* Mission_Element_Rail::descriptor() {
+const ::google::protobuf::Descriptor* Block_Line::descriptor() {
   ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const Mission_Element_Rail& Mission_Element_Rail::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Mission_Element_Rail.base);
+const Block_Line& Block_Line::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Block_Line.base);
   return *internal_default_instance();
 }
 
 
-void Mission_Element_Rail::Clear() {
-// @@protoc_insertion_point(message_clear_start:pb.mission.Mission.Element.Rail)
+void Block_Line::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Block.Line)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  points_.Clear();
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (GetArenaNoVirtual() == NULL && p0_ != NULL) {
-    delete p0_;
-  }
-  p0_ = NULL;
-  if (GetArenaNoVirtual() == NULL && p1_ != NULL) {
-    delete p1_;
-  }
-  p1_ = NULL;
+  type_ = 0;
   _internal_metadata_.Clear();
 }
 
-bool Mission_Element_Rail::MergePartialFromCodedStream(
+bool Block_Line::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Block.Line)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -680,31 +809,34 @@ bool Mission_Element_Rail::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->name().data(), static_cast<int>(this->name().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "pb.mission.Mission.Element.Rail.name"));
+            "rtsys.mission.Block.Line.name"));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .pb.mission.Mission.Element.Point p0 = 2;
+      // .rtsys.mission.Block.Line.Type type = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_p0()));
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_type(static_cast< ::rtsys::mission::Block_Line_Type >(value));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .pb.mission.Mission.Element.Point p1 = 3;
+      // repeated .rtsys.mission.Block.Point points = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_p1()));
+                input, add_points()));
         } else {
           goto handle_unusual;
         }
@@ -723,17 +855,17 @@ bool Mission_Element_Rail::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Block.Line)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Block.Line)
   return false;
 #undef DO_
 }
 
-void Mission_Element_Rail::SerializeWithCachedSizes(
+void Block_Line::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Block.Line)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -742,34 +874,37 @@ void Mission_Element_Rail::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Element.Rail.name");
+      "rtsys.mission.Block.Line.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
 
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  if (this->has_p0()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->_internal_p0(), output);
+  // .rtsys.mission.Block.Line.Type type = 2;
+  if (this->type() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->type(), output);
   }
 
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  if (this->has_p1()) {
+  // repeated .rtsys.mission.Block.Point points = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->points_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->_internal_p1(), output);
+      3,
+      this->points(static_cast<int>(i)),
+      output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Block.Line)
 }
 
-::google::protobuf::uint8* Mission_Element_Rail::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Block_Line::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Block.Line)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -778,36 +913,36 @@ void Mission_Element_Rail::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Element.Rail.name");
+      "rtsys.mission.Block.Line.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
   }
 
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  if (this->has_p0()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        2, this->_internal_p0(), deterministic, target);
+  // .rtsys.mission.Block.Line.Type type = 2;
+  if (this->type() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      2, this->type(), target);
   }
 
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  if (this->has_p1()) {
+  // repeated .rtsys.mission.Block.Point points = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->points_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        3, this->_internal_p1(), deterministic, target);
+        3, this->points(static_cast<int>(i)), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:pb.mission.Mission.Element.Rail)
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Block.Line)
   return target;
 }
 
-size_t Mission_Element_Rail::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:pb.mission.Mission.Element.Rail)
+size_t Block_Line::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Block.Line)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -815,349 +950,17 @@ size_t Mission_Element_Rail::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // string name = 1;
-  if (this->name().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->name());
-  }
-
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  if (this->has_p0()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *p0_);
-  }
-
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  if (this->has_p1()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *p1_);
-  }
-
-  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
-}
-
-void Mission_Element_Rail::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:pb.mission.Mission.Element.Rail)
-  GOOGLE_DCHECK_NE(&from, this);
-  const Mission_Element_Rail* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const Mission_Element_Rail>(
-          &from);
-  if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:pb.mission.Mission.Element.Rail)
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:pb.mission.Mission.Element.Rail)
-    MergeFrom(*source);
-  }
-}
-
-void Mission_Element_Rail::MergeFrom(const Mission_Element_Rail& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:pb.mission.Mission.Element.Rail)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from.name().size() > 0) {
-
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
-  }
-  if (from.has_p0()) {
-    mutable_p0()->::pb::mission::Mission_Element_Point::MergeFrom(from.p0());
-  }
-  if (from.has_p1()) {
-    mutable_p1()->::pb::mission::Mission_Element_Point::MergeFrom(from.p1());
-  }
-}
-
-void Mission_Element_Rail::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:pb.mission.Mission.Element.Rail)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void Mission_Element_Rail::CopyFrom(const Mission_Element_Rail& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:pb.mission.Mission.Element.Rail)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool Mission_Element_Rail::IsInitialized() const {
-  return true;
-}
-
-void Mission_Element_Rail::Swap(Mission_Element_Rail* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void Mission_Element_Rail::InternalSwap(Mission_Element_Rail* other) {
-  using std::swap;
-  name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
-  swap(p0_, other->p0_);
-  swap(p1_, other->p1_);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-}
-
-::google::protobuf::Metadata Mission_Element_Rail::GetMetadata() const {
-  protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
-}
-
-
-// ===================================================================
-
-void Mission_Element_Segment::InitAsDefaultInstance() {
-  ::pb::mission::_Mission_Element_Segment_default_instance_._instance.get_mutable()->p0_ = const_cast< ::pb::mission::Mission_Element_Point*>(
-      ::pb::mission::Mission_Element_Point::internal_default_instance());
-  ::pb::mission::_Mission_Element_Segment_default_instance_._instance.get_mutable()->p1_ = const_cast< ::pb::mission::Mission_Element_Point*>(
-      ::pb::mission::Mission_Element_Point::internal_default_instance());
-}
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Mission_Element_Segment::kNameFieldNumber;
-const int Mission_Element_Segment::kP0FieldNumber;
-const int Mission_Element_Segment::kP1FieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-Mission_Element_Segment::Mission_Element_Segment()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  ::google::protobuf::internal::InitSCC(
-      &protobuf_mission_2eproto::scc_info_Mission_Element_Segment.base);
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:pb.mission.Mission.Element.Segment)
-}
-Mission_Element_Segment::Mission_Element_Segment(const Mission_Element_Segment& from)
-  : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
-  _internal_metadata_.MergeFrom(from._internal_metadata_);
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.name().size() > 0) {
-    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
-  }
-  if (from.has_p0()) {
-    p0_ = new ::pb::mission::Mission_Element_Point(*from.p0_);
-  } else {
-    p0_ = NULL;
-  }
-  if (from.has_p1()) {
-    p1_ = new ::pb::mission::Mission_Element_Point(*from.p1_);
-  } else {
-    p1_ = NULL;
-  }
-  // @@protoc_insertion_point(copy_constructor:pb.mission.Mission.Element.Segment)
-}
-
-void Mission_Element_Segment::SharedCtor() {
-  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&p0_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&p1_) -
-      reinterpret_cast<char*>(&p0_)) + sizeof(p1_));
-}
-
-Mission_Element_Segment::~Mission_Element_Segment() {
-  // @@protoc_insertion_point(destructor:pb.mission.Mission.Element.Segment)
-  SharedDtor();
-}
-
-void Mission_Element_Segment::SharedDtor() {
-  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (this != internal_default_instance()) delete p0_;
-  if (this != internal_default_instance()) delete p1_;
-}
-
-void Mission_Element_Segment::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-const ::google::protobuf::Descriptor* Mission_Element_Segment::descriptor() {
-  ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
-  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
-}
-
-const Mission_Element_Segment& Mission_Element_Segment::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Mission_Element_Segment.base);
-  return *internal_default_instance();
-}
-
-
-void Mission_Element_Segment::Clear() {
-// @@protoc_insertion_point(message_clear_start:pb.mission.Mission.Element.Segment)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (GetArenaNoVirtual() == NULL && p0_ != NULL) {
-    delete p0_;
-  }
-  p0_ = NULL;
-  if (GetArenaNoVirtual() == NULL && p1_ != NULL) {
-    delete p1_;
-  }
-  p1_ = NULL;
-  _internal_metadata_.Clear();
-}
-
-bool Mission_Element_Segment::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:pb.mission.Mission.Element.Segment)
-  for (;;) {
-    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // string name = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_name()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->name().data(), static_cast<int>(this->name().length()),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "pb.mission.Mission.Element.Segment.name"));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // .pb.mission.Mission.Element.Point p0 = 2;
-      case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_p0()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // .pb.mission.Mission.Element.Point p1 = 3;
-      case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_p1()));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, _internal_metadata_.mutable_unknown_fields()));
-        break;
-      }
+  // repeated .rtsys.mission.Block.Point points = 3;
+  {
+    unsigned int count = static_cast<unsigned int>(this->points_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->points(static_cast<int>(i)));
     }
   }
-success:
-  // @@protoc_insertion_point(parse_success:pb.mission.Mission.Element.Segment)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:pb.mission.Mission.Element.Segment)
-  return false;
-#undef DO_
-}
 
-void Mission_Element_Segment::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:pb.mission.Mission.Element.Segment)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string name = 1;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Element.Segment.name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->name(), output);
-  }
-
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  if (this->has_p0()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->_internal_p0(), output);
-  }
-
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  if (this->has_p1()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->_internal_p1(), output);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
-  }
-  // @@protoc_insertion_point(serialize_end:pb.mission.Mission.Element.Segment)
-}
-
-::google::protobuf::uint8* Mission_Element_Segment::InternalSerializeWithCachedSizesToArray(
-    bool deterministic, ::google::protobuf::uint8* target) const {
-  (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:pb.mission.Mission.Element.Segment)
-  ::google::protobuf::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string name = 1;
-  if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), static_cast<int>(this->name().length()),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Element.Segment.name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->name(), target);
-  }
-
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  if (this->has_p0()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        2, this->_internal_p0(), deterministic, target);
-  }
-
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  if (this->has_p1()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageToArray(
-        3, this->_internal_p1(), deterministic, target);
-  }
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:pb.mission.Mission.Element.Segment)
-  return target;
-}
-
-size_t Mission_Element_Segment::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:pb.mission.Mission.Element.Segment)
-  size_t total_size = 0;
-
-  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
-  }
   // string name = 1;
   if (this->name().size() > 0) {
     total_size += 1 +
@@ -1165,18 +968,10 @@ size_t Mission_Element_Segment::ByteSizeLong() const {
         this->name());
   }
 
-  // .pb.mission.Mission.Element.Point p0 = 2;
-  if (this->has_p0()) {
+  // .rtsys.mission.Block.Line.Type type = 2;
+  if (this->type() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *p0_);
-  }
-
-  // .pb.mission.Mission.Element.Point p1 = 3;
-  if (this->has_p1()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *p1_);
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -1184,72 +979,70 @@ size_t Mission_Element_Segment::ByteSizeLong() const {
   return total_size;
 }
 
-void Mission_Element_Segment::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:pb.mission.Mission.Element.Segment)
+void Block_Line::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Block.Line)
   GOOGLE_DCHECK_NE(&from, this);
-  const Mission_Element_Segment* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const Mission_Element_Segment>(
+  const Block_Line* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Block_Line>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:pb.mission.Mission.Element.Segment)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Block.Line)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:pb.mission.Mission.Element.Segment)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Block.Line)
     MergeFrom(*source);
   }
 }
 
-void Mission_Element_Segment::MergeFrom(const Mission_Element_Segment& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:pb.mission.Mission.Element.Segment)
+void Block_Line::MergeFrom(const Block_Line& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Block.Line)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  points_.MergeFrom(from.points_);
   if (from.name().size() > 0) {
 
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  if (from.has_p0()) {
-    mutable_p0()->::pb::mission::Mission_Element_Point::MergeFrom(from.p0());
-  }
-  if (from.has_p1()) {
-    mutable_p1()->::pb::mission::Mission_Element_Point::MergeFrom(from.p1());
+  if (from.type() != 0) {
+    set_type(from.type());
   }
 }
 
-void Mission_Element_Segment::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:pb.mission.Mission.Element.Segment)
+void Block_Line::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Block.Line)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Mission_Element_Segment::CopyFrom(const Mission_Element_Segment& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:pb.mission.Mission.Element.Segment)
+void Block_Line::CopyFrom(const Block_Line& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Block.Line)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Mission_Element_Segment::IsInitialized() const {
+bool Block_Line::IsInitialized() const {
   return true;
 }
 
-void Mission_Element_Segment::Swap(Mission_Element_Segment* other) {
+void Block_Line::Swap(Block_Line* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void Mission_Element_Segment::InternalSwap(Mission_Element_Segment* other) {
+void Block_Line::InternalSwap(Block_Line* other) {
   using std::swap;
+  CastToBase(&points_)->InternalSwap(CastToBase(&other->points_));
   name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
-  swap(p0_, other->p0_);
-  swap(p1_, other->p1_);
+  swap(type_, other->type_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata Mission_Element_Segment::GetMetadata() const {
+::google::protobuf::Metadata Block_Line::GetMetadata() const {
   protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1257,17 +1050,15 @@ void Mission_Element_Segment::InternalSwap(Mission_Element_Segment* other) {
 
 // ===================================================================
 
-void Mission_Element::InitAsDefaultInstance() {
-  ::pb::mission::_Mission_Element_default_instance_.point_ = const_cast< ::pb::mission::Mission_Element_Point*>(
-      ::pb::mission::Mission_Element_Point::internal_default_instance());
-  ::pb::mission::_Mission_Element_default_instance_.rail_ = const_cast< ::pb::mission::Mission_Element_Rail*>(
-      ::pb::mission::Mission_Element_Rail::internal_default_instance());
-  ::pb::mission::_Mission_Element_default_instance_.segment_ = const_cast< ::pb::mission::Mission_Element_Segment*>(
-      ::pb::mission::Mission_Element_Segment::internal_default_instance());
+void Block::InitAsDefaultInstance() {
+  ::rtsys::mission::_Block_default_instance_.point_ = const_cast< ::rtsys::mission::Block_Point*>(
+      ::rtsys::mission::Block_Point::internal_default_instance());
+  ::rtsys::mission::_Block_default_instance_.line_ = const_cast< ::rtsys::mission::Block_Line*>(
+      ::rtsys::mission::Block_Line::internal_default_instance());
 }
-void Mission_Element::set_allocated_point(::pb::mission::Mission_Element_Point* point) {
+void Block::set_allocated_point(::rtsys::mission::Block_Point* point) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  clear_element();
+  clear_block();
   if (point) {
     ::google::protobuf::Arena* submessage_arena = NULL;
     if (message_arena != submessage_arena) {
@@ -1275,149 +1066,129 @@ void Mission_Element::set_allocated_point(::pb::mission::Mission_Element_Point* 
           message_arena, point, submessage_arena);
     }
     set_has_point();
-    element_.point_ = point;
+    block_.point_ = point;
   }
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.point)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Block.point)
 }
-void Mission_Element::set_allocated_rail(::pb::mission::Mission_Element_Rail* rail) {
+void Block::set_allocated_line(::rtsys::mission::Block_Line* line) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  clear_element();
-  if (rail) {
+  clear_block();
+  if (line) {
     ::google::protobuf::Arena* submessage_arena = NULL;
     if (message_arena != submessage_arena) {
-      rail = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, rail, submessage_arena);
+      line = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, line, submessage_arena);
     }
-    set_has_rail();
-    element_.rail_ = rail;
+    set_has_line();
+    block_.line_ = line;
   }
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.rail)
-}
-void Mission_Element::set_allocated_segment(::pb::mission::Mission_Element_Segment* segment) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  clear_element();
-  if (segment) {
-    ::google::protobuf::Arena* submessage_arena = NULL;
-    if (message_arena != submessage_arena) {
-      segment = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, segment, submessage_arena);
-    }
-    set_has_segment();
-    element_.segment_ = segment;
-  }
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Element.segment)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Block.line)
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Mission_Element::kPointFieldNumber;
-const int Mission_Element::kRailFieldNumber;
-const int Mission_Element::kSegmentFieldNumber;
+const int Block::kPointFieldNumber;
+const int Block::kLineFieldNumber;
+const int Block::kPayloadsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-Mission_Element::Mission_Element()
+Block::Block()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_mission_2eproto::scc_info_Mission_Element.base);
+      &protobuf_mission_2eproto::scc_info_Block.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(constructor:rtsys.mission.Block)
 }
-Mission_Element::Mission_Element(const Mission_Element& from)
+Block::Block(const Block& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL) {
+      _internal_metadata_(NULL),
+      payloads_(from.payloads_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  clear_has_element();
-  switch (from.element_case()) {
+  clear_has_block();
+  switch (from.block_case()) {
     case kPoint: {
-      mutable_point()->::pb::mission::Mission_Element_Point::MergeFrom(from.point());
+      mutable_point()->::rtsys::mission::Block_Point::MergeFrom(from.point());
       break;
     }
-    case kRail: {
-      mutable_rail()->::pb::mission::Mission_Element_Rail::MergeFrom(from.rail());
+    case kLine: {
+      mutable_line()->::rtsys::mission::Block_Line::MergeFrom(from.line());
       break;
     }
-    case kSegment: {
-      mutable_segment()->::pb::mission::Mission_Element_Segment::MergeFrom(from.segment());
-      break;
-    }
-    case ELEMENT_NOT_SET: {
+    case BLOCK_NOT_SET: {
       break;
     }
   }
-  // @@protoc_insertion_point(copy_constructor:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Block)
 }
 
-void Mission_Element::SharedCtor() {
-  clear_has_element();
+void Block::SharedCtor() {
+  clear_has_block();
 }
 
-Mission_Element::~Mission_Element() {
-  // @@protoc_insertion_point(destructor:pb.mission.Mission.Element)
+Block::~Block() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Block)
   SharedDtor();
 }
 
-void Mission_Element::SharedDtor() {
-  if (has_element()) {
-    clear_element();
+void Block::SharedDtor() {
+  if (has_block()) {
+    clear_block();
   }
 }
 
-void Mission_Element::SetCachedSize(int size) const {
+void Block::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* Mission_Element::descriptor() {
+const ::google::protobuf::Descriptor* Block::descriptor() {
   ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const Mission_Element& Mission_Element::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Mission_Element.base);
+const Block& Block::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Block.base);
   return *internal_default_instance();
 }
 
 
-void Mission_Element::clear_element() {
-// @@protoc_insertion_point(one_of_clear_start:pb.mission.Mission.Element)
-  switch (element_case()) {
+void Block::clear_block() {
+// @@protoc_insertion_point(one_of_clear_start:rtsys.mission.Block)
+  switch (block_case()) {
     case kPoint: {
-      delete element_.point_;
+      delete block_.point_;
       break;
     }
-    case kRail: {
-      delete element_.rail_;
+    case kLine: {
+      delete block_.line_;
       break;
     }
-    case kSegment: {
-      delete element_.segment_;
-      break;
-    }
-    case ELEMENT_NOT_SET: {
+    case BLOCK_NOT_SET: {
       break;
     }
   }
-  _oneof_case_[0] = ELEMENT_NOT_SET;
+  _oneof_case_[0] = BLOCK_NOT_SET;
 }
 
 
-void Mission_Element::Clear() {
-// @@protoc_insertion_point(message_clear_start:pb.mission.Mission.Element)
+void Block::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Block)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  clear_element();
+  payloads_.Clear();
+  clear_block();
   _internal_metadata_.Clear();
 }
 
-bool Mission_Element::MergePartialFromCodedStream(
+bool Block::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Block)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .pb.mission.Mission.Element.Point point = 1;
+      // .rtsys.mission.Block.Point point = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
@@ -1429,24 +1200,24 @@ bool Mission_Element::MergePartialFromCodedStream(
         break;
       }
 
-      // .pb.mission.Mission.Element.Rail rail = 2;
+      // .rtsys.mission.Block.Line line = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_rail()));
+               input, mutable_line()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .pb.mission.Mission.Element.Segment segment = 3;
-      case 3: {
+      // repeated .rtsys.mission.Payload payloads = 4;
+      case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_segment()));
+                input, add_payloads()));
         } else {
           goto handle_unusual;
         }
@@ -1465,83 +1236,87 @@ bool Mission_Element::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Block)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Block)
   return false;
 #undef DO_
 }
 
-void Mission_Element::SerializeWithCachedSizes(
+void Block::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Block)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .pb.mission.Mission.Element.Point point = 1;
+  // .rtsys.mission.Block.Point point = 1;
   if (has_point()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->_internal_point(), output);
   }
 
-  // .pb.mission.Mission.Element.Rail rail = 2;
-  if (has_rail()) {
+  // .rtsys.mission.Block.Line line = 2;
+  if (has_line()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->_internal_rail(), output);
+      2, this->_internal_line(), output);
   }
 
-  // .pb.mission.Mission.Element.Segment segment = 3;
-  if (has_segment()) {
+  // repeated .rtsys.mission.Payload payloads = 4;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->payloads_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->_internal_segment(), output);
+      4,
+      this->payloads(static_cast<int>(i)),
+      output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Block)
 }
 
-::google::protobuf::uint8* Mission_Element::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Block::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Block)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .pb.mission.Mission.Element.Point point = 1;
+  // .rtsys.mission.Block.Point point = 1;
   if (has_point()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
         1, this->_internal_point(), deterministic, target);
   }
 
-  // .pb.mission.Mission.Element.Rail rail = 2;
-  if (has_rail()) {
+  // .rtsys.mission.Block.Line line = 2;
+  if (has_line()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        2, this->_internal_rail(), deterministic, target);
+        2, this->_internal_line(), deterministic, target);
   }
 
-  // .pb.mission.Mission.Element.Segment segment = 3;
-  if (has_segment()) {
+  // repeated .rtsys.mission.Payload payloads = 4;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->payloads_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        3, this->_internal_segment(), deterministic, target);
+        4, this->payloads(static_cast<int>(i)), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Block)
   return target;
 }
 
-size_t Mission_Element::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:pb.mission.Mission.Element)
+size_t Block::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Block)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1549,29 +1324,33 @@ size_t Mission_Element::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  switch (element_case()) {
-    // .pb.mission.Mission.Element.Point point = 1;
+  // repeated .rtsys.mission.Payload payloads = 4;
+  {
+    unsigned int count = static_cast<unsigned int>(this->payloads_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->payloads(static_cast<int>(i)));
+    }
+  }
+
+  switch (block_case()) {
+    // .rtsys.mission.Block.Point point = 1;
     case kPoint: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
-          *element_.point_);
+          *block_.point_);
       break;
     }
-    // .pb.mission.Mission.Element.Rail rail = 2;
-    case kRail: {
+    // .rtsys.mission.Block.Line line = 2;
+    case kLine: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
-          *element_.rail_);
+          *block_.line_);
       break;
     }
-    // .pb.mission.Mission.Element.Segment segment = 3;
-    case kSegment: {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSize(
-          *element_.segment_);
-      break;
-    }
-    case ELEMENT_NOT_SET: {
+    case BLOCK_NOT_SET: {
       break;
     }
   }
@@ -1580,77 +1359,75 @@ size_t Mission_Element::ByteSizeLong() const {
   return total_size;
 }
 
-void Mission_Element::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:pb.mission.Mission.Element)
+void Block::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Block)
   GOOGLE_DCHECK_NE(&from, this);
-  const Mission_Element* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const Mission_Element>(
+  const Block* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Block>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Block)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:pb.mission.Mission.Element)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Block)
     MergeFrom(*source);
   }
 }
 
-void Mission_Element::MergeFrom(const Mission_Element& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:pb.mission.Mission.Element)
+void Block::MergeFrom(const Block& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Block)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  switch (from.element_case()) {
+  payloads_.MergeFrom(from.payloads_);
+  switch (from.block_case()) {
     case kPoint: {
-      mutable_point()->::pb::mission::Mission_Element_Point::MergeFrom(from.point());
+      mutable_point()->::rtsys::mission::Block_Point::MergeFrom(from.point());
       break;
     }
-    case kRail: {
-      mutable_rail()->::pb::mission::Mission_Element_Rail::MergeFrom(from.rail());
+    case kLine: {
+      mutable_line()->::rtsys::mission::Block_Line::MergeFrom(from.line());
       break;
     }
-    case kSegment: {
-      mutable_segment()->::pb::mission::Mission_Element_Segment::MergeFrom(from.segment());
-      break;
-    }
-    case ELEMENT_NOT_SET: {
+    case BLOCK_NOT_SET: {
       break;
     }
   }
 }
 
-void Mission_Element::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:pb.mission.Mission.Element)
+void Block::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Block)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Mission_Element::CopyFrom(const Mission_Element& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:pb.mission.Mission.Element)
+void Block::CopyFrom(const Block& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Block)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Mission_Element::IsInitialized() const {
+bool Block::IsInitialized() const {
   return true;
 }
 
-void Mission_Element::Swap(Mission_Element* other) {
+void Block::Swap(Block* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void Mission_Element::InternalSwap(Mission_Element* other) {
+void Block::InternalSwap(Block* other) {
   using std::swap;
-  swap(element_, other->element_);
+  CastToBase(&payloads_)->InternalSwap(CastToBase(&other->payloads_));
+  swap(block_, other->block_);
   swap(_oneof_case_[0], other->_oneof_case_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata Mission_Element::GetMetadata() const {
+::google::protobuf::Metadata Block::GetMetadata() const {
   protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1658,75 +1435,604 @@ void Mission_Element::InternalSwap(Mission_Element* other) {
 
 // ===================================================================
 
-void Mission_Collection::InitAsDefaultInstance() {
+void Payload_Navigation::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Mission_Collection::kNameFieldNumber;
-const int Mission_Collection::kElementsFieldNumber;
+const int Payload_Navigation::kVelocityFieldNumber;
+const int Payload_Navigation::kHeadingFieldNumber;
+const int Payload_Navigation::kDepthFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-Mission_Collection::Mission_Collection()
+Payload_Navigation::Payload_Navigation()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   ::google::protobuf::internal::InitSCC(
-      &protobuf_mission_2eproto::scc_info_Mission_Collection.base);
+      &protobuf_mission_2eproto::scc_info_Payload_Navigation.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(constructor:rtsys.mission.Payload.Navigation)
 }
-Mission_Collection::Mission_Collection(const Mission_Collection& from)
+Payload_Navigation::Payload_Navigation(const Payload_Navigation& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&velocity_, &from.velocity_,
+    static_cast<size_t>(reinterpret_cast<char*>(&depth_) -
+    reinterpret_cast<char*>(&velocity_)) + sizeof(depth_));
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Payload.Navigation)
+}
+
+void Payload_Navigation::SharedCtor() {
+  ::memset(&velocity_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&depth_) -
+      reinterpret_cast<char*>(&velocity_)) + sizeof(depth_));
+}
+
+Payload_Navigation::~Payload_Navigation() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Payload.Navigation)
+  SharedDtor();
+}
+
+void Payload_Navigation::SharedDtor() {
+}
+
+void Payload_Navigation::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Payload_Navigation::descriptor() {
+  ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Payload_Navigation& Payload_Navigation::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Payload_Navigation.base);
+  return *internal_default_instance();
+}
+
+
+void Payload_Navigation::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Payload.Navigation)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&velocity_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&depth_) -
+      reinterpret_cast<char*>(&velocity_)) + sizeof(depth_));
+  _internal_metadata_.Clear();
+}
+
+bool Payload_Navigation::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Payload.Navigation)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // float velocity = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(13u /* 13 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &velocity_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // float heading = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(21u /* 21 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &heading_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // float depth = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(29u /* 29 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &depth_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Payload.Navigation)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Payload.Navigation)
+  return false;
+#undef DO_
+}
+
+void Payload_Navigation::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Payload.Navigation)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // float velocity = 1;
+  if (this->velocity() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->velocity(), output);
+  }
+
+  // float heading = 2;
+  if (this->heading() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->heading(), output);
+  }
+
+  // float depth = 3;
+  if (this->depth() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->depth(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Payload.Navigation)
+}
+
+::google::protobuf::uint8* Payload_Navigation::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Payload.Navigation)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // float velocity = 1;
+  if (this->velocity() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->velocity(), target);
+  }
+
+  // float heading = 2;
+  if (this->heading() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->heading(), target);
+  }
+
+  // float depth = 3;
+  if (this->depth() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->depth(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Payload.Navigation)
+  return target;
+}
+
+size_t Payload_Navigation::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Payload.Navigation)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // float velocity = 1;
+  if (this->velocity() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // float heading = 2;
+  if (this->heading() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // float depth = 3;
+  if (this->depth() != 0) {
+    total_size += 1 + 4;
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Payload_Navigation::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Payload.Navigation)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Payload_Navigation* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Payload_Navigation>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Payload.Navigation)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Payload.Navigation)
+    MergeFrom(*source);
+  }
+}
+
+void Payload_Navigation::MergeFrom(const Payload_Navigation& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Payload.Navigation)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.velocity() != 0) {
+    set_velocity(from.velocity());
+  }
+  if (from.heading() != 0) {
+    set_heading(from.heading());
+  }
+  if (from.depth() != 0) {
+    set_depth(from.depth());
+  }
+}
+
+void Payload_Navigation::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Payload.Navigation)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Payload_Navigation::CopyFrom(const Payload_Navigation& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Payload.Navigation)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Payload_Navigation::IsInitialized() const {
+  return true;
+}
+
+void Payload_Navigation::Swap(Payload_Navigation* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Payload_Navigation::InternalSwap(Payload_Navigation* other) {
+  using std::swap;
+  swap(velocity_, other->velocity_);
+  swap(heading_, other->heading_);
+  swap(depth_, other->depth_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Payload_Navigation::GetMetadata() const {
+  protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Payload::InitAsDefaultInstance() {
+  ::rtsys::mission::_Payload_default_instance_._instance.get_mutable()->navigation_ = const_cast< ::rtsys::mission::Payload_Navigation*>(
+      ::rtsys::mission::Payload_Navigation::internal_default_instance());
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Payload::kNavigationFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Payload::Payload()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_mission_2eproto::scc_info_Payload.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:rtsys.mission.Payload)
+}
+Payload::Payload(const Payload& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from.has_navigation()) {
+    navigation_ = new ::rtsys::mission::Payload_Navigation(*from.navigation_);
+  } else {
+    navigation_ = NULL;
+  }
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Payload)
+}
+
+void Payload::SharedCtor() {
+  navigation_ = NULL;
+}
+
+Payload::~Payload() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Payload)
+  SharedDtor();
+}
+
+void Payload::SharedDtor() {
+  if (this != internal_default_instance()) delete navigation_;
+}
+
+void Payload::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Payload::descriptor() {
+  ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Payload& Payload::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Payload.base);
+  return *internal_default_instance();
+}
+
+
+void Payload::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Payload)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaNoVirtual() == NULL && navigation_ != NULL) {
+    delete navigation_;
+  }
+  navigation_ = NULL;
+  _internal_metadata_.Clear();
+}
+
+bool Payload::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Payload)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // .rtsys.mission.Payload.Navigation navigation = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_navigation()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Payload)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Payload)
+  return false;
+#undef DO_
+}
+
+void Payload::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Payload)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .rtsys.mission.Payload.Navigation navigation = 1;
+  if (this->has_navigation()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->_internal_navigation(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Payload)
+}
+
+::google::protobuf::uint8* Payload::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Payload)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .rtsys.mission.Payload.Navigation navigation = 1;
+  if (this->has_navigation()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        1, this->_internal_navigation(), deterministic, target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Payload)
+  return target;
+}
+
+size_t Payload::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Payload)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // .rtsys.mission.Payload.Navigation navigation = 1;
+  if (this->has_navigation()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSize(
+        *navigation_);
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Payload::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Payload)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Payload* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Payload>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Payload)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Payload)
+    MergeFrom(*source);
+  }
+}
+
+void Payload::MergeFrom(const Payload& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Payload)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.has_navigation()) {
+    mutable_navigation()->::rtsys::mission::Payload_Navigation::MergeFrom(from.navigation());
+  }
+}
+
+void Payload::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Payload)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Payload::CopyFrom(const Payload& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Payload)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Payload::IsInitialized() const {
+  return true;
+}
+
+void Payload::Swap(Payload* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Payload::InternalSwap(Payload* other) {
+  using std::swap;
+  swap(navigation_, other->navigation_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Payload::GetMetadata() const {
+  protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Collection::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Collection::kNameFieldNumber;
+const int Collection::kBlocksFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Collection::Collection()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_mission_2eproto::scc_info_Collection.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:rtsys.mission.Collection)
+}
+Collection::Collection(const Collection& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
-      elements_(from.elements_) {
+      blocks_(from.blocks_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.name().size() > 0) {
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  // @@protoc_insertion_point(copy_constructor:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Collection)
 }
 
-void Mission_Collection::SharedCtor() {
+void Collection::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-Mission_Collection::~Mission_Collection() {
-  // @@protoc_insertion_point(destructor:pb.mission.Mission.Collection)
+Collection::~Collection() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Collection)
   SharedDtor();
 }
 
-void Mission_Collection::SharedDtor() {
+void Collection::SharedDtor() {
   name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void Mission_Collection::SetCachedSize(int size) const {
+void Collection::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const ::google::protobuf::Descriptor* Mission_Collection::descriptor() {
+const ::google::protobuf::Descriptor* Collection::descriptor() {
   ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
 }
 
-const Mission_Collection& Mission_Collection::default_instance() {
-  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Mission_Collection.base);
+const Collection& Collection::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Collection.base);
   return *internal_default_instance();
 }
 
 
-void Mission_Collection::Clear() {
-// @@protoc_insertion_point(message_clear_start:pb.mission.Mission.Collection)
+void Collection::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Collection)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  elements_.Clear();
+  blocks_.Clear();
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
-bool Mission_Collection::MergePartialFromCodedStream(
+bool Collection::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Collection)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -1741,19 +2047,19 @@ bool Mission_Collection::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->name().data(), static_cast<int>(this->name().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "pb.mission.Mission.Collection.name"));
+            "rtsys.mission.Collection.name"));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // repeated .pb.mission.Mission.Element elements = 2;
+      // repeated .rtsys.mission.Block blocks = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-                input, add_elements()));
+                input, add_blocks()));
         } else {
           goto handle_unusual;
         }
@@ -1772,17 +2078,17 @@ bool Mission_Collection::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Collection)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Collection)
   return false;
 #undef DO_
 }
 
-void Mission_Collection::SerializeWithCachedSizes(
+void Collection::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Collection)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1791,17 +2097,17 @@ void Mission_Collection::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Collection.name");
+      "rtsys.mission.Collection.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
 
-  // repeated .pb.mission.Mission.Element elements = 2;
+  // repeated .rtsys.mission.Block blocks = 2;
   for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->elements_size()); i < n; i++) {
+      n = static_cast<unsigned int>(this->blocks_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2,
-      this->elements(static_cast<int>(i)),
+      this->blocks(static_cast<int>(i)),
       output);
   }
 
@@ -1809,13 +2115,13 @@ void Mission_Collection::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Collection)
 }
 
-::google::protobuf::uint8* Mission_Collection::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Collection::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Collection)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -1824,30 +2130,30 @@ void Mission_Collection::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.Collection.name");
+      "rtsys.mission.Collection.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
   }
 
-  // repeated .pb.mission.Mission.Element elements = 2;
+  // repeated .rtsys.mission.Block blocks = 2;
   for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->elements_size()); i < n; i++) {
+      n = static_cast<unsigned int>(this->blocks_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        2, this->elements(static_cast<int>(i)), deterministic, target);
+        2, this->blocks(static_cast<int>(i)), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Collection)
   return target;
 }
 
-size_t Mission_Collection::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:pb.mission.Mission.Collection)
+size_t Collection::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Collection)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1855,14 +2161,14 @@ size_t Mission_Collection::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // repeated .pb.mission.Mission.Element elements = 2;
+  // repeated .rtsys.mission.Block blocks = 2;
   {
-    unsigned int count = static_cast<unsigned int>(this->elements_size());
+    unsigned int count = static_cast<unsigned int>(this->blocks_size());
     total_size += 1UL * count;
     for (unsigned int i = 0; i < count; i++) {
       total_size +=
         ::google::protobuf::internal::WireFormatLite::MessageSize(
-          this->elements(static_cast<int>(i)));
+          this->blocks(static_cast<int>(i)));
     }
   }
 
@@ -1878,66 +2184,66 @@ size_t Mission_Collection::ByteSizeLong() const {
   return total_size;
 }
 
-void Mission_Collection::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:pb.mission.Mission.Collection)
+void Collection::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Collection)
   GOOGLE_DCHECK_NE(&from, this);
-  const Mission_Collection* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const Mission_Collection>(
+  const Collection* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Collection>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Collection)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:pb.mission.Mission.Collection)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Collection)
     MergeFrom(*source);
   }
 }
 
-void Mission_Collection::MergeFrom(const Mission_Collection& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:pb.mission.Mission.Collection)
+void Collection::MergeFrom(const Collection& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Collection)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  elements_.MergeFrom(from.elements_);
+  blocks_.MergeFrom(from.blocks_);
   if (from.name().size() > 0) {
 
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
 }
 
-void Mission_Collection::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:pb.mission.Mission.Collection)
+void Collection::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Collection)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Mission_Collection::CopyFrom(const Mission_Collection& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:pb.mission.Mission.Collection)
+void Collection::CopyFrom(const Collection& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Collection)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Mission_Collection::IsInitialized() const {
+bool Collection::IsInitialized() const {
   return true;
 }
 
-void Mission_Collection::Swap(Mission_Collection* other) {
+void Collection::Swap(Collection* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void Mission_Collection::InternalSwap(Mission_Collection* other) {
+void Collection::InternalSwap(Collection* other) {
   using std::swap;
-  CastToBase(&elements_)->InternalSwap(CastToBase(&other->elements_));
+  CastToBase(&blocks_)->InternalSwap(CastToBase(&other->blocks_));
   name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
-::google::protobuf::Metadata Mission_Collection::GetMetadata() const {
+::google::protobuf::Metadata Collection::GetMetadata() const {
   protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -1945,27 +2251,27 @@ void Mission_Collection::InternalSwap(Mission_Collection* other) {
 
 // ===================================================================
 
-void Mission_Component::InitAsDefaultInstance() {
-  ::pb::mission::_Mission_Component_default_instance_.element_ = const_cast< ::pb::mission::Mission_Element*>(
-      ::pb::mission::Mission_Element::internal_default_instance());
-  ::pb::mission::_Mission_Component_default_instance_.collection_ = const_cast< ::pb::mission::Mission_Collection*>(
-      ::pb::mission::Mission_Collection::internal_default_instance());
+void Device_Component::InitAsDefaultInstance() {
+  ::rtsys::mission::_Device_Component_default_instance_.block_ = const_cast< ::rtsys::mission::Block*>(
+      ::rtsys::mission::Block::internal_default_instance());
+  ::rtsys::mission::_Device_Component_default_instance_.collection_ = const_cast< ::rtsys::mission::Collection*>(
+      ::rtsys::mission::Collection::internal_default_instance());
 }
-void Mission_Component::set_allocated_element(::pb::mission::Mission_Element* element) {
+void Device_Component::set_allocated_block(::rtsys::mission::Block* block) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   clear_component();
-  if (element) {
+  if (block) {
     ::google::protobuf::Arena* submessage_arena = NULL;
     if (message_arena != submessage_arena) {
-      element = ::google::protobuf::internal::GetOwnedMessage(
-          message_arena, element, submessage_arena);
+      block = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, block, submessage_arena);
     }
-    set_has_element();
-    component_.element_ = element;
+    set_has_block();
+    component_.block_ = block;
   }
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Component.element)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Device.Component.block)
 }
-void Mission_Component::set_allocated_collection(::pb::mission::Mission_Collection* collection) {
+void Device_Component::set_allocated_collection(::rtsys::mission::Collection* collection) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   clear_component();
   if (collection) {
@@ -1977,10 +2283,695 @@ void Mission_Component::set_allocated_collection(::pb::mission::Mission_Collecti
     set_has_collection();
     component_.collection_ = collection;
   }
-  // @@protoc_insertion_point(field_set_allocated:pb.mission.Mission.Component.collection)
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Device.Component.collection)
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Mission_Component::kElementFieldNumber;
+const int Device_Component::kBlockFieldNumber;
+const int Device_Component::kCollectionFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Device_Component::Device_Component()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_mission_2eproto::scc_info_Device_Component.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:rtsys.mission.Device.Component)
+}
+Device_Component::Device_Component(const Device_Component& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  clear_has_component();
+  switch (from.component_case()) {
+    case kBlock: {
+      mutable_block()->::rtsys::mission::Block::MergeFrom(from.block());
+      break;
+    }
+    case kCollection: {
+      mutable_collection()->::rtsys::mission::Collection::MergeFrom(from.collection());
+      break;
+    }
+    case COMPONENT_NOT_SET: {
+      break;
+    }
+  }
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Device.Component)
+}
+
+void Device_Component::SharedCtor() {
+  clear_has_component();
+}
+
+Device_Component::~Device_Component() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Device.Component)
+  SharedDtor();
+}
+
+void Device_Component::SharedDtor() {
+  if (has_component()) {
+    clear_component();
+  }
+}
+
+void Device_Component::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Device_Component::descriptor() {
+  ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Device_Component& Device_Component::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Device_Component.base);
+  return *internal_default_instance();
+}
+
+
+void Device_Component::clear_component() {
+// @@protoc_insertion_point(one_of_clear_start:rtsys.mission.Device.Component)
+  switch (component_case()) {
+    case kBlock: {
+      delete component_.block_;
+      break;
+    }
+    case kCollection: {
+      delete component_.collection_;
+      break;
+    }
+    case COMPONENT_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = COMPONENT_NOT_SET;
+}
+
+
+void Device_Component::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Device.Component)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  clear_component();
+  _internal_metadata_.Clear();
+}
+
+bool Device_Component::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Device.Component)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // .rtsys.mission.Block block = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_block()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .rtsys.mission.Collection collection = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_collection()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Device.Component)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Device.Component)
+  return false;
+#undef DO_
+}
+
+void Device_Component::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Device.Component)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .rtsys.mission.Block block = 1;
+  if (has_block()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->_internal_block(), output);
+  }
+
+  // .rtsys.mission.Collection collection = 3;
+  if (has_collection()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->_internal_collection(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Device.Component)
+}
+
+::google::protobuf::uint8* Device_Component::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Device.Component)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .rtsys.mission.Block block = 1;
+  if (has_block()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        1, this->_internal_block(), deterministic, target);
+  }
+
+  // .rtsys.mission.Collection collection = 3;
+  if (has_collection()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        3, this->_internal_collection(), deterministic, target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Device.Component)
+  return target;
+}
+
+size_t Device_Component::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Device.Component)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  switch (component_case()) {
+    // .rtsys.mission.Block block = 1;
+    case kBlock: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *component_.block_);
+      break;
+    }
+    // .rtsys.mission.Collection collection = 3;
+    case kCollection: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *component_.collection_);
+      break;
+    }
+    case COMPONENT_NOT_SET: {
+      break;
+    }
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Device_Component::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Device.Component)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Device_Component* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Device_Component>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Device.Component)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Device.Component)
+    MergeFrom(*source);
+  }
+}
+
+void Device_Component::MergeFrom(const Device_Component& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Device.Component)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  switch (from.component_case()) {
+    case kBlock: {
+      mutable_block()->::rtsys::mission::Block::MergeFrom(from.block());
+      break;
+    }
+    case kCollection: {
+      mutable_collection()->::rtsys::mission::Collection::MergeFrom(from.collection());
+      break;
+    }
+    case COMPONENT_NOT_SET: {
+      break;
+    }
+  }
+}
+
+void Device_Component::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Device.Component)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Device_Component::CopyFrom(const Device_Component& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Device.Component)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Device_Component::IsInitialized() const {
+  return true;
+}
+
+void Device_Component::Swap(Device_Component* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Device_Component::InternalSwap(Device_Component* other) {
+  using std::swap;
+  swap(component_, other->component_);
+  swap(_oneof_case_[0], other->_oneof_case_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Device_Component::GetMetadata() const {
+  protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Device::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Device::kNameFieldNumber;
+const int Device::kTypeFieldNumber;
+const int Device::kComponentsFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Device::Device()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_mission_2eproto::scc_info_Device.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:rtsys.mission.Device)
+}
+Device::Device(const Device& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      components_(from.components_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.name().size() > 0) {
+    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  }
+  type_ = from.type_;
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Device)
+}
+
+void Device::SharedCtor() {
+  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_ = 0;
+}
+
+Device::~Device() {
+  // @@protoc_insertion_point(destructor:rtsys.mission.Device)
+  SharedDtor();
+}
+
+void Device::SharedDtor() {
+  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void Device::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* Device::descriptor() {
+  ::protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Device& Device::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_mission_2eproto::scc_info_Device.base);
+  return *internal_default_instance();
+}
+
+
+void Device::Clear() {
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Device)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  components_.Clear();
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_ = 0;
+  _internal_metadata_.Clear();
+}
+
+bool Device::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Device)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // string name = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->name().data(), static_cast<int>(this->name().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "rtsys.mission.Device.name"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .rtsys.mission.Device.Type type = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_type(static_cast< ::rtsys::mission::Device_Type >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated .rtsys.mission.Device.Component components = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+                input, add_components()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Device)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Device)
+  return false;
+#undef DO_
+}
+
+void Device::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Device)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string name = 1;
+  if (this->name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->name().data(), static_cast<int>(this->name().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "rtsys.mission.Device.name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
+  }
+
+  // .rtsys.mission.Device.Type type = 2;
+  if (this->type() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->type(), output);
+  }
+
+  // repeated .rtsys.mission.Device.Component components = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->components_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3,
+      this->components(static_cast<int>(i)),
+      output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Device)
+}
+
+::google::protobuf::uint8* Device::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Device)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string name = 1;
+  if (this->name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->name().data(), static_cast<int>(this->name().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "rtsys.mission.Device.name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // .rtsys.mission.Device.Type type = 2;
+  if (this->type() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      2, this->type(), target);
+  }
+
+  // repeated .rtsys.mission.Device.Component components = 3;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->components_size()); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        3, this->components(static_cast<int>(i)), deterministic, target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Device)
+  return target;
+}
+
+size_t Device::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Device)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // repeated .rtsys.mission.Device.Component components = 3;
+  {
+    unsigned int count = static_cast<unsigned int>(this->components_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->components(static_cast<int>(i)));
+    }
+  }
+
+  // string name = 1;
+  if (this->name().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->name());
+  }
+
+  // .rtsys.mission.Device.Type type = 2;
+  if (this->type() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Device::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Device)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Device* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Device>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Device)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Device)
+    MergeFrom(*source);
+  }
+}
+
+void Device::MergeFrom(const Device& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Device)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  components_.MergeFrom(from.components_);
+  if (from.name().size() > 0) {
+
+    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  }
+  if (from.type() != 0) {
+    set_type(from.type());
+  }
+}
+
+void Device::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Device)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Device::CopyFrom(const Device& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Device)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Device::IsInitialized() const {
+  return true;
+}
+
+void Device::Swap(Device* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Device::InternalSwap(Device* other) {
+  using std::swap;
+  CastToBase(&components_)->InternalSwap(CastToBase(&other->components_));
+  name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  swap(type_, other->type_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata Device::GetMetadata() const {
+  protobuf_mission_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_mission_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Mission_Component::InitAsDefaultInstance() {
+  ::rtsys::mission::_Mission_Component_default_instance_.block_ = const_cast< ::rtsys::mission::Block*>(
+      ::rtsys::mission::Block::internal_default_instance());
+  ::rtsys::mission::_Mission_Component_default_instance_.device_ = const_cast< ::rtsys::mission::Device*>(
+      ::rtsys::mission::Device::internal_default_instance());
+  ::rtsys::mission::_Mission_Component_default_instance_.collection_ = const_cast< ::rtsys::mission::Collection*>(
+      ::rtsys::mission::Collection::internal_default_instance());
+}
+void Mission_Component::set_allocated_block(::rtsys::mission::Block* block) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  clear_component();
+  if (block) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      block = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, block, submessage_arena);
+    }
+    set_has_block();
+    component_.block_ = block;
+  }
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Mission.Component.block)
+}
+void Mission_Component::set_allocated_device(::rtsys::mission::Device* device) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  clear_component();
+  if (device) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      device = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, device, submessage_arena);
+    }
+    set_has_device();
+    component_.device_ = device;
+  }
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Mission.Component.device)
+}
+void Mission_Component::set_allocated_collection(::rtsys::mission::Collection* collection) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  clear_component();
+  if (collection) {
+    ::google::protobuf::Arena* submessage_arena = NULL;
+    if (message_arena != submessage_arena) {
+      collection = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, collection, submessage_arena);
+    }
+    set_has_collection();
+    component_.collection_ = collection;
+  }
+  // @@protoc_insertion_point(field_set_allocated:rtsys.mission.Mission.Component.collection)
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Mission_Component::kBlockFieldNumber;
+const int Mission_Component::kDeviceFieldNumber;
 const int Mission_Component::kCollectionFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -1989,7 +2980,7 @@ Mission_Component::Mission_Component()
   ::google::protobuf::internal::InitSCC(
       &protobuf_mission_2eproto::scc_info_Mission_Component.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(constructor:rtsys.mission.Mission.Component)
 }
 Mission_Component::Mission_Component(const Mission_Component& from)
   : ::google::protobuf::Message(),
@@ -1997,19 +2988,23 @@ Mission_Component::Mission_Component(const Mission_Component& from)
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   clear_has_component();
   switch (from.component_case()) {
-    case kElement: {
-      mutable_element()->::pb::mission::Mission_Element::MergeFrom(from.element());
+    case kBlock: {
+      mutable_block()->::rtsys::mission::Block::MergeFrom(from.block());
+      break;
+    }
+    case kDevice: {
+      mutable_device()->::rtsys::mission::Device::MergeFrom(from.device());
       break;
     }
     case kCollection: {
-      mutable_collection()->::pb::mission::Mission_Collection::MergeFrom(from.collection());
+      mutable_collection()->::rtsys::mission::Collection::MergeFrom(from.collection());
       break;
     }
     case COMPONENT_NOT_SET: {
       break;
     }
   }
-  // @@protoc_insertion_point(copy_constructor:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Mission.Component)
 }
 
 void Mission_Component::SharedCtor() {
@@ -2017,7 +3012,7 @@ void Mission_Component::SharedCtor() {
 }
 
 Mission_Component::~Mission_Component() {
-  // @@protoc_insertion_point(destructor:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(destructor:rtsys.mission.Mission.Component)
   SharedDtor();
 }
 
@@ -2042,10 +3037,14 @@ const Mission_Component& Mission_Component::default_instance() {
 
 
 void Mission_Component::clear_component() {
-// @@protoc_insertion_point(one_of_clear_start:pb.mission.Mission.Component)
+// @@protoc_insertion_point(one_of_clear_start:rtsys.mission.Mission.Component)
   switch (component_case()) {
-    case kElement: {
-      delete component_.element_;
+    case kBlock: {
+      delete component_.block_;
+      break;
+    }
+    case kDevice: {
+      delete component_.device_;
       break;
     }
     case kCollection: {
@@ -2061,7 +3060,7 @@ void Mission_Component::clear_component() {
 
 
 void Mission_Component::Clear() {
-// @@protoc_insertion_point(message_clear_start:pb.mission.Mission.Component)
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Mission.Component)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -2074,28 +3073,40 @@ bool Mission_Component::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Mission.Component)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .pb.mission.Mission.Element element = 1;
+      // .rtsys.mission.Block block = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
-               input, mutable_element()));
+               input, mutable_block()));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .pb.mission.Mission.Collection collection = 2;
+      // .rtsys.mission.Device device = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_device()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .rtsys.mission.Collection collection = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                input, mutable_collection()));
         } else {
@@ -2116,70 +3127,83 @@ bool Mission_Component::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Mission.Component)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Mission.Component)
   return false;
 #undef DO_
 }
 
 void Mission_Component::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Mission.Component)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .pb.mission.Mission.Element element = 1;
-  if (has_element()) {
+  // .rtsys.mission.Block block = 1;
+  if (has_block()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->_internal_element(), output);
+      1, this->_internal_block(), output);
   }
 
-  // .pb.mission.Mission.Collection collection = 2;
+  // .rtsys.mission.Device device = 2;
+  if (has_device()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->_internal_device(), output);
+  }
+
+  // .rtsys.mission.Collection collection = 3;
   if (has_collection()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->_internal_collection(), output);
+      3, this->_internal_collection(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Mission.Component)
 }
 
 ::google::protobuf::uint8* Mission_Component::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Mission.Component)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .pb.mission.Mission.Element element = 1;
-  if (has_element()) {
+  // .rtsys.mission.Block block = 1;
+  if (has_block()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        1, this->_internal_element(), deterministic, target);
+        1, this->_internal_block(), deterministic, target);
   }
 
-  // .pb.mission.Mission.Collection collection = 2;
+  // .rtsys.mission.Device device = 2;
+  if (has_device()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        2, this->_internal_device(), deterministic, target);
+  }
+
+  // .rtsys.mission.Collection collection = 3;
   if (has_collection()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        2, this->_internal_collection(), deterministic, target);
+        3, this->_internal_collection(), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Mission.Component)
   return target;
 }
 
 size_t Mission_Component::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:pb.mission.Mission.Component)
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Mission.Component)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2188,14 +3212,21 @@ size_t Mission_Component::ByteSizeLong() const {
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
   switch (component_case()) {
-    // .pb.mission.Mission.Element element = 1;
-    case kElement: {
+    // .rtsys.mission.Block block = 1;
+    case kBlock: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
-          *component_.element_);
+          *component_.block_);
       break;
     }
-    // .pb.mission.Mission.Collection collection = 2;
+    // .rtsys.mission.Device device = 2;
+    case kDevice: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *component_.device_);
+      break;
+    }
+    // .rtsys.mission.Collection collection = 3;
     case kCollection: {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSize(
@@ -2212,34 +3243,38 @@ size_t Mission_Component::ByteSizeLong() const {
 }
 
 void Mission_Component::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:pb.mission.Mission.Component)
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Mission.Component)
   GOOGLE_DCHECK_NE(&from, this);
   const Mission_Component* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const Mission_Component>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Mission.Component)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:pb.mission.Mission.Component)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Mission.Component)
     MergeFrom(*source);
   }
 }
 
 void Mission_Component::MergeFrom(const Mission_Component& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:pb.mission.Mission.Component)
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Mission.Component)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   switch (from.component_case()) {
-    case kElement: {
-      mutable_element()->::pb::mission::Mission_Element::MergeFrom(from.element());
+    case kBlock: {
+      mutable_block()->::rtsys::mission::Block::MergeFrom(from.block());
+      break;
+    }
+    case kDevice: {
+      mutable_device()->::rtsys::mission::Device::MergeFrom(from.device());
       break;
     }
     case kCollection: {
-      mutable_collection()->::pb::mission::Mission_Collection::MergeFrom(from.collection());
+      mutable_collection()->::rtsys::mission::Collection::MergeFrom(from.collection());
       break;
     }
     case COMPONENT_NOT_SET: {
@@ -2249,14 +3284,14 @@ void Mission_Component::MergeFrom(const Mission_Component& from) {
 }
 
 void Mission_Component::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:pb.mission.Mission.Component)
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Mission.Component)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Mission_Component::CopyFrom(const Mission_Component& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:pb.mission.Mission.Component)
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Mission.Component)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2289,6 +3324,7 @@ void Mission::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Mission::kNameFieldNumber;
+const int Mission::kBriefFieldNumber;
 const int Mission::kComponentsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -2297,7 +3333,7 @@ Mission::Mission()
   ::google::protobuf::internal::InitSCC(
       &protobuf_mission_2eproto::scc_info_Mission.base);
   SharedCtor();
-  // @@protoc_insertion_point(constructor:pb.mission.Mission)
+  // @@protoc_insertion_point(constructor:rtsys.mission.Mission)
 }
 Mission::Mission(const Mission& from)
   : ::google::protobuf::Message(),
@@ -2308,20 +3344,26 @@ Mission::Mission(const Mission& from)
   if (from.name().size() > 0) {
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  // @@protoc_insertion_point(copy_constructor:pb.mission.Mission)
+  brief_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.brief().size() > 0) {
+    brief_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.brief_);
+  }
+  // @@protoc_insertion_point(copy_constructor:rtsys.mission.Mission)
 }
 
 void Mission::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  brief_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 Mission::~Mission() {
-  // @@protoc_insertion_point(destructor:pb.mission.Mission)
+  // @@protoc_insertion_point(destructor:rtsys.mission.Mission)
   SharedDtor();
 }
 
 void Mission::SharedDtor() {
   name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  brief_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void Mission::SetCachedSize(int size) const {
@@ -2339,13 +3381,14 @@ const Mission& Mission::default_instance() {
 
 
 void Mission::Clear() {
-// @@protoc_insertion_point(message_clear_start:pb.mission.Mission)
+// @@protoc_insertion_point(message_clear_start:rtsys.mission.Mission)
   ::google::protobuf::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   components_.Clear();
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  brief_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
@@ -2353,7 +3396,7 @@ bool Mission::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:pb.mission.Mission)
+  // @@protoc_insertion_point(parse_start:rtsys.mission.Mission)
   for (;;) {
     ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
@@ -2368,17 +3411,33 @@ bool Mission::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->name().data(), static_cast<int>(this->name().length()),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "pb.mission.Mission.name"));
+            "rtsys.mission.Mission.name"));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // repeated .pb.mission.Mission.Component components = 2;
+      // string brief = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_brief()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->brief().data(), static_cast<int>(this->brief().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "rtsys.mission.Mission.brief"));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated .rtsys.mission.Mission.Component components = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                 input, add_components()));
         } else {
@@ -2399,17 +3458,17 @@ bool Mission::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:pb.mission.Mission)
+  // @@protoc_insertion_point(parse_success:rtsys.mission.Mission)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:pb.mission.Mission)
+  // @@protoc_insertion_point(parse_failure:rtsys.mission.Mission)
   return false;
 #undef DO_
 }
 
 void Mission::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:pb.mission.Mission)
+  // @@protoc_insertion_point(serialize_start:rtsys.mission.Mission)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -2418,16 +3477,26 @@ void Mission::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.name");
+      "rtsys.mission.Mission.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
 
-  // repeated .pb.mission.Mission.Component components = 2;
+  // string brief = 2;
+  if (this->brief().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->brief().data(), static_cast<int>(this->brief().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "rtsys.mission.Mission.brief");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      2, this->brief(), output);
+  }
+
+  // repeated .rtsys.mission.Mission.Component components = 3;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->components_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2,
+      3,
       this->components(static_cast<int>(i)),
       output);
   }
@@ -2436,13 +3505,13 @@ void Mission::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
-  // @@protoc_insertion_point(serialize_end:pb.mission.Mission)
+  // @@protoc_insertion_point(serialize_end:rtsys.mission.Mission)
 }
 
 ::google::protobuf::uint8* Mission::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:pb.mission.Mission)
+  // @@protoc_insertion_point(serialize_to_array_start:rtsys.mission.Mission)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -2451,30 +3520,41 @@ void Mission::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), static_cast<int>(this->name().length()),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "pb.mission.Mission.name");
+      "rtsys.mission.Mission.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
   }
 
-  // repeated .pb.mission.Mission.Component components = 2;
+  // string brief = 2;
+  if (this->brief().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->brief().data(), static_cast<int>(this->brief().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "rtsys.mission.Mission.brief");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->brief(), target);
+  }
+
+  // repeated .rtsys.mission.Mission.Component components = 3;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->components_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        2, this->components(static_cast<int>(i)), deterministic, target);
+        3, this->components(static_cast<int>(i)), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:pb.mission.Mission)
+  // @@protoc_insertion_point(serialize_to_array_end:rtsys.mission.Mission)
   return target;
 }
 
 size_t Mission::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:pb.mission.Mission)
+// @@protoc_insertion_point(message_byte_size_start:rtsys.mission.Mission)
   size_t total_size = 0;
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2482,7 +3562,7 @@ size_t Mission::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // repeated .pb.mission.Mission.Component components = 2;
+  // repeated .rtsys.mission.Mission.Component components = 3;
   {
     unsigned int count = static_cast<unsigned int>(this->components_size());
     total_size += 1UL * count;
@@ -2500,28 +3580,35 @@ size_t Mission::ByteSizeLong() const {
         this->name());
   }
 
+  // string brief = 2;
+  if (this->brief().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->brief());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
 }
 
 void Mission::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:pb.mission.Mission)
+// @@protoc_insertion_point(generalized_merge_from_start:rtsys.mission.Mission)
   GOOGLE_DCHECK_NE(&from, this);
   const Mission* source =
       ::google::protobuf::internal::DynamicCastToGenerated<const Mission>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:pb.mission.Mission)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rtsys.mission.Mission)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:pb.mission.Mission)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rtsys.mission.Mission)
     MergeFrom(*source);
   }
 }
 
 void Mission::MergeFrom(const Mission& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:pb.mission.Mission)
+// @@protoc_insertion_point(class_specific_merge_from_start:rtsys.mission.Mission)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::google::protobuf::uint32 cached_has_bits = 0;
@@ -2532,17 +3619,21 @@ void Mission::MergeFrom(const Mission& from) {
 
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
+  if (from.brief().size() > 0) {
+
+    brief_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.brief_);
+  }
 }
 
 void Mission::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:pb.mission.Mission)
+// @@protoc_insertion_point(generalized_copy_from_start:rtsys.mission.Mission)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Mission::CopyFrom(const Mission& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:pb.mission.Mission)
+// @@protoc_insertion_point(class_specific_copy_from_start:rtsys.mission.Mission)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2561,6 +3652,8 @@ void Mission::InternalSwap(Mission* other) {
   CastToBase(&components_)->InternalSwap(CastToBase(&other->components_));
   name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  brief_.Swap(&other->brief_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
@@ -2572,29 +3665,38 @@ void Mission::InternalSwap(Mission* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace mission
-}  // namespace pb
+}  // namespace rtsys
 namespace google {
 namespace protobuf {
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::pb::mission::Mission_Element_Point* Arena::CreateMaybeMessage< ::pb::mission::Mission_Element_Point >(Arena* arena) {
-  return Arena::CreateInternal< ::pb::mission::Mission_Element_Point >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Block_Point* Arena::CreateMaybeMessage< ::rtsys::mission::Block_Point >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Block_Point >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::pb::mission::Mission_Element_Rail* Arena::CreateMaybeMessage< ::pb::mission::Mission_Element_Rail >(Arena* arena) {
-  return Arena::CreateInternal< ::pb::mission::Mission_Element_Rail >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Block_Line* Arena::CreateMaybeMessage< ::rtsys::mission::Block_Line >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Block_Line >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::pb::mission::Mission_Element_Segment* Arena::CreateMaybeMessage< ::pb::mission::Mission_Element_Segment >(Arena* arena) {
-  return Arena::CreateInternal< ::pb::mission::Mission_Element_Segment >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Block* Arena::CreateMaybeMessage< ::rtsys::mission::Block >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Block >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::pb::mission::Mission_Element* Arena::CreateMaybeMessage< ::pb::mission::Mission_Element >(Arena* arena) {
-  return Arena::CreateInternal< ::pb::mission::Mission_Element >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Payload_Navigation* Arena::CreateMaybeMessage< ::rtsys::mission::Payload_Navigation >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Payload_Navigation >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::pb::mission::Mission_Collection* Arena::CreateMaybeMessage< ::pb::mission::Mission_Collection >(Arena* arena) {
-  return Arena::CreateInternal< ::pb::mission::Mission_Collection >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Payload* Arena::CreateMaybeMessage< ::rtsys::mission::Payload >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Payload >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::pb::mission::Mission_Component* Arena::CreateMaybeMessage< ::pb::mission::Mission_Component >(Arena* arena) {
-  return Arena::CreateInternal< ::pb::mission::Mission_Component >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Collection* Arena::CreateMaybeMessage< ::rtsys::mission::Collection >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Collection >(arena);
 }
-template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::pb::mission::Mission* Arena::CreateMaybeMessage< ::pb::mission::Mission >(Arena* arena) {
-  return Arena::CreateInternal< ::pb::mission::Mission >(arena);
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Device_Component* Arena::CreateMaybeMessage< ::rtsys::mission::Device_Component >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Device_Component >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Device* Arena::CreateMaybeMessage< ::rtsys::mission::Device >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Device >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Mission_Component* Arena::CreateMaybeMessage< ::rtsys::mission::Mission_Component >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Mission_Component >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::rtsys::mission::Mission* Arena::CreateMaybeMessage< ::rtsys::mission::Mission >(Arena* arena) {
+  return Arena::CreateInternal< ::rtsys::mission::Mission >(arena);
 }
 }  // namespace protobuf
 }  // namespace google

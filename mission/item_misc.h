@@ -20,6 +20,8 @@
 #include "mission/item.h"
 #include "protobuf/mission.pb.h"
 
+#include <QDebug>
+
 // ===
 // === Function
 // ============================================================================ //
@@ -47,6 +49,25 @@ void RepeatedFieldMoveUpLastAt(const int row, google::protobuf::RepeatedPtrField
     }
 }
 
+// Insert a device protobuf message depending on the parent component to
+// the specified protobuf message and row.
+inline MissionItem::Protobuf *insertDeviceProtobuf(const int row, MissionItem *parent)
+{
+    auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
+
+    const auto &component = parent->data(Qt::UserRoleComponent);
+    if (component == MissionItem::kMission) {
+        auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
+        auto *component = mission->add_components();
+        auto *device = component->mutable_device();
+        if (mission->mutable_components(row) != component) {
+            RepeatedFieldMoveUpLastAt(row, mission->mutable_components());
+        }
+        return device;
+    }
+    return nullptr;
+};
+
 // Insert a collection protobuf message depending on the parent component to
 // the specified protobuf message and row.
 inline MissionItem::Protobuf *insertCollectionProtobuf(const int row, MissionItem *parent)
@@ -55,11 +76,20 @@ inline MissionItem::Protobuf *insertCollectionProtobuf(const int row, MissionIte
 
     const auto &component = parent->data(Qt::UserRoleComponent);
     if (component == MissionItem::kMission) {
-        auto *mission = static_cast<pb::mission::Mission *>(protobuf);
+        auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *collection = component->mutable_collection();
         if (mission->mutable_components(row) != component) {
             RepeatedFieldMoveUpLastAt(row, mission->mutable_components());
+        }
+        return collection;
+
+    } else if (component == MissionItem::kDevice) {
+        auto *device = static_cast<rtsys::mission::Device *>(protobuf);
+        auto *component = device->add_components();
+        auto *collection = component->mutable_collection();
+        if (device->mutable_components(row) != component) {
+            RepeatedFieldMoveUpLastAt(row, device->mutable_components());
         }
         return collection;
     }
@@ -74,20 +104,29 @@ inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *pa
 
     const auto &component = parent->data(Qt::UserRoleComponent);
     if (component == MissionItem::kMission) {
-        auto *mission = static_cast<pb::mission::Mission *>(protobuf);
+        auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
-        auto *point = component->mutable_element()->mutable_point();
+        auto *point = component->mutable_block()->mutable_point();
         if (mission->mutable_components(row) != component) {
             RepeatedFieldMoveUpLastAt(row, mission->mutable_components());
         }
         return point;
 
+    } else if (component == MissionItem::kDevice) {
+        auto *device = static_cast<rtsys::mission::Device *>(protobuf);
+        auto *component = device->add_components();
+        auto *point = component->mutable_block()->mutable_point();
+        if (device->mutable_components(row) != component) {
+            RepeatedFieldMoveUpLastAt(row, device->mutable_components());
+        }
+        return point;
+
     } else if (component == MissionItem::kCollection) {
-        auto *component = static_cast<pb::mission::Mission::Collection *>(protobuf);
-        auto *element = component->add_elements();
-        auto *point = element->mutable_point();
-        if (component->mutable_elements(row) != element) {
-            RepeatedFieldMoveUpLastAt(row, component->mutable_elements());
+        auto *component = static_cast<rtsys::mission::Collection *>(protobuf);
+        auto *block = component->add_blocks();
+        auto *point = block->mutable_point();
+        if (component->mutable_blocks(row) != block) {
+            RepeatedFieldMoveUpLastAt(row, component->mutable_blocks());
         }
         return point;
     }
@@ -97,57 +136,37 @@ inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *pa
 
 // Insert a rail protobuf message depending on the parent component to the
 // specified protobuf message and row.
-inline MissionItem::Protobuf *insertRailProtobuf(const int row, MissionItem *parent)
+inline MissionItem::Protobuf *insertLineProtobuf(const int row, MissionItem *parent)
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
     const auto &component = parent->data(Qt::UserRoleComponent);
     if (component == MissionItem::kMission) {
-        auto *mission = static_cast<pb::mission::Mission *>(protobuf);
+        auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
-        auto *rail = component->mutable_element()->mutable_rail();
+        auto *line = component->mutable_block()->mutable_line();
         if (mission->mutable_components(row) != component) {
             RepeatedFieldMoveUpLastAt(row, mission->mutable_components());
         }
-        return rail;
+        return line;
+
+    } else if (component == MissionItem::kDevice) {
+        auto *device = static_cast<rtsys::mission::Device *>(protobuf);
+        auto *component = device->add_components();
+        auto *line = component->mutable_block()->mutable_line();
+        if (device->mutable_components(row) != component) {
+            RepeatedFieldMoveUpLastAt(row, device->mutable_components());
+        }
+        return line;
 
     } else if (component == MissionItem::kCollection) {
-        auto *component = static_cast<pb::mission::Mission::Collection *>(protobuf);
-        auto *element = component->add_elements();
-        auto *rail = element->mutable_rail();
-        if (component->mutable_elements(row) != element) {
-            RepeatedFieldMoveUpLastAt(row, component->mutable_elements());
+        auto *component = static_cast<rtsys::mission::Collection *>(protobuf);
+        auto *block = component->add_blocks();
+        auto *line = block->mutable_line();
+        if (component->mutable_blocks(row) != block) {
+            RepeatedFieldMoveUpLastAt(row, component->mutable_blocks());
         }
-        return rail;
-    }
-
-    return nullptr;
-};
-
-// Insert a segment protobuf message depending on the parent component to the
-// specified protobuf message and row.
-inline MissionItem::Protobuf *insertSegmentProtobuf(const int row, MissionItem *parent)
-{
-    auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
-
-    const auto &component = parent->data(Qt::UserRoleComponent);
-    if (component == MissionItem::kMission) {
-        auto *mission = static_cast<pb::mission::Mission *>(protobuf);
-        auto *component = mission->add_components();
-        auto *segment = component->mutable_element()->mutable_segment();
-        if (mission->mutable_components(row) != component) {
-            RepeatedFieldMoveUpLastAt(row, mission->mutable_components());
-        }
-        return segment;
-
-    } else if (component == MissionItem::kCollection) {
-        auto *component = static_cast<pb::mission::Mission::Collection *>(protobuf);
-        auto *element = component->add_elements();
-        auto *segment = element->mutable_segment();
-        if (component->mutable_elements(row) != element) {
-            RepeatedFieldMoveUpLastAt(row, component->mutable_elements());
-        }
-        return segment;
+        return line;
     }
 
     return nullptr;
@@ -164,41 +183,28 @@ inline MissionItem *addChild(MissionItem::Protobuf *protobuf, MissionItem *paren
 }
 
 // Expands the point protobuf message from its parent item.
-inline void expandPointProtobuf(pb::mission::Mission::Element::Point *point, MissionItem *parent,
-                                bool is_nested = false)
+inline void expandPointProtobuf(rtsys::mission::Block::Point *point, MissionItem *parent, bool is_nested = false)
 {
     if (is_nested) addChild(point, parent);
 };
 
-// Expands the rail protobuf message from its parent item.
-inline void expandRailProtobuf(pb::mission::Mission::Element::Rail *rail, MissionItem *parent, bool is_nested = false)
+// Expands the line protobuf message from its parent item.
+inline void expandLineProtobuf(rtsys::mission::Block::Line *line, MissionItem *parent, bool is_nested = false)
 {
-    auto item = is_nested ? addChild(rail, parent) : parent;
-    addChild(rail->mutable_p0(), item);
-    addChild(rail->mutable_p1(), item);
+    auto item = is_nested ? addChild(line, parent) : parent;
+    addChild(line->mutable_points(0), item);
+    addChild(line->mutable_points(1), item);
 };
 
-// Expands the segment protobuf message from its parent item.
-inline void expandSegmentProtobuf(pb::mission::Mission::Element::Segment *segment, MissionItem *parent,
-                                  bool is_nested = false)
+// Expands the block protobuf message from its parent item.
+inline void expandBlockProtobuf(rtsys::mission::Block *block, MissionItem *parent, bool is_nested = false)
 {
-    auto item = is_nested ? addChild(segment, parent) : parent;
-    addChild(segment->mutable_p0(), item);
-    addChild(segment->mutable_p1(), item);
-};
-
-// Expands the element protobuf message from its parent item.
-inline void expandElementProtobuf(pb::mission::Mission::Element *element, MissionItem *parent, bool is_nested = false)
-{
-    switch (element->element_case()) {
-        case pb::mission::Mission::Element::kPoint:
-            expandPointProtobuf(element->mutable_point(), parent, is_nested);
+    switch (block->block_case()) {
+        case rtsys::mission::Block::kPoint:
+            expandPointProtobuf(block->mutable_point(), parent, is_nested);
             break;
-        case pb::mission::Mission::Element::kRail:
-            expandRailProtobuf(element->mutable_rail(), parent, is_nested);
-            break;
-        case pb::mission::Mission::Element::kSegment:
-            expandSegmentProtobuf(element->mutable_segment(), parent, is_nested);
+        case rtsys::mission::Block::kLine:
+            expandLineProtobuf(block->mutable_line(), parent, is_nested);
             break;
         default:
             break;
@@ -206,25 +212,46 @@ inline void expandElementProtobuf(pb::mission::Mission::Element *element, Missio
 };
 
 // Expands the collection protobuf message from its parent item.
-inline void expandCollectionProtobuf(pb::mission::Mission::Collection *collection, MissionItem *parent,
+inline void expandCollectionProtobuf(rtsys::mission::Collection *collection, MissionItem *parent,
                                      bool is_nested = false)
 {
     auto item = is_nested ? addChild(collection, parent) : parent;
-    for (auto &element : *collection->mutable_elements()) {
-        expandElementProtobuf(&element, item, true); // force nested flag
+    for (auto &block : *collection->mutable_blocks()) {
+        expandBlockProtobuf(&block, item, true); // force nested flag
+    }
+};
+
+// Expands the device protobuf message from its parent item.
+inline void expandDeviceProtobuf(rtsys::mission::Device *device, MissionItem *parent, bool is_nested = false)
+{
+    auto item = is_nested ? addChild(device, parent) : parent;
+    for (auto &component : *device->mutable_components()) {
+        switch (component.component_case()) {
+            case rtsys::mission::Device::Component::kCollection:
+                expandCollectionProtobuf(component.mutable_collection(), item, true); // nested
+                break;
+            case rtsys::mission::Device::Component::kBlock:
+                expandBlockProtobuf(component.mutable_block(), item, true); // nested
+                break;
+            default:
+                break;
+        }
     }
 };
 
 // Expands the mission protobuf message from its parent item.
-inline void expandMissionProtobuf(pb::mission::Mission *mission, MissionItem *parent)
+inline void expandMissionProtobuf(rtsys::mission::Mission *mission, MissionItem *parent)
 {
     for (auto &component : *mission->mutable_components()) {
         switch (component.component_case()) {
-            case pb::mission::Mission::Component::kElement:
-                expandElementProtobuf(component.mutable_element(), parent, true); // nested
+            case rtsys::mission::Mission::Component::kDevice:
+                expandDeviceProtobuf(component.mutable_device(), parent, true); // nested
                 break;
-            case pb::mission::Mission::Component::kCollection:
+            case rtsys::mission::Mission::Component::kCollection:
                 expandCollectionProtobuf(component.mutable_collection(), parent, true); // nested
+                break;
+            case rtsys::mission::Mission::Component::kBlock:
+                expandBlockProtobuf(component.mutable_block(), parent, true); // nested
                 break;
             default:
                 break;

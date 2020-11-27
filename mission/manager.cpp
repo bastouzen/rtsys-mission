@@ -6,96 +6,84 @@
 #include "mission/item.h"
 #include "protobuf/misc/misc_cpp.h"
 
-#include <QDebug>
 #include <QFile>
+#include <QLoggingCategory>
 
 // ===
 // === Define
 // ============================================================================ //
 
-#define CLASSNAME "MissionManager ::"
+Q_LOGGING_CATEGORY(LC_RMMG, "rtsys.mission.manager")
 
 // ===
 // === Function
 // ============================================================================ //
 
 // This generates a template for the mission protobuf message.
-pb::mission::Mission MissionManager::getMissionTemplate()
+
+rtsys::mission::Mission MissionManager::getMissionTemplate()
 {
-    pb::mission::Mission mission;
-    pb::mission::Mission::Component *component;
-    pb::mission::Mission::Element *element;
+    rtsys::mission::Mission mission;
+    rtsys::mission::Collection *collection;
+    rtsys::mission::Block *block;
+    rtsys::mission::Device *device;
+    rtsys::mission::Payload::Navigation *navigation;
+
+    auto make_default_line = [](rtsys::mission::Block::Line *line, const rtsys::mission::Block::Line::Type type,
+                                const std::string &name) {
+        line->set_name(name);
+        line->set_type(type);
+        line->add_points()->set_name(name + "A");
+        line->add_points()->set_name(name + "B");
+    };
 
     mission.set_name("RTSys Template Mission");
+    mission.set_brief("This is a simple brief about my mission. Basically we have to set the datatime");
 
-    component = mission.add_components();
-    component->mutable_element()->mutable_point()->set_name("P0");
+    block = mission.add_components()->mutable_block();
+    block->mutable_point()->set_name("P0");
+    navigation = block->add_payloads()->mutable_navigation();
+    navigation->set_depth(10.0);
+    navigation->set_heading(270);
+    navigation->set_velocity(3.0);
 
-    component = mission.add_components();
-    component->mutable_collection()->set_name("Scenario");
+    make_default_line(mission.add_components()->mutable_block()->mutable_line(), rtsys::mission::Block::Line::LINE_RAIL,
+                      "J0");
 
-    element = component->mutable_collection()->add_elements();
-    element->mutable_point()->set_name("P1");
+    collection = mission.add_components()->mutable_collection();
+    collection->set_name("Scenario");
+    collection->add_blocks()->mutable_point()->set_name("P1");
+    make_default_line(collection->add_blocks()->mutable_line(), rtsys::mission::Block::Line::LINE_RAIL, "J0");
+    make_default_line(collection->add_blocks()->mutable_line(), rtsys::mission::Block::Line::LINE_SEGMENT, "S0");
 
-    element = component->mutable_collection()->add_elements();
-    element->mutable_rail()->set_name("R0");
-    element->mutable_rail()->mutable_p0()->set_name("RA");
-    element->mutable_rail()->mutable_p1()->set_name("RB");
+    collection = mission.add_components()->mutable_collection();
+    collection->set_name("Route");
+    for (int i = 0; i < 5; i++) {
+        collection->add_blocks()->mutable_point()->set_name("R" + std::to_string(i));
+    }
 
-    element = component->mutable_collection()->add_elements();
-    element->mutable_segment()->set_name("S1");
-    element->mutable_segment()->mutable_p0()->set_name("SA");
-    element->mutable_segment()->mutable_p1()->set_name("SB");
+    make_default_line(mission.add_components()->mutable_block()->mutable_line(),
+                      rtsys::mission::Block::Line::LINE_SEGMENT, "S1");
 
-    component = mission.add_components();
-    component->mutable_element()->mutable_rail()->set_name("R0");
-    component->mutable_element()->mutable_rail()->mutable_p0()->set_name("RA");
-    component->mutable_element()->mutable_rail()->mutable_p1()->set_name("RB");
+    collection = mission.add_components()->mutable_collection();
+    collection->set_name("Familly");
+    for (int i = 0; i < 6; i++) {
+        make_default_line(collection->add_blocks()->mutable_line(), rtsys::mission::Block::Line::LINE_RAIL,
+                          "J" + std::to_string(i));
+    }
 
-    component = mission.add_components();
-    component->mutable_collection()->set_name("Route");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_point()->set_name("R0");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_point()->set_name("R1");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_point()->set_name("R2");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_point()->set_name("R3");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_point()->set_name("R4");
-
-    component = mission.add_components();
-    component->mutable_element()->mutable_segment()->set_name("S0");
-    component->mutable_element()->mutable_segment()->mutable_p0()->set_name("SA");
-    component->mutable_element()->mutable_segment()->mutable_p1()->set_name("SB");
-
-    component = mission.add_components();
-    component->mutable_collection()->set_name("Family");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_rail()->set_name("J1");
-    element->mutable_rail()->mutable_p0()->set_name("J1A");
-    element->mutable_rail()->mutable_p1()->set_name("J1B");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_rail()->set_name("J2");
-    element->mutable_rail()->mutable_p0()->set_name("J2A");
-    element->mutable_rail()->mutable_p1()->set_name("J2B");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_rail()->set_name("J3");
-    element->mutable_rail()->mutable_p0()->set_name("J3A");
-    element->mutable_rail()->mutable_p1()->set_name("J3B");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_rail()->set_name("J4");
-    element->mutable_rail()->mutable_p0()->set_name("J4A");
-    element->mutable_rail()->mutable_p1()->set_name("J4B");
-    element = component->mutable_collection()->add_elements();
-    element->mutable_rail()->set_name("J5");
-    element->mutable_rail()->mutable_p0()->set_name("J5A");
-    element->mutable_rail()->mutable_p1()->set_name("J5B");
+    device = mission.add_components()->mutable_device();
+    device->set_name("My Device");
+    device->set_type(rtsys::mission::Device_Type_DEVICE_SURFACE);
+    collection = device->add_components()->mutable_collection();
+    collection->set_name("My Familly");
+    for (int i = 0; i < 6; i++) {
+        make_default_line(collection->add_blocks()->mutable_line(), rtsys::mission::Block::Line::LINE_RAIL,
+                          "J" + std::to_string(i));
+    }
 
     return mission;
 }
-
 // ===
 // === Class
 // ============================================================================ //
@@ -108,6 +96,7 @@ MissionManager::MissionManager(QObject *parent)
     addIndexRail(_model.index(0, 0, QModelIndex()));
     addIndexSegment(_model.index(0, 0, QModelIndex()));
     addIndexCollection(_model.index(0, 0, QModelIndex()));
+    addIndexDevice(_model.index(0, 0, QModelIndex()));
 }
 
 MissionManager::~MissionManager() {}
@@ -123,7 +112,7 @@ void MissionManager::removeMission()
         removeIndex(_model.index(_model.root()->child(0)));
         return;
     }
-    qWarning() << CLASSNAME << "[Warning] fail removing mission, root item children" << _model.root()->countChild();
+    qCWarning(LC_RMMG) << "fail removing mission, root item children" << _model.root()->countChild();
 }
 
 // This creates a new mission.
@@ -141,7 +130,7 @@ void MissionManager::newMission()
 }
 
 // This loads a mission.
-void MissionManager::loadMission(const pb::mission::Mission &mission)
+void MissionManager::loadMission(const rtsys::mission::Mission &mission)
 {
     newMission();
     auto index = _model.index(0, 0, QModelIndex()); // index of the root children for the mission
@@ -162,9 +151,9 @@ void MissionManager::saveMissionAs(const QString &filename)
         rtsys::protobuf::misc::serializeToJson(_mission, &json_stream);
         json_file.write(json_stream.data());
         _current_mission_filename = filename;
-        qInfo() << CLASSNAME << "[Info] save the mission into" << json_file.fileName();
+        qCInfo(LC_RMMG) << "save the mission into" << json_file.fileName();
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail saving the mission, can't open file" << json_file.fileName();
+        qCWarning(LC_RMMG) << "fail saving the mission, can't open file" << json_file.fileName();
     }
 }
 
@@ -177,13 +166,13 @@ void MissionManager::openMission(const QString &filename)
 
     QFile json_file(filename);
     if (json_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        pb::mission::Mission mission;
+        rtsys::mission::Mission mission;
         rtsys::protobuf::misc::parseFromJson(&mission, json_file.readAll().toStdString());
         loadMission(mission);
         _current_mission_filename = filename;
-        qInfo() << CLASSNAME << "[Info] open the mission from" << json_file.fileName();
+        qCInfo(LC_RMMG) << "open the mission from" << json_file.fileName();
     } else {
-        qWarning() << CLASSNAME << "[Warning] fail opening mission, can't open file" << json_file.fileName();
+        qCWarning(LC_RMMG) << "fail opening mission, can't open file" << json_file.fileName();
     }
 }
 
@@ -194,7 +183,7 @@ void MissionManager::saveMission()
         saveMissionAs(_current_mission_filename);
         return;
     }
-    qWarning() << CLASSNAME << "[Warning] fail saving mission, missing reference" << _current_mission_filename;
+    qCWarning(LC_RMMG) << "fail saving mission, missing reference" << _current_mission_filename;
 }
 
 // Remove the specified model index from the internal model mission.
@@ -204,9 +193,9 @@ void MissionManager::removeIndex(const QModelIndex &index)
 }
 
 // TODO
-void MissionManager::swapIndex(const QModelIndex &parent)
+void MissionManager::swapIndex(const QModelIndex &index)
 {
-    _model.swapRow(parent);
+    _model.swapRows(index.row(), _model.parent(index));
 }
 
 // Adds a flag identifier under the specified parent index.
@@ -216,5 +205,6 @@ void MissionManager::addIndexFromFlag(const QModelIndex &parent, int flag)
 
     auto row = _model.rowCount(parent);
     _model.insertRow(row, parent);
-    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(flag), Qt::UserRoleComponent);
+    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(static_cast<MissionItem::Feature>(flag)),
+                   Qt::UserRoleComponent);
 }

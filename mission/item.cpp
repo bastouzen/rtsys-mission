@@ -24,13 +24,12 @@ const auto ResourceIconSegment = QStringLiteral(":/resource/segment.svg");
 const auto ResourceIconPoint = QStringLiteral(":/resource/point.png");
 const auto ResourceIconRailPoint = QStringLiteral(":/resource/rail.png");
 
-const auto ProtobufMission = pb::mission::Mission::descriptor() -> name();
-const auto ProtobufComponant = pb::mission::Mission::Component::descriptor() -> name();
-const auto ProtobufCollection = pb::mission::Mission::Collection::descriptor() -> name();
-const auto ProtobufElement = pb::mission::Mission::Element::descriptor() -> name();
-const auto ProtobufPoint = pb::mission::Mission::Element::Point::descriptor() -> name();
-const auto ProtobufRail = pb::mission::Mission::Element::Rail::descriptor() -> name();
-const auto ProtobufSegment = pb::mission::Mission::Element::Segment::descriptor() -> name();
+const auto ProtobufMission = rtsys::mission::Mission::descriptor() -> name();
+const auto ProtobufDevice = rtsys::mission::Device::descriptor() -> name();
+const auto ProtobufCollection = rtsys::mission::Collection::descriptor() -> name();
+const auto ProtobufBlock = rtsys::mission::Block::descriptor() -> name();
+const auto ProtobufPoint = rtsys::mission::Block::Point::descriptor() -> name();
+const auto ProtobufLine = rtsys::mission::Block::Line::descriptor() -> name();
 
 // ===
 // === Function
@@ -45,18 +44,19 @@ MissionItem::Feature MissionItem::component(const Protobuf *protobuf)
 
     if (name == ProtobufMission) {
         return Feature::kMission;
-    } else if (name == ProtobufComponant) {
-        return Feature::kComponent;
+    } else if (name == ProtobufDevice) {
+        return Feature::kDevice;
     } else if (name == ProtobufCollection) {
         return Feature::kCollection;
-    } else if (name == ProtobufElement) {
-        return Feature::kElement;
     } else if (name == ProtobufPoint) {
         return Feature::kPoint;
-    } else if (name == ProtobufRail) {
-        return Feature::kRail;
-    } else if (name == ProtobufSegment) {
-        return Feature::kSegment;
+    } else if (name == ProtobufLine) {
+        const auto &type = static_cast<const rtsys::mission::Block::Line *>(protobuf)->type();
+        if (type == rtsys::mission::Block::Line::LINE_RAIL) {
+            return Feature::kRail;
+        } else {
+            return Feature::kSegment;
+        }
     } else {
         qCWarning(LC_RMI) << "fail getting component, missing message [" << name.data() << "]";
         return Feature::kUndefined;
@@ -94,14 +94,18 @@ unsigned int MissionItem::supportedFeatures() const
         return Bit(kMission);
 
     } else if (component_ == kMission) {
-        return Bit(kDelete) | Bit(kEdit) | Bit(kPoint) | Bit(kRail) | Bit(kSegment) | Bit(kCollection);
+        return Bit(kDelete) | Bit(kEdit) | /* Add*/ Bit(kDevice) | Bit(kCollection) | Bit(kPoint) | Bit(kRail) |
+               Bit(kSegment);
+
+    } else if (component_ == kDevice) {
+        return Bit(kDelete) | Bit(kEdit) | /* Add*/ Bit(kCollection) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
 
     } else if (component_ == kCollection) {
         const auto &collection_ = collection();
         if (collection_ == kFamily || collection_ == kRoute) {
-            return Bit(kDelete) | Bit(kEdit) | Bit(kSwap) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+            return Bit(kDelete) | Bit(kEdit) /*| Bit(kSwap)*/ | /* Add*/ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
         } else {
-            return Bit(kDelete) | Bit(kEdit) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+            return Bit(kDelete) | Bit(kEdit) | /* Add*/ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
         }
 
     } else if (component_ == kRail || component_ == kSegment) {
@@ -157,10 +161,13 @@ void MissionItem::removeChild(int row)
         // Remove the child protobuf message.
         const auto &component_ = component(_protobuf);
         if (component_ == kMission) {
-            RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission *>(_protobuf)->mutable_components());
+            RepeatedFieldRemoveAt(row, static_cast<rtsys::mission::Mission *>(_protobuf)->mutable_components());
+
+        } else if (component_ == kDevice) {
+            RepeatedFieldRemoveAt(row, static_cast<rtsys::mission::Device *>(_protobuf)->mutable_components());
 
         } else if (component_ == kCollection) {
-            RepeatedFieldRemoveAt(row, static_cast<pb::mission::Mission::Collection *>(_protobuf)->mutable_elements());
+            RepeatedFieldRemoveAt(row, static_cast<rtsys::mission::Collection *>(_protobuf)->mutable_blocks());
 
         } else if (component_ == kUndefined) {
             // In this case we want to remove a top-level row-protobuf message, it
@@ -212,15 +219,15 @@ bool MissionItem::setData(const QVariant &value, int role)
 
         const auto &component_ = component(_protobuf);
         if (component_ == kMission) {
-            setUserRoleName(static_cast<pb::mission::Mission *>(_protobuf));
+            setUserRoleName(static_cast<rtsys::mission::Mission *>(_protobuf));
+        } else if (component_ == kDevice) {
+            setUserRoleName(static_cast<rtsys::mission::Device *>(_protobuf));
         } else if (component_ == kCollection) {
-            setUserRoleName(static_cast<pb::mission::Mission::Collection *>(_protobuf));
+            setUserRoleName(static_cast<rtsys::mission::Collection *>(_protobuf));
         } else if (component_ == kPoint) {
-            setUserRoleName(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
-        } else if (component_ == kRail) {
-            setUserRoleName(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
-        } else if (component_ == kSegment) {
-            setUserRoleName(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
+            setUserRoleName(static_cast<rtsys::mission::Block::Point *>(_protobuf));
+        } else if (component_ == kRail || component_ == kSegment) {
+            setUserRoleName(static_cast<rtsys::mission::Block::Line *>(_protobuf));
         } else {
             qCWarning(LC_RMI) << "fail setting data, missing component [" << component_ << "]";
             return false;
@@ -262,15 +269,15 @@ QVariant MissionItem::data(const int role, const int column) const
         };
         const auto &component_ = component(_protobuf);
         if (component_ == kMission) {
-            return getUserName(static_cast<pb::mission::Mission *>(_protobuf));
+            return getUserName(static_cast<rtsys::mission::Mission *>(_protobuf));
+        } else if (component_ == kDevice) {
+            return getUserName(static_cast<rtsys::mission::Device *>(_protobuf));
         } else if (component_ == kCollection) {
-            return getUserName(static_cast<pb::mission::Mission::Collection *>(_protobuf));
+            return getUserName(static_cast<rtsys::mission::Collection *>(_protobuf));
         } else if (component_ == kPoint) {
-            return getUserName(static_cast<pb::mission::Mission::Element::Point *>(_protobuf));
-        } else if (component_ == kRail) {
-            return getUserName(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf));
-        } else if (component_ == kSegment) {
-            return getUserName(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf));
+            return getUserName(static_cast<rtsys::mission::Block::Point *>(_protobuf));
+        } else if (component_ == kRail || component_ == kSegment) {
+            return getUserName(static_cast<rtsys::mission::Block::Line *>(_protobuf));
         } else {
             qCWarning(LC_RMI) << "fail getting data, missing component [" << component_ << "]";
         }
@@ -293,8 +300,11 @@ QVariant MissionItem::data(const int role, const int column) const
 QVariant MissionItem::icon() const
 {
     const auto &component_ = component(_protobuf);
+
     if (component_ == kMission) {
         return QIcon(ResourceIconMission);
+    } else if (component_ == kDevice) {
+        return QIcon(ResourceIconCollection);
     } else if (component_ == kCollection) {
         const auto &collection_ = collection();
         if (collection_ == kRoute) {
@@ -357,36 +367,40 @@ void MissionItem::setDataFromComponent(const MissionItem::Feature component)
 
     const auto &enumerate = _parent->countChild() - 1;
     if (component == kMission) {
-        auto *protobuf = static_cast<pb::mission::Mission *>(_protobuf);
+        auto *protobuf = static_cast<rtsys::mission::Mission *>(_protobuf);
         protobuf->set_name(QObject::tr("My Amazing Mission").toStdString());
 
+    } else if (component == kDevice) {
+        auto *protobuf = static_cast<rtsys::mission::Device *>(insertDeviceProtobuf(row(), _parent));
+        protobuf->set_name(QObject::tr("Device %1").arg(enumerate).toStdString());
+        _protobuf = protobuf;
+
     } else if (component == kCollection) {
-        auto *protobuf = static_cast<pb::mission::Mission *>(insertCollectionProtobuf(row(), _parent));
+        auto *protobuf = static_cast<rtsys::mission::Mission *>(insertCollectionProtobuf(row(), _parent));
         protobuf->set_name(QObject::tr("Collection %1").arg(enumerate).toStdString());
         _protobuf = protobuf;
 
     } else if (component == kPoint) {
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Point *>(insertPointProtobuf(row(), _parent));
+        auto *protobuf = static_cast<rtsys::mission::Block::Point *>(insertPointProtobuf(row(), _parent));
         protobuf->set_name(QObject::tr("Point %1").arg(enumerate).toStdString());
         _protobuf = protobuf;
 
-    } else if (component == kRail) {
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Rail *>(insertRailProtobuf(row(), _parent));
-        protobuf->set_name(QObject::tr("Rail %1").arg(enumerate).toStdString());
-        protobuf->mutable_p0()->set_name("JA");
-        protobuf->mutable_p1()->set_name("JB");
+    } else if (component == kRail || component == kSegment) {
+        auto *protobuf = static_cast<rtsys::mission::Block::Line *>(insertLineProtobuf(row(), _parent));
+        if (component == kRail) {
+            protobuf->set_type(rtsys::mission::Block::Line::LINE_RAIL);
+            protobuf->set_name(QObject::tr("Rail %1").arg(enumerate).toStdString());
+            protobuf->add_points()->set_name("JA");
+            protobuf->add_points()->set_name("JB");
+        } else if (component == kSegment) {
+            protobuf->set_type(rtsys::mission::Block::Line::LINE_SEGMENT);
+            protobuf->set_name(QObject::tr("Segment %1").arg(enumerate).toStdString());
+            protobuf->add_points()->set_name("SA");
+            protobuf->add_points()->set_name("SB");
+        }
         _protobuf = protobuf;
-        addChild(protobuf->mutable_p0(), this);
-        addChild(protobuf->mutable_p1(), this);
-
-    } else if (component == kSegment) {
-        auto *protobuf = static_cast<pb::mission::Mission::Element::Segment *>(insertSegmentProtobuf(row(), _parent));
-        protobuf->set_name(QObject::tr("Segment %1").arg(enumerate).toStdString());
-        protobuf->mutable_p0()->set_name("SA");
-        protobuf->mutable_p1()->set_name("SB");
-        _protobuf = protobuf;
-        addChild(protobuf->mutable_p0(), this);
-        addChild(protobuf->mutable_p1(), this);
+        addChild(protobuf->mutable_points(0), this);
+        addChild(protobuf->mutable_points(1), this);
 
     } else {
         qCWarning(LC_RMI) << "fail setting data, missing component [" << component << "]";
@@ -410,13 +424,19 @@ bool MissionItem::setDataFromProtobuf(const QByteArray &packed)
 
     if (component_ == kMission) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
-            expandMissionProtobuf(static_cast<pb::mission::Mission *>(_protobuf), this);
+            expandMissionProtobuf(static_cast<rtsys::mission::Mission *>(_protobuf), this);
+            return true;
+        }
+
+    } else if (component_ == kDevice) {
+        if (_protobuf->ParseFromString(packed.toStdString())) {
+            expandDeviceProtobuf(static_cast<rtsys::mission::Device *>(_protobuf), this);
             return true;
         }
 
     } else if (component_ == kCollection) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
-            expandCollectionProtobuf(static_cast<pb::mission::Mission::Collection *>(_protobuf), this);
+            expandCollectionProtobuf(static_cast<rtsys::mission::Collection *>(_protobuf), this);
             return true;
         }
 
@@ -425,15 +445,9 @@ bool MissionItem::setDataFromProtobuf(const QByteArray &packed)
             return true;
         }
 
-    } else if (component_ == kRail) {
+    } else if (component_ == kRail || component_ == kSegment) {
         if (_protobuf->ParseFromString(packed.toStdString())) {
-            expandRailProtobuf(static_cast<pb::mission::Mission::Element::Rail *>(_protobuf), this);
-            return true;
-        }
-
-    } else if (component_ == kSegment) {
-        if (_protobuf->ParseFromString(packed.toStdString())) {
-            expandSegmentProtobuf(static_cast<pb::mission::Mission::Element::Segment *>(_protobuf), this);
+            expandLineProtobuf(static_cast<rtsys::mission::Block::Line *>(_protobuf), this);
             return true;
         }
 

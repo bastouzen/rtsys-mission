@@ -60,21 +60,20 @@ class MissionItem
     enum Feature {
         kUndefined,
 
-        // Feature for component
+        // Feature Type
         kMission,
-        kComponent,
+        kDevice,
         kCollection,
-        kElement,
         kPoint,
         kRail,
         kSegment,
 
-        // Feature for interpreted component
+        // Feature Type Interpreted
         kScenario,
         kRoute,
         kFamily,
 
-        // Feature for action
+        // Feature Action
         kDelete,
         kEdit,
         kSwap,
