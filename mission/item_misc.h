@@ -131,6 +131,15 @@ inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *pa
         return point;
     }
 
+    else if (component == MissionItem::kRail || component == MissionItem::kSegment) {
+        auto *line = static_cast<rtsys::mission::Block::Line *>(protobuf);
+        auto *point = line->add_points();
+        if (line->mutable_points(row) != point) {
+            RepeatedFieldMoveUpLastAt(row, line->mutable_points());
+        }
+        return point;
+    }
+
     return nullptr;
 };
 

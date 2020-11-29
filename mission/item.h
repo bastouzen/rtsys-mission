@@ -64,7 +64,7 @@ class MissionItem
         kMission,
         kDevice,
         kCollection,
-        kPoint,
+        kPoint,        
         kRail,
         kSegment,
 

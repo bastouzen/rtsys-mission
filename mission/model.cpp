@@ -124,8 +124,6 @@ bool MissionModel::setData(const QModelIndex &index, const QVariant &value, int 
 // Removes the item specified by the given row and parent index.
 bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    // Q_ASSERT(count == 1);
-
     if (rowCount(parent) && rowCount(parent) >= row) {
         beginRemoveRows(parent, row, row + count - 1);
         for (int i = 0; i < count; i++) {
@@ -141,8 +139,6 @@ bool MissionModel::removeRows(int row, int count, const QModelIndex &parent)
 // Insert an item specified by the given row and parent index.
 bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    // Q_ASSERT(count == 1);
-
     beginInsertRows(parent, row, row + count - 1);
     for (int i = 0; i < count; i++) {
         _ItemOrRoot(parent)->insertChild(row);
@@ -153,48 +149,32 @@ bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
 }
 
 // TODO
-bool MissionModel::swapRows(const int row, const QModelIndex &parent)
+bool MissionModel::swapRow(const QModelIndex &index)
 {
-//    if (!parent.isValid()) return false;
+    if (!index.isValid()) return false;
 
-//    // Store indexes
-//    QModelIndexList indexes;
-//    auto *child = _Item(index(row, 0, parent));
-//    for (int i = 0; i < child->countChild(); i++) {
-//        indexes << index(child->child(i));
-//    }
+    // Store child indexes
+    QModelIndexList indexes;
+    auto *item = _Item(index);
+    auto n = item->countChild();
+    for (int i = 0; i < n; i++) {
+        indexes << this->index(item->child(i));
+    }
+    auto data = mimeData(indexes);
 
-//    int N = child->countChild() - 1;
+    removeRows(0, n, index);
+    insertRows(0, n, index);
 
-////    QByteArray encoded;
-////    QDataStream in(&encoded, QIODevice::WriteOnly);
-////    for (auto it = indexes.begin(); it != indexes.end(); ++it) {
-////        in << N - (*it).row() << (*it).column() << itemData(*it);
-////    }
+    // setData
+    QByteArray encoded = data->data(mimeTypes().first());
+    QDataStream out(&encoded, QIODevice::ReadOnly);
+    while (!out.atEnd()) {
+        int row, column;
+        QMap<int, QVariant> roles;
+        out >> row >> column >> roles;
+        setItemData(this->index(n - 1 - row, column, index), roles);
+    }
 
-//    removeRows(row, 1, parent);
-//    insertRows(row, 1, parent);
-//    // setData
-
-//    QDataStream out(&encoded, QIODevice::ReadOnly);
-//    QVector<int> rows, columns;
-//    QVector<QMap<int, QVariant>> roles;
-//    while (!out.atEnd()) {
-//        int row, column;
-//        QMap<int, QVariant> data;
-//        out >> row >> column >> data;
-//        rows.append(row);
-//        columns.append(column);
-//        roles.append(data);
-//    }
-
-//    for (int i = 0; i < rows.length(); i++) {
-//        setItemData(index(rows.length() - 1 - i, columns.at(i), parent), roles.at(i));
-//    }
-
-//    //    //    beginMoveRows(source_parent, source_row, source_row, destination_parent, source_row + 2);
-//    //    //    //_ItemOrRoot(source_parent)->moveChild(source_row, destination_child);
-//    //    //    endMoveRows();
     return true;
 }
 

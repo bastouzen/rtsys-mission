@@ -94,18 +94,18 @@ unsigned int MissionItem::supportedFeatures() const
         return Bit(kMission);
 
     } else if (component_ == kMission) {
-        return Bit(kDelete) | Bit(kEdit) | /* Add*/ Bit(kDevice) | Bit(kCollection) | Bit(kPoint) | Bit(kRail) |
+        return Bit(kDelete) | Bit(kEdit) | /* Add */ Bit(kDevice) | Bit(kCollection) | Bit(kPoint) | Bit(kRail) |
                Bit(kSegment);
 
     } else if (component_ == kDevice) {
-        return Bit(kDelete) | Bit(kEdit) | /* Add*/ Bit(kCollection) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+        return Bit(kDelete) | Bit(kEdit) | /* Add */ Bit(kCollection) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
 
     } else if (component_ == kCollection) {
         const auto &collection_ = collection();
         if (collection_ == kFamily || collection_ == kRoute) {
-            return Bit(kDelete) | Bit(kEdit) /*| Bit(kSwap)*/ | /* Add*/ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+            return Bit(kDelete) | Bit(kEdit) /*| Bit(kSwap)*/ | /* Add */ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
         } else {
-            return Bit(kDelete) | Bit(kEdit) | /* Add*/ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+            return Bit(kDelete) | Bit(kEdit) | /* Add */ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
         }
 
     } else if (component_ == kRail || component_ == kSegment) {
@@ -132,7 +132,10 @@ Qt::ItemFlags MissionItem::supportedFlags() const
     const auto &component_ = component(_protobuf);
 
     if (component_ == kMission) {
-        return Qt::NoItemFlags;
+        return Qt::ItemIsDropEnabled;
+
+    } else if (component_ == kDevice) {
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 
     } else if (component_ == kCollection) {
         return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
@@ -360,15 +363,10 @@ MissionItem::Feature MissionItem::collection() const
 // children.
 void MissionItem::setDataFromComponent(const MissionItem::Feature component)
 {
-    if (!_parent->isFeatureSupported(component)) {
-        qCWarning(LC_RMI) << "fail setting data, component not supported [" << component << "]";
-        return;
-    }
-
     const auto &enumerate = _parent->countChild() - 1;
     if (component == kMission) {
         auto *protobuf = static_cast<rtsys::mission::Mission *>(_protobuf);
-        protobuf->set_name(QObject::tr("My Amazing Mission").toStdString());
+        protobuf->set_name(QObject::tr("New Mission").toStdString());
 
     } else if (component == kDevice) {
         auto *protobuf = static_cast<rtsys::mission::Device *>(insertDeviceProtobuf(row(), _parent));
@@ -417,7 +415,7 @@ bool MissionItem::setDataFromProtobuf(const QByteArray &packed)
     // were created by calling "setDataFromComponent" but as we use the parse
     // function from google protobuf, the nested field messages may be
     // desallocated and reallocated by the parsing process. So in order to avoid
-    //  dangling pointer we remove all the children.
+    // dangling pointer we remove all the children.
     if (component_ == kRail || component_ == kSegment) {
         while (countChild()) removeChild(0);
     }

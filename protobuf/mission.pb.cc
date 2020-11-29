@@ -390,7 +390,7 @@ void AddDescriptorsImpl() {
       "\n\rmission.proto\022\rrtsys.mission\"\303\002\n\005Block"
       "\022+\n\005point\030\001 \001(\0132\032.rtsys.mission.Block.Po"
       "intH\000\022)\n\004line\030\002 \001(\0132\031.rtsys.mission.Bloc"
-      "k.LineH\000\022(\n\010payloads\030\004 \003(\0132\026.rtsys.missi"
+      "k.LineH\000\022(\n\010payloads\030\003 \003(\0132\026.rtsys.missi"
       "on.Payload\032\025\n\005Point\022\014\n\004name\030\001 \001(\t\032\227\001\n\004Li"
       "ne\022\014\n\004name\030\001 \001(\t\022,\n\004type\030\002 \001(\0162\036.rtsys.m"
       "ission.Block.Line.Type\022*\n\006points\030\003 \003(\0132\032"
@@ -1212,10 +1212,10 @@ bool Block::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .rtsys.mission.Payload payloads = 4;
-      case 4: {
+      // repeated .rtsys.mission.Payload payloads = 3;
+      case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
+            static_cast< ::google::protobuf::uint8>(26u /* 26 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
                 input, add_payloads()));
         } else {
@@ -1262,11 +1262,11 @@ void Block::SerializeWithCachedSizes(
       2, this->_internal_line(), output);
   }
 
-  // repeated .rtsys.mission.Payload payloads = 4;
+  // repeated .rtsys.mission.Payload payloads = 3;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->payloads_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4,
+      3,
       this->payloads(static_cast<int>(i)),
       output);
   }
@@ -1299,12 +1299,12 @@ void Block::SerializeWithCachedSizes(
         2, this->_internal_line(), deterministic, target);
   }
 
-  // repeated .rtsys.mission.Payload payloads = 4;
+  // repeated .rtsys.mission.Payload payloads = 3;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->payloads_size()); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        4, this->payloads(static_cast<int>(i)), deterministic, target);
+        3, this->payloads(static_cast<int>(i)), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -1324,7 +1324,7 @@ size_t Block::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // repeated .rtsys.mission.Payload payloads = 4;
+  // repeated .rtsys.mission.Payload payloads = 3;
   {
     unsigned int count = static_cast<unsigned int>(this->payloads_size());
     total_size += 1UL * count;

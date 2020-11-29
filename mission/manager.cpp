@@ -195,7 +195,7 @@ void MissionManager::removeIndex(const QModelIndex &index)
 // TODO
 void MissionManager::swapIndex(const QModelIndex &index)
 {
-    _model.swapRows(index.row(), _model.parent(index));
+    _model.swapRow(index);
 }
 
 // Adds a flag identifier under the specified parent index.

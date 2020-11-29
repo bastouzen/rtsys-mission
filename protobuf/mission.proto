@@ -21,8 +21,8 @@ message Block {
   oneof block {
     Point point = 1;
     Line line = 2;
-  }
-  repeated Payload payloads = 4;
+  }  
+  repeated Payload payloads = 3;
 }
 
 /* A payload configures the behavior of a based part of the mission (block).

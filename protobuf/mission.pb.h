@@ -505,10 +505,10 @@ class Block : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 
   // accessors -------------------------------------------------------
 
-  // repeated .rtsys.mission.Payload payloads = 4;
+  // repeated .rtsys.mission.Payload payloads = 3;
   int payloads_size() const;
   void clear_payloads();
-  static const int kPayloadsFieldNumber = 4;
+  static const int kPayloadsFieldNumber = 3;
   ::rtsys::mission::Payload* mutable_payloads(int index);
   ::google::protobuf::RepeatedPtrField< ::rtsys::mission::Payload >*
       mutable_payloads();
@@ -1767,7 +1767,7 @@ inline ::rtsys::mission::Block_Line* Block::mutable_line() {
   return block_.line_;
 }
 
-// repeated .rtsys.mission.Payload payloads = 4;
+// repeated .rtsys.mission.Payload payloads = 3;
 inline int Block::payloads_size() const {
   return payloads_.size();
 }
