@@ -203,8 +203,8 @@ void MissionManager::addIndexFromFlag(const QModelIndex &parent, int flag)
 {
     if (!parent.isValid()) return;
 
-    auto row = _model.rowCount(parent);
-    _model.insertRow(row, parent);
-    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(static_cast<MissionItem::Feature>(flag)),
-                   Qt::UserRoleComponent);
+//    auto row = _model.rowCount(parent);
+//    _model.insertRow(row, parent);
+//    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(static_cast<MissionItem::Feature>(flag)),
+//                   Qt::UserRoleComponent);
 }

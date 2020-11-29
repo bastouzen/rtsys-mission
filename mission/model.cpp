@@ -217,7 +217,7 @@ bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
             int row, column;
             QMap<int, QVariant> roles;
             stream >> row >> column >> roles;
-            mask |= (1 << roles[Qt::UserRoleComponent].value<MissionItem::Feature>());
+            mask |= (1 << roles[Qt::UserRoleComponent].value<MissionItem::Features>());
         }
         return mask;
     };

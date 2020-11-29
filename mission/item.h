@@ -39,6 +39,7 @@ enum MyRoles {
 } // namespace Qt
 
 #define Bit(feature) (1 << feature)
+#define BitValue(bit) (1 << bit)
 
 // ===
 // === Class
@@ -57,31 +58,32 @@ class MissionItem
         Protobuf *pointer;
     };
 
-    enum Feature {
-        kUndefined,
+    enum FeatureFlag {
 
         // Feature Type
-        kMission,
-        kDevice,
-        kCollection,
-        kPoint,        
-        kRail,
-        kSegment,
+        kUndefined = 0,
+        kMission = 1 << 0,
+        kDevice = 1 << 1,
+        kCollection = 1 << 2,
+        kLine = 1 << 3,
+        kPoint = 1 << 4,
 
         // Feature Type Interpreted
-        kScenario,
-        kRoute,
-        kFamily,
+        kScenario = 1 << 5,
+        kRoute = 1 << 6,
+        kFamily = 1 << 7,
 
         // Feature Action
-        kDelete,
-        kEdit,
-        kSwap,
+        kDelete = 1 << 8,
+        kRail = 1 << 9,
+        kSegment = 1 << 10,
+        kEdit = 1 << 11,
+        kSwap = 1 << 12,
     };
-    Q_ENUM(Feature);
+    Q_DECLARE_FLAGS(Features, FeatureFlag)
 
-    static Feature component(const Protobuf *protobuf);
-    static Feature component(const Protobuf &protobuf) { return component(&protobuf); }
+    static Features component(const Protobuf *protobuf);
+    static Features component(const Protobuf &protobuf) { return component(&protobuf); }
     static Wrapper wrap(Protobuf *protobuf)
     {
         MissionItem::Wrapper wrapper;
@@ -96,9 +98,12 @@ class MissionItem
     void removeChild(const int row);
     void insertChild(const int row = -1);
 
-    unsigned int supportedFeatures() const;
-    bool isFeatureSupported(const Feature feature, const unsigned int mask) const { return (mask >> feature) & 1; }
-    bool isFeatureSupported(const Feature feature) const { return isFeatureSupported(feature, supportedFeatures()); }
+    Features supportedFeatures() const;
+    bool isFeatureSupported(const Features feature, const unsigned int mask) const { return (mask >> feature) & 1; }
+    bool isFeatureSupported(const Features feature) const
+    {
+        return isFeatureSupported(feature, supportedFeatures());
+    }
     Qt::ItemFlags supportedFlags() const;
 
     // Getters and Setters
@@ -113,9 +118,9 @@ class MissionItem
 
   private:
     QVariant icon() const;
-    Feature parentFlag() const;
-    Feature collection() const;
-    void setDataFromComponent(const Feature component);
+    Features parentFlag() const;
+    Features collection() const;
+    void setDataFromComponent(const Features component);
     bool setDataFromProtobuf(const QByteArray &packed);
     MissionItem *_parent;
     Protobuf *_protobuf;
@@ -123,5 +128,6 @@ class MissionItem
 };
 
 Q_DECLARE_METATYPE(MissionItem::Wrapper);
+Q_DECLARE_OPERATORS_FOR_FLAGS(MissionItem::Features)
 
 #endif // RTSYS_MISSION_MODEL_ITEM_H

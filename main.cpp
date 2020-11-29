@@ -14,19 +14,23 @@
 
 int main(int argc, char *argv[])
 {
-    QLoggingCategory::setFilterRules("rtsys.*.debug=true");
+    //    QLoggingCategory::setFilterRules("rtsys.*.debug=true");
 
-    QApplication app(argc, argv);
-    MissionManager manager;
+    //    QApplication app(argc, argv);
+    //    MissionManager manager;
 
-    MissionTreeWidget widget;
-    widget.setWindowTitle(QObject::tr("RTSys Mission Tree Widget"));
-    widget.setManager(&manager);
-    widget.show();
+    //    MissionTreeWidget widget;
+    //    widget.setWindowTitle(QObject::tr("RTSys Mission Tree Widget"));
+    //    widget.setManager(&manager);
+    //    widget.show();
 
-    // manager.loadMission(MissionManager::getMissionTemplate());
+    //    // manager.loadMission(MissionManager::getMissionTemplate());
 
-    return app.exec();
+    //    return app.exec();
+
+    MissionItem::Features feat;
+    feat = MissionItem::kMission | MissionItem::kCollection;
+    qDebug() << feat;
 }
 
 /*

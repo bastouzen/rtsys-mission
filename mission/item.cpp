@@ -36,30 +36,30 @@ const auto ProtobufLine = rtsys::mission::Block::Line::descriptor() -> name();
 // ============================================================================ //
 
 // Returns the component specified by the underlying protobuf message.
-MissionItem::Feature MissionItem::component(const Protobuf *protobuf)
+MissionItem::Features MissionItem::component(const Protobuf *protobuf)
 {
-    if (!protobuf) return Feature::kUndefined;
+    if (!protobuf) return FeatureFlag::kUndefined;
 
     const auto &name = protobuf->GetDescriptor()->name();
 
     if (name == ProtobufMission) {
-        return Feature::kMission;
+        return FeatureFlag::kMission;
     } else if (name == ProtobufDevice) {
-        return Feature::kDevice;
+        return FeatureFlag::kDevice;
     } else if (name == ProtobufCollection) {
-        return Feature::kCollection;
+        return FeatureFlag::kCollection;
     } else if (name == ProtobufPoint) {
-        return Feature::kPoint;
+        return FeatureFlag::kPoint;
     } else if (name == ProtobufLine) {
         const auto &type = static_cast<const rtsys::mission::Block::Line *>(protobuf)->type();
         if (type == rtsys::mission::Block::Line::LINE_RAIL) {
-            return Feature::kRail;
+            return FeatureFlag::kLine | FeatureFlag::kRail;
         } else {
-            return Feature::kSegment;
+            return FeatureFlag::kLine | FeatureFlag::kSegment;
         }
     } else {
         qCWarning(LC_RMI) << "fail getting component, missing message [" << name.data() << "]";
-        return Feature::kUndefined;
+        return FeatureFlag::kUndefined;
     }
 }
 
@@ -86,43 +86,42 @@ MissionItem::~MissionItem()
 
 // Returns the supported feature. This depends on the item component and parent
 // item component.
-unsigned int MissionItem::supportedFeatures() const
+MissionItem::Features MissionItem::supportedFeatures() const
 {
     const auto &component_ = component(_protobuf);
 
     if (component_ == kUndefined) {
-        return Bit(kMission);
+        return kMission;
 
     } else if (component_ == kMission) {
-        return Bit(kDelete) | Bit(kEdit) | /* Add */ Bit(kDevice) | Bit(kCollection) | Bit(kPoint) | Bit(kRail) |
-               Bit(kSegment);
+        return kDelete | kEdit | /* Add */ kDevice | kCollection | kLine | kPoint;
 
     } else if (component_ == kDevice) {
-        return Bit(kDelete) | Bit(kEdit) | /* Add */ Bit(kCollection) | Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+        return kDelete | kEdit | /* Add */ kCollection | kLine | kPoint;
 
     } else if (component_ == kCollection) {
         const auto &collection_ = collection();
         if (collection_ == kFamily || collection_ == kRoute) {
-            return Bit(kDelete) | Bit(kEdit) /*| Bit(kSwap)*/ | /* Add */ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+            return kDelete | kEdit | kSwap | /* Add */ kLine | kPoint;
         } else {
-            return Bit(kDelete) | Bit(kEdit) | /* Add */ Bit(kPoint) | Bit(kRail) | Bit(kSegment);
+            return kDelete | kEdit | /* Add */ kLine | kPoint;
         }
 
-    } else if (component_ == kRail || component_ == kSegment) {
-        return Bit(kDelete) | Bit(kEdit) | Bit(kSwap);
+    } else if (component_ == kLine) {
+        return kDelete | kEdit | kSwap;
 
     } else if (component_ == kPoint) {
         const auto &component_parent = component(_parent->_protobuf);
-        if (component_parent == kRail || component_parent == kSegment) {
-            return Bit(kEdit);
+        if (component_parent == kLine) {
+            return kEdit;
         }
-        return Bit(kDelete) | Bit(kEdit);
+        return kDelete | kEdit;
 
     } else {
         qCWarning(LC_RMI) << "fail getting supported features, missing component [" << component_ << "]";
     }
 
-    return 0;
+    return MissionItem::Features();
 }
 
 // Returns the supported flag. This depends on the item component and parent
@@ -238,7 +237,7 @@ bool MissionItem::setData(const QVariant &value, int role)
         return true;
 
     } else if (role == Qt::UserRoleComponent) {
-        setDataFromComponent(value.value<MissionItem::Feature>());
+        setDataFromComponent(value.value<MissionItem::Features>());
         return true;
 
     } else if (role == Qt::UserRolePack) {
@@ -261,7 +260,7 @@ QVariant MissionItem::data(const int role, const int column) const
 
     } else if (role == Qt::DisplayRole && column == 0) {
         // Use reflection property of Qt for getting the name of the component.
-        return QString(QMetaEnum::fromType<Feature>().valueToKey(component(_protobuf))).mid(1, -1);
+        return QString(QMetaEnum::fromType<Features>().valueToKey(component(_protobuf))).mid(1, -1);
 
     } else if ((role == Qt::DisplayRole && column == 1) || role == Qt::EditRole) {
         // Here we use some king to inline template function thank to C++14
@@ -340,15 +339,15 @@ QVariant MissionItem::icon() const
 // is figured out by looking at the item children component
 //  - A Route is a collection of Point.
 //  - A Family is a collection of Rail.
-MissionItem::Feature MissionItem::collection() const
+MissionItem::Features MissionItem::collection() const
 {
     if (countChild()) {
         auto is_route = true;
         auto is_family = true;
-        for (auto *child_item : _childs) {
-            const auto &component_ = component(child_item->_protobuf);
-            is_route &= component_ == kPoint;
-            is_family &= component_ == kRail;
+        for (const auto *child_item : _childs) {
+            const auto &features = component(child_item->_protobuf);
+            is_route &= features.testFlag(kPoint);
+            is_family &= features.testFlag(kRail);
         }
         if (is_route) {
             return kRoute;
@@ -361,7 +360,7 @@ MissionItem::Feature MissionItem::collection() const
 
 // Sets the data from the specified component this also create all dependant
 // children.
-void MissionItem::setDataFromComponent(const MissionItem::Feature component)
+void MissionItem::setDataFromComponent(const MissionItem::Features component)
 {
     const auto &enumerate = _parent->countChild() - 1;
     if (component == kMission) {
