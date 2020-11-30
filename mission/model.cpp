@@ -105,7 +105,7 @@ Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
     if (index.column() > 0)
         return Qt::ItemIsEnabled | Qt::ItemIsEditable;
     else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | _Item(index)->supportedDropFlags();
+        return Qt::ItemIsEnabled | _Item(index)->supportedItemFlags();
 }
 
 // Sets the data for the specified value and role. Returns true if successful
@@ -144,43 +144,6 @@ bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
         _ItemOrRoot(parent)->insertChild(row);
     }
     endInsertRows();
-
-    return true;
-}
-
-// TODO
-bool MissionModel::swapIndex(const QModelIndex &index)
-{
-    if (!index.isValid()) return false;
-
-    // Backup children indexes
-    auto *item = _Item(index);
-    QModelIndexList children;
-    auto count = item->countChild();
-    for (int i = 0; i < count; i++) {
-        children << this->index(item->child(i));
-    }
-    auto data = mimeData(children);
-
-    // Remove all index's children then insert 'count' into index's child
-    removeRows(0, count, index);
-    insertRows(0, count, index);
-
-    // Restore children indexes (reverse order)
-    QByteArray encoded = data->data(mimeTypes().first());
-    QDataStream stream(&encoded, QIODevice::ReadOnly);
-    QVector<int> rows;
-    QVector<QMap<int, QVariant>> roles;
-    while (!stream.atEnd()) {
-        int row, column;
-        QMap<int, QVariant> map;
-        stream >> row >> column >> map;
-        rows << row;
-        roles << map;
-    }
-    for (int i = 0; i < count; i++) {
-        setItemData(this->index(i, 0, index), roles.at(count - 1 - i));
-    }
 
     return true;
 }
@@ -249,11 +212,39 @@ MissionItem *MissionModel::item(const QModelIndex &index) const
     return index.isValid() ? _Item(index) : nullptr;
 }
 
-// void MissionModel::debugPrintItem(MissionItem *item, int level) const
-//{
-//    QVariant data = item->data(Qt::DisplayRole, 1);
-//    qDebug().noquote().nospace() << QString(" ").repeated(level) << (data.isValid() ? data.toString() : "Root");
-//    for (int i = 0; i < item->countChild(); i++) {
-//        debugPrintItem(item->child(i), level + 1);
-//    }
-//}
+// Reverses the index's children order of the specifed index.
+bool MissionModel::reverseIndexChildren(const QModelIndex &index)
+{
+    if (!index.isValid()) return false;
+
+    // Backup children indexes
+    auto *item = _Item(index);
+    QModelIndexList children;
+    auto count = item->countChild();
+    for (int i = 0; i < count; i++) {
+        children << this->index(item->child(i));
+    }
+    auto data = mimeData(children);
+
+    // Remove all index's children then insert 'count' into index's child
+    removeRows(0, count, index);
+    insertRows(0, count, index);
+
+    // Restore children indexes (reverse order)
+    QByteArray encoded = data->data(mimeTypes().first());
+    QDataStream stream(&encoded, QIODevice::ReadOnly);
+    QVector<int> rows;
+    QVector<QMap<int, QVariant>> roles;
+    while (!stream.atEnd()) {
+        int row, column;
+        QMap<int, QVariant> map;
+        stream >> row >> column >> map;
+        rows << row;
+        roles << map;
+    }
+    for (int i = 0; i < count; i++) {
+        setItemData(this->index(i, 0, index), roles.at(count - 1 - i));
+    }
+
+    return true;
+}

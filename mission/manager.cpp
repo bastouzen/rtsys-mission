@@ -100,7 +100,7 @@ MissionManager::MissionManager(QObject *parent)
 
 MissionManager::~MissionManager() {}
 
-// This removes the mission. Here we suppose that the root item has only one
+// Removes the mission. Here we suppose that the root item has only one
 // child which is the internal mission item.
 void MissionManager::removeMission()
 {
@@ -114,7 +114,7 @@ void MissionManager::removeMission()
     qCWarning(LC_RMMG) << "fail removing mission, root item children" << _model.root()->countChild();
 }
 
-// This creates a new mission.
+// Creates a new mission.
 void MissionManager::newMission()
 {
     removeMission();
@@ -129,7 +129,7 @@ void MissionManager::newMission()
                    Qt::UserRoleFeature);
 }
 
-// This loads a mission.
+// Loads a mission.
 void MissionManager::loadMission(const rtsys::mission::Mission &mission)
 {
     newMission();
@@ -138,7 +138,7 @@ void MissionManager::loadMission(const rtsys::mission::Mission &mission)
     emit loadMissionDone();
 }
 
-// This saves the mission into the specified filename path. This is using the
+// Saves the mission into the specified filename path. This is using the
 // protobuf capability in order to save the internal mission protobuf message
 // in json format.
 void MissionManager::saveMissionAs(const QString &filename)
@@ -157,7 +157,7 @@ void MissionManager::saveMissionAs(const QString &filename)
     }
 }
 
-// This opens the mission from the specified filename path. This is using the
+// Opens the mission from the specified filename path. This is using the
 // protobuf capability in order to retrieve the internal mission protobuf message
 // from the json format.
 void MissionManager::openMission(const QString &filename)
@@ -176,7 +176,7 @@ void MissionManager::openMission(const QString &filename)
     }
 }
 
-// This saves the mission into the current mission filename.
+// Saves the mission into the current mission filename.
 void MissionManager::saveMission()
 {
     if (canSaveMission()) {
@@ -186,16 +186,16 @@ void MissionManager::saveMission()
     qCWarning(LC_RMMG) << "fail saving mission, missing reference" << _current_mission_filename;
 }
 
-// Remove the specified model index from the internal model mission.
+// Removes the specified model index from the internal model mission.
 void MissionManager::removeIndex(const QModelIndex &index)
 {
     if (index.isValid()) _model.removeRow(index.row(), index.parent());
 }
 
-// TODO
-void MissionManager::swapIndex(const QModelIndex &index)
+// Reverses the index's children order of the specifed index.
+void MissionManager::reverseIndexChildren(const QModelIndex &index)
 {
-    _model.swapIndex(index);
+    _model.reverseIndexChildren(index);
 }
 
 // Adds a flag identifier under the specified parent index.

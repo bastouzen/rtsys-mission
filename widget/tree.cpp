@@ -18,7 +18,7 @@ MissionTreeWidget::MissionTreeWidget(QWidget *parent)
     // ui->treeView->setModel(_manager.model());
 
     ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    // ui->treeView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+    ui->treeView->setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
     // ui->treeView->setSelectionModel()
 
     // Enable right-click context.
@@ -49,13 +49,22 @@ void MissionTreeWidget::setManager(MissionManager *manager)
     _manager = manager;
     ui->treeView->setModel(_manager->model());
     connect(ui->actionNewMission, &QAction::triggered, _manager, &MissionManager::newMission);
-    connect(ui->actionDelete, &QAction::triggered, this, [&]() { _manager->removeIndex(_index); });
-    connect(ui->actionAddCollection, &QAction::triggered, this, [&]() { _manager->addIndexCollection(_index); });
-    connect(ui->actionAddPoint, &QAction::triggered, this, [&]() { _manager->addIndexPoint(_index); });
-    connect(ui->actionAddRail, &QAction::triggered, this, [&]() { _manager->addIndexRail(_index); });
-    connect(ui->actionAddSegment, &QAction::triggered, this, [&]() { _manager->addIndexSegment(_index); });
+    connect(ui->actionDelete, &QAction::triggered, this, [&]() {
+        while (!ui->treeView->selectionModel()->selectedIndexes().isEmpty()) {
+            _manager->removeIndex(ui->treeView->selectionModel()->selectedIndexes().first());
+        }
+    });
+    connect(ui->actionAddCollection, &QAction::triggered, this,
+            [&]() { _manager->addIndexCollection(ui->treeView->selectionModel()->selectedIndexes().first()); });
+    connect(ui->actionAddPoint, &QAction::triggered, this,
+            [&]() { _manager->addIndexPoint(ui->treeView->selectionModel()->selectedIndexes().first()); });
+    connect(ui->actionAddRail, &QAction::triggered, this,
+            [&]() { _manager->addIndexRail(ui->treeView->selectionModel()->selectedIndexes().first()); });
+    connect(ui->actionAddSegment, &QAction::triggered, this,
+            [&]() { _manager->addIndexSegment(ui->treeView->selectionModel()->selectedIndexes().first()); });
     connect(ui->actionSaveMission, &QAction::triggered, this, [&]() { _manager->saveMission(); });
-    connect(ui->actionSwap, &QAction::triggered, this, [&]() { _manager->swapIndex(_index); });
+    connect(ui->actionSwap, &QAction::triggered, this,
+            [&]() { _manager->reverseIndexChildren(ui->treeView->selectionModel()->selectedIndexes().first()); });
     connect(ui->actionSaveMissionAs, &QAction::triggered, this, [&]() {
         _manager->saveMissionAs(QFileDialog::getSaveFileName(
             this, tr("Save Mission File"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
@@ -74,15 +83,20 @@ void MissionTreeWidget::setManager(MissionManager *manager)
 
 void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
 {
-    _index = ui->treeView->indexAt(position);
+    const auto &indexes = ui->treeView->selectionModel()->selectedIndexes();
+    if (!indexes.empty()) {
 
-    auto *item = _manager->model()->item(_index);
+        // Compose indexes features
+        auto features = _manager->model()->item(indexes.first())->supportedFeatures();
+        for (const auto &index : indexes) {
+            features &= _manager->model()->item(index)->supportedFeatures();
+        }
 
-    if (item) {
-        const auto &features = item->supportedFeatures();
+        // Remove Edit feature in case of multiple selection
+        if (indexes.size() > 1) features &= ~(MissionItem::kEdit);
+
         if (features) {
             QMenu menu(this);
-
             if (features & MissionItem::kDelete) menu.addAction(ui->actionDelete);
             if (features & MissionItem::kEdit) menu.addAction(ui->actionEdit);
             if (features & MissionItem::kSwap) menu.addAction(ui->actionSwap);
@@ -95,7 +109,9 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
                 if (features & MissionItem::kPoint) menu.addAction(ui->actionAddPoint);
             }
 
-            if (MissionItem::Features(item->data(Qt::UserRoleFeature).toInt()) & MissionItem::kMission) {
+            // When only one index is selected and this index is the top mission index.
+            if (indexes.size() == 1 &&
+                MissionItem::Features(indexes.first().data(Qt::UserRoleFeature).toInt() & MissionItem::kMission)) {
                 menu.addSection("Mission");
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);

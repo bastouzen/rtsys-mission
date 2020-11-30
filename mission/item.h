@@ -94,7 +94,7 @@ class MissionItem
     QVariant data(int role, const int column = 0) const;
     bool setData(const QVariant &value, int role);
     Features supportedFeatures() const;
-    Qt::ItemFlags supportedDropFlags() const;
+    Qt::ItemFlags supportedItemFlags() const;
 
     // Getters and Setters
     MissionItem *parent() { return _parent; }

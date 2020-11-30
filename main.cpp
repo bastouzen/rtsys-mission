@@ -24,17 +24,23 @@ int main(int argc, char *argv[])
     widget.setManager(&manager);
     widget.show();
 
-    manager.loadMission(MissionManager::getMissionTemplate());
+    // manager.loadMission(MissionManager::getMissionTemplate());
 
     return app.exec();
 }
 
+/* IMPLEMENTED FEATURES
+ * - reverse children order (permutate) for route, family, rail and segment)
+ * - drag & drop (single and multiple selection)
+ * - remove (single and multiple selection)
+ */
+
 /*
  * TODO
- *  Multiple Selection for drag&drop + remove
  *  Edit (generate dialogue windows depending on the flag identifier)
  *  Add contact
  *      Allow cast point->contact and contact ->point
  *  Add Device
  *      Allow cast collection->device and device ->collection
+ * Add Copy/Past
  */

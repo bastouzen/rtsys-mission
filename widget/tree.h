@@ -24,7 +24,6 @@ class MissionTreeWidget : public QWidget
     void createCustomContexMenu(const QPoint &position);
     Ui::MissionTreeWidget *ui;
     MissionManager *_manager;
-    QModelIndex _index;
 };
 
 #endif // MISSION_TREE_WIDGET_H

@@ -193,27 +193,24 @@ MissionItem::Features MissionItem::supportedFeatures() const
 
 // Returns the supported drop flag. This depends on item underlying protobuf
 // message and parent item underlying protobuf message.
-Qt::ItemFlags MissionItem::supportedDropFlags() const
+Qt::ItemFlags MissionItem::supportedItemFlags() const
 {
     const auto feature = this->feature();
 
     if (feature & kMission) {
-        return Qt::ItemIsDropEnabled;
+        return Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
 
-    } else if (feature & kDevice) {
-        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
-
-    } else if (feature & kCollection) {
-        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+    } else if (feature & (kDevice | kCollection)) {
+        return Qt::ItemIsSelectable | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled;
 
     } else if (feature & kLine) {
-        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+        return Qt::ItemIsSelectable | Qt::ItemIsDragEnabled;
 
     } else if (feature & kPoint) {
         if (_parent->feature() & kLine) {
             return Qt::NoItemFlags;
         }
-        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+        return Qt::ItemIsSelectable | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled;
 
     } else {
         return Qt::NoItemFlags;
