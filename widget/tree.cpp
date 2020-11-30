@@ -79,21 +79,23 @@ void MissionTreeWidget::createCustomContexMenu(const QPoint &position)
     auto *item = _manager->model()->item(_index);
 
     if (item) {
-        const auto &flags = item->supportedFeatures();
-        if (flags) {
+        const auto &features = item->supportedFeatures();
+        if (features) {
             QMenu menu(this);
 
-            if (item->isFeatureSupported(MissionItem::kDelete, flags)) menu.addAction(ui->actionDelete);
-            if (item->isFeatureSupported(MissionItem::kEdit, flags)) menu.addAction(ui->actionEdit);
-            if (item->isFeatureSupported(MissionItem::kSwap, flags)) menu.addAction(ui->actionSwap);
+            if (features & MissionItem::kDelete) menu.addAction(ui->actionDelete);
+            if (features & MissionItem::kEdit) menu.addAction(ui->actionEdit);
+            if (features & MissionItem::kSwap) menu.addAction(ui->actionSwap);
 
-            menu.addSection("Action");
-            if (item->isFeatureSupported(MissionItem::kPoint, flags)) menu.addAction(ui->actionAddPoint);
-            if (item->isFeatureSupported(MissionItem::kRail, flags)) menu.addAction(ui->actionAddRail);
-            if (item->isFeatureSupported(MissionItem::kSegment, flags)) menu.addAction(ui->actionAddSegment);
-            if (item->isFeatureSupported(MissionItem::kCollection, flags)) menu.addAction(ui->actionAddCollection);
+            if (features & (MissionItem::kCollection | MissionItem::kLine | MissionItem::kPoint)) {
+                menu.addSection("Action");
+                if (features & MissionItem::kCollection) menu.addAction(ui->actionAddCollection);
+                if (features & MissionItem::kLine) menu.addAction(ui->actionAddRail);
+                if (features & MissionItem::kLine) menu.addAction(ui->actionAddSegment);
+                if (features & MissionItem::kPoint) menu.addAction(ui->actionAddPoint);
+            }
 
-            if (item->data(Qt::UserRoleComponent) == MissionItem::kMission) {
+            if (MissionItem::Features(item->data(Qt::UserRoleFeature).toInt()) & MissionItem::kMission) {
                 menu.addSection("Mission");
                 menu.addAction(ui->actionNewMission);
                 menu.addAction(ui->actionOpenMission);

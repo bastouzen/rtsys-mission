@@ -20,7 +20,6 @@ Q_LOGGING_CATEGORY(LC_RMMG, "rtsys.mission.manager")
 // ============================================================================ //
 
 // This generates a template for the mission protobuf message.
-
 rtsys::mission::Mission MissionManager::getMissionTemplate()
 {
     rtsys::mission::Mission mission;
@@ -126,7 +125,8 @@ void MissionManager::newMission()
     _model.insertRow(row, parent);
     _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::wrap(&_mission)),
                    Qt::UserRoleWrapper);
-    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(MissionItem::kMission), Qt::UserRoleComponent);
+    _model.setData(_model.index(row, 0, parent), MissionItem::Features::Int(MissionItem::kMission),
+                   Qt::UserRoleFeature);
 }
 
 // This loads a mission.
@@ -195,16 +195,20 @@ void MissionManager::removeIndex(const QModelIndex &index)
 // TODO
 void MissionManager::swapIndex(const QModelIndex &index)
 {
-    _model.swapRow(index);
+    _model.swapIndex(index);
 }
 
 // Adds a flag identifier under the specified parent index.
-void MissionManager::addIndexFromFlag(const QModelIndex &parent, int flag)
+void MissionManager::addIndexFromFlag(const QModelIndex &parent, MissionItem::Features feature)
 {
     if (!parent.isValid()) return;
 
-//    auto row = _model.rowCount(parent);
-//    _model.insertRow(row, parent);
-//    _model.setData(_model.index(row, 0, parent), QVariant::fromValue(static_cast<MissionItem::Feature>(flag)),
-//                   Qt::UserRoleComponent);
+    // Set kLine if kRail or kSegment has been set.
+    if (feature & (MissionItem::kRail | MissionItem::kSegment)) {
+        feature |= MissionItem::kLine;
+    }
+
+    auto row = _model.rowCount(parent);
+    _model.insertRow(row, parent);
+    _model.setData(_model.index(row, 0, parent), MissionItem::Features::Int(feature), Qt::UserRoleFeature);
 }

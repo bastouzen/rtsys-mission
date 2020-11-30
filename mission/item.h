@@ -1,15 +1,13 @@
 /*
- * This defines the model item object. It represents one item of the model tree.
+ * This defines the mission model item. It represents one item of the model tree.
  * Each one holds a reference to their parent and to their children. The parent
  * reference is weak so that it isn't responsible for deleting its parent. The
  * children reference is strong so that it is responsible for deleting them. It
  * holds the data that are displayed in the model tree view.
- *
- * The backend is responsible of managing the underlying protobuf message.
  */
 
-#ifndef RTSYS_MISSION_MODEL_ITEM_H
-#define RTSYS_MISSION_MODEL_ITEM_H
+#ifndef RTSYS_MISSION_ITEM_H
+#define RTSYS_MISSION_ITEM_H
 
 // ===
 // === Include
@@ -32,14 +30,11 @@ class MissionItem;
 
 namespace Qt {
 enum MyRoles {
-    UserRoleComponent = UserRole + 1,
+    UserRoleFeature = UserRole + 100,
     UserRolePack,
     UserRoleWrapper,
 };
 } // namespace Qt
-
-#define Bit(feature) (1 << feature)
-#define BitValue(bit) (1 << bit)
 
 // ===
 // === Class
@@ -47,7 +42,7 @@ enum MyRoles {
 
 class MissionItem
 {
-    Q_GADGET
+    Q_GADGET; // needed for Q_ENUM
 
     static const int COLUMNS = 2;
 
@@ -60,7 +55,7 @@ class MissionItem
 
     enum FeatureFlag {
 
-        // Feature Type
+        // Feature Base Type
         kUndefined = 0,
         kMission = 1 << 0,
         kDevice = 1 << 1,
@@ -69,21 +64,20 @@ class MissionItem
         kPoint = 1 << 4,
 
         // Feature Type Interpreted
-        kScenario = 1 << 5,
-        kRoute = 1 << 6,
-        kFamily = 1 << 7,
+        kRail = 1 << 5,
+        kSegment = 1 << 6,
+        kScenario = 1 << 7,
+        kRoute = 1 << 8,
+        kFamily = 1 << 9,
 
-        // Feature Action
-        kDelete = 1 << 8,
-        kRail = 1 << 9,
-        kSegment = 1 << 10,
+        // Feature Type Action
+        kDelete = 1 << 10,
         kEdit = 1 << 11,
         kSwap = 1 << 12,
     };
-    Q_DECLARE_FLAGS(Features, FeatureFlag)
+    Q_ENUM(FeatureFlag)                    // needed for QMetaEnum::fromType
+    Q_DECLARE_FLAGS(Features, FeatureFlag) // needed for QFlags
 
-    static Features component(const Protobuf *protobuf);
-    static Features component(const Protobuf &protobuf) { return component(&protobuf); }
     static Wrapper wrap(Protobuf *protobuf)
     {
         MissionItem::Wrapper wrapper;
@@ -97,14 +91,10 @@ class MissionItem
 
     void removeChild(const int row);
     void insertChild(const int row = -1);
-
+    QVariant data(int role, const int column = 0) const;
+    bool setData(const QVariant &value, int role);
     Features supportedFeatures() const;
-    bool isFeatureSupported(const Features feature, const unsigned int mask) const { return (mask >> feature) & 1; }
-    bool isFeatureSupported(const Features feature) const
-    {
-        return isFeatureSupported(feature, supportedFeatures());
-    }
-    Qt::ItemFlags supportedFlags() const;
+    Qt::ItemFlags supportedDropFlags() const;
 
     // Getters and Setters
     MissionItem *parent() { return _parent; }
@@ -113,21 +103,18 @@ class MissionItem
     int column() const { return COLUMNS; }
     int row() const { return _parent ? _parent->_childs.indexOf(const_cast<MissionItem *>(this)) : 0; }
 
-    QVariant data(int role, const int column = 0) const;
-    bool setData(const QVariant &value, int role);
-
   private:
     QVariant icon() const;
-    Features parentFlag() const;
+    Features feature() const;
     Features collection() const;
-    void setDataFromComponent(const Features component);
+    void setDataFromFeature(const Features feature);
     bool setDataFromProtobuf(const QByteArray &packed);
     MissionItem *_parent;
     Protobuf *_protobuf;
     QVector<MissionItem *> _childs;
 };
 
-Q_DECLARE_METATYPE(MissionItem::Wrapper);
-Q_DECLARE_OPERATORS_FOR_FLAGS(MissionItem::Features)
+Q_DECLARE_OPERATORS_FOR_FLAGS(MissionItem::Features) // needed for QFlags misc function
+Q_DECLARE_METATYPE(MissionItem::Wrapper);            // needed for QVariant<MissionItem::Wrapper>
 
-#endif // RTSYS_MISSION_MODEL_ITEM_H
+#endif // RTSYS_MISSION_ITEM_H

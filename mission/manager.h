@@ -1,3 +1,8 @@
+/*
+ * This defines the mission manager, it defines the interface for accessing
+ * and managing the model data.
+ */
+
 #ifndef RTSYS_MISSION_MANAGER_H
 #define RTSYS_MISSION_MANAGER_H
 
@@ -47,7 +52,7 @@ class MissionManager : public QObject
     void loadMissionDone();
 
   private:
-    void addIndexFromFlag(const QModelIndex &parent, int flag);
+    void addIndexFromFlag(const QModelIndex &parent, MissionItem::Features feature);
     rtsys::mission::Mission _mission;
     MissionModel _model;
     QString _current_mission_filename;

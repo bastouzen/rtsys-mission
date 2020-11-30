@@ -2,7 +2,7 @@
  * This defines the mission model. The mission model is represented as a tree, each
  * element of the tree (item) is linked to the root item in either parent or child
  * relationship. The items of the tree are instance of 'MissionItem'. In other words
- *the mission model holds all its data through the root item.
+ * the mission model holds all its data through the root item.
  */
 
 #ifndef RTSYS_MISSION_MODEL_H
@@ -64,7 +64,7 @@ class MissionModel : public QAbstractItemModel
     MissionItem *root() { return _root; }
     MissionItem *item(const QModelIndex &index) const;
     QModelIndex index(MissionItem *item, int column = 0) const;
-    bool swapRow(const QModelIndex &index);
+    bool swapIndex(const QModelIndex &index);
 
   private:
     MissionItem *_root;

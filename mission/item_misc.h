@@ -1,11 +1,5 @@
 /*
- * This defines the model item object. It represents one item of the model tree.
- * Each one holds a reference to their parent and to their children. The parent
- * reference is weak so that it isn't responsible for deleting its parent. The
- * children reference is strong so that it is responsible for deleting them. It
- * holds the data that are displayed in the model tree view.
- *
- * The backend is responsible of managing the underlying protobuf message.
+ * This defines some miscellaneous functions used by MissionItem.
  */
 
 #ifndef RTSYS_MISSION_MODEL_ITEM_MISC_H
@@ -19,8 +13,6 @@
 
 #include "mission/item.h"
 #include "protobuf/mission.pb.h"
-
-#include <QDebug>
 
 // ===
 // === Function
@@ -55,8 +47,8 @@ inline MissionItem::Protobuf *insertDeviceProtobuf(const int row, MissionItem *p
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
-    const auto &component = parent->data(Qt::UserRoleComponent);
-    if (component == MissionItem::kMission) {
+    const auto &feature = MissionItem::Features(parent->data(Qt::UserRoleFeature).toInt());
+    if (feature & MissionItem::kMission) {
         auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *device = component->mutable_device();
@@ -74,8 +66,8 @@ inline MissionItem::Protobuf *insertCollectionProtobuf(const int row, MissionIte
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
-    const auto &component = parent->data(Qt::UserRoleComponent);
-    if (component == MissionItem::kMission) {
+    const auto &feature = MissionItem::Features(parent->data(Qt::UserRoleFeature).toInt());
+    if (feature & MissionItem::kMission) {
         auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *collection = component->mutable_collection();
@@ -84,7 +76,7 @@ inline MissionItem::Protobuf *insertCollectionProtobuf(const int row, MissionIte
         }
         return collection;
 
-    } else if (component == MissionItem::kDevice) {
+    } else if (feature & MissionItem::kDevice) {
         auto *device = static_cast<rtsys::mission::Device *>(protobuf);
         auto *component = device->add_components();
         auto *collection = component->mutable_collection();
@@ -93,53 +85,6 @@ inline MissionItem::Protobuf *insertCollectionProtobuf(const int row, MissionIte
         }
         return collection;
     }
-    return nullptr;
-};
-
-// Insert a point protobuf message depending on the parent component to the
-// specified protobuf message and row.
-inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *parent)
-{
-    auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
-
-    const auto &component = parent->data(Qt::UserRoleComponent);
-    if (component == MissionItem::kMission) {
-        auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
-        auto *component = mission->add_components();
-        auto *point = component->mutable_block()->mutable_point();
-        if (mission->mutable_components(row) != component) {
-            RepeatedFieldMoveUpLastAt(row, mission->mutable_components());
-        }
-        return point;
-
-    } else if (component == MissionItem::kDevice) {
-        auto *device = static_cast<rtsys::mission::Device *>(protobuf);
-        auto *component = device->add_components();
-        auto *point = component->mutable_block()->mutable_point();
-        if (device->mutable_components(row) != component) {
-            RepeatedFieldMoveUpLastAt(row, device->mutable_components());
-        }
-        return point;
-
-    } else if (component == MissionItem::kCollection) {
-        auto *component = static_cast<rtsys::mission::Collection *>(protobuf);
-        auto *block = component->add_blocks();
-        auto *point = block->mutable_point();
-        if (component->mutable_blocks(row) != block) {
-            RepeatedFieldMoveUpLastAt(row, component->mutable_blocks());
-        }
-        return point;
-    }
-
-    else if (component == MissionItem::kRail || component == MissionItem::kSegment) {
-        auto *line = static_cast<rtsys::mission::Block::Line *>(protobuf);
-        auto *point = line->add_points();
-        if (line->mutable_points(row) != point) {
-            RepeatedFieldMoveUpLastAt(row, line->mutable_points());
-        }
-        return point;
-    }
-
     return nullptr;
 };
 
@@ -149,8 +94,8 @@ inline MissionItem::Protobuf *insertLineProtobuf(const int row, MissionItem *par
 {
     auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
 
-    const auto &component = parent->data(Qt::UserRoleComponent);
-    if (component == MissionItem::kMission) {
+    const auto &feature = MissionItem::Features(parent->data(Qt::UserRoleFeature).toInt());
+    if (feature & MissionItem::kMission) {
         auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
         auto *component = mission->add_components();
         auto *line = component->mutable_block()->mutable_line();
@@ -159,7 +104,7 @@ inline MissionItem::Protobuf *insertLineProtobuf(const int row, MissionItem *par
         }
         return line;
 
-    } else if (component == MissionItem::kDevice) {
+    } else if (feature & MissionItem::kDevice) {
         auto *device = static_cast<rtsys::mission::Device *>(protobuf);
         auto *component = device->add_components();
         auto *line = component->mutable_block()->mutable_line();
@@ -168,7 +113,7 @@ inline MissionItem::Protobuf *insertLineProtobuf(const int row, MissionItem *par
         }
         return line;
 
-    } else if (component == MissionItem::kCollection) {
+    } else if (feature & MissionItem::kCollection) {
         auto *component = static_cast<rtsys::mission::Collection *>(protobuf);
         auto *block = component->add_blocks();
         auto *line = block->mutable_line();
@@ -176,6 +121,53 @@ inline MissionItem::Protobuf *insertLineProtobuf(const int row, MissionItem *par
             RepeatedFieldMoveUpLastAt(row, component->mutable_blocks());
         }
         return line;
+    }
+
+    return nullptr;
+};
+
+// Insert a point protobuf message depending on the parent component to the
+// specified protobuf message and row.
+inline MissionItem::Protobuf *insertPointProtobuf(const int row, MissionItem *parent)
+{
+    auto *protobuf = parent->data(Qt::UserRoleWrapper).value<MissionItem::Wrapper>().pointer;
+
+    const auto &feature = MissionItem::Features(parent->data(Qt::UserRoleFeature).toInt());
+    if (feature & MissionItem::kMission) {
+        auto *mission = static_cast<rtsys::mission::Mission *>(protobuf);
+        auto *component = mission->add_components();
+        auto *point = component->mutable_block()->mutable_point();
+        if (mission->mutable_components(row) != component) {
+            RepeatedFieldMoveUpLastAt(row, mission->mutable_components());
+        }
+        return point;
+
+    } else if (feature & MissionItem::kDevice) {
+        auto *device = static_cast<rtsys::mission::Device *>(protobuf);
+        auto *component = device->add_components();
+        auto *point = component->mutable_block()->mutable_point();
+        if (device->mutable_components(row) != component) {
+            RepeatedFieldMoveUpLastAt(row, device->mutable_components());
+        }
+        return point;
+
+    } else if (feature & MissionItem::kCollection) {
+        auto *component = static_cast<rtsys::mission::Collection *>(protobuf);
+        auto *block = component->add_blocks();
+        auto *point = block->mutable_point();
+        if (component->mutable_blocks(row) != block) {
+            RepeatedFieldMoveUpLastAt(row, component->mutable_blocks());
+        }
+        return point;
+    }
+
+    else if (feature & MissionItem::kLine) {
+        auto *line = static_cast<rtsys::mission::Block::Line *>(protobuf);
+        auto *point = line->add_points();
+        if (line->mutable_points(row) != point) {
+            RepeatedFieldMoveUpLastAt(row, line->mutable_points());
+        }
+        return point;
     }
 
     return nullptr;

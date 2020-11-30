@@ -35,9 +35,9 @@ MissionModel::~MissionModel()
     delete _root;
 }
 
-// =============================
+// ====================================
 // Read-only Model
-// =============================
+// ====================================
 
 // Returns the data stored under the given role for the specified index.
 QVariant MissionModel::data(const QModelIndex &index, int role) const
@@ -50,7 +50,7 @@ QVariant MissionModel::data(const QModelIndex &index, int role) const
 // Returns the data for the given role and section in the header with the specified orientation.
 QVariant MissionModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    const QVector<QVariant> HEADER_DATA = {tr("Component"), tr("Name")};
+    const QVector<QVariant> HEADER_DATA = {tr("Feature"), tr("Name")};
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         return HEADER_DATA[section];
     }
@@ -92,9 +92,9 @@ QModelIndex MissionModel::parent(const QModelIndex &child) const
     return QModelIndex();
 }
 
-// =============================
-// Editing and Resizing Row-only
-// =============================
+// ====================================
+// Editing and Resizing Model
+// ====================================
 
 // Returns the item flags for the given index.
 Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
@@ -105,7 +105,7 @@ Qt::ItemFlags MissionModel::flags(const QModelIndex &index) const
     if (index.column() > 0)
         return Qt::ItemIsEnabled | Qt::ItemIsEditable;
     else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | _Item(index)->supportedFlags();
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | _Item(index)->supportedDropFlags();
 }
 
 // Sets the data for the specified value and role. Returns true if successful
@@ -149,38 +149,45 @@ bool MissionModel::insertRows(int row, int count, const QModelIndex &parent)
 }
 
 // TODO
-bool MissionModel::swapRow(const QModelIndex &index)
+bool MissionModel::swapIndex(const QModelIndex &index)
 {
     if (!index.isValid()) return false;
 
-    // Store child indexes
-    QModelIndexList indexes;
+    // Backup children indexes
     auto *item = _Item(index);
-    auto n = item->countChild();
-    for (int i = 0; i < n; i++) {
-        indexes << this->index(item->child(i));
+    QModelIndexList children;
+    auto count = item->countChild();
+    for (int i = 0; i < count; i++) {
+        children << this->index(item->child(i));
     }
-    auto data = mimeData(indexes);
+    auto data = mimeData(children);
 
-    removeRows(0, n, index);
-    insertRows(0, n, index);
+    // Remove all index's children then insert 'count' into index's child
+    removeRows(0, count, index);
+    insertRows(0, count, index);
 
-    // setData
+    // Restore children indexes (reverse order)
     QByteArray encoded = data->data(mimeTypes().first());
-    QDataStream out(&encoded, QIODevice::ReadOnly);
-    while (!out.atEnd()) {
+    QDataStream stream(&encoded, QIODevice::ReadOnly);
+    QVector<int> rows;
+    QVector<QMap<int, QVariant>> roles;
+    while (!stream.atEnd()) {
         int row, column;
-        QMap<int, QVariant> roles;
-        out >> row >> column >> roles;
-        setItemData(this->index(n - 1 - row, column, index), roles);
+        QMap<int, QVariant> map;
+        stream >> row >> column >> map;
+        rows << row;
+        roles << map;
+    }
+    for (int i = 0; i < count; i++) {
+        setItemData(this->index(i, 0, index), roles.at(count - 1 - i));
     }
 
     return true;
 }
 
-// =============================
-// Drag & Drop
-// =============================
+// ====================================
+// Drag & Drop Model
+// ====================================
 
 // Returns the drop actions supported by this view.
 Qt::DropActions MissionModel::supportedDropActions() const
@@ -194,7 +201,7 @@ QMap<int, QVariant> MissionModel::itemData(const QModelIndex &index) const
 {
     // auto roles = QAbstractItemModel::itemData(index);
     QMap<int, QVariant> roles;
-    for (auto i : {Qt::UserRoleComponent, Qt::UserRolePack}) {
+    for (auto i : {Qt::UserRoleFeature, Qt::UserRolePack}) {
         auto var = data(index, i);
         if (var.isValid()) roles.insert(i, var);
     }
@@ -212,19 +219,17 @@ bool MissionModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
     auto getDragMask = [&]() {
         QByteArray encoded = data->data(mimeTypes().first());
         QDataStream stream(&encoded, QIODevice::ReadOnly);
-        unsigned int mask = 0;
+        MissionItem::Features mask;
         while (!stream.atEnd()) {
             int row, column;
             QMap<int, QVariant> roles;
             stream >> row >> column >> roles;
-            mask |= (1 << roles[Qt::UserRoleComponent].value<MissionItem::Features>());
+            mask |= MissionItem::Features(roles[Qt::UserRoleFeature].toInt());
         }
         return mask;
     };
 
-    auto drag_mask = getDragMask();
-
-    return (drag_mask & item(parent)->supportedFeatures()) == drag_mask;
+    return getDragMask() & item(parent)->supportedFeatures();
 }
 
 // ============================================================================ //
